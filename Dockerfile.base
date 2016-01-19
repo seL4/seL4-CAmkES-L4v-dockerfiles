@@ -1,0 +1,120 @@
+# Docker image for running Bamboo Server
+FROM debian:jessie
+
+COPY res/sources.list /etc/apt/sources.list
+
+RUN apt-get update -q \
+    && apt-get install -y --no-install-recommends \
+	curl \
+	conserver-client \
+        git \
+	make \
+	mercurial \
+	rsync \
+	ssh \
+	texlive \
+	texlive-metapost \
+	texlive-latex-extra \
+	vim \
+	wget 
+
+RUN ln -s /usr/bin/hg /usr/local/bin/hg
+
+RUN mkdir -p /etc/apt/sources.list.d \
+    && echo "deb http://emdebian.org/tools/debian/ jessie main" > /etc/apt/sources.list.d/crosstools.list \
+    && curl http://emdebian.org/tools/debian/emdebian-toolchain-archive.key | apt-key add -
+
+RUN dpkg --add-architecture armhf \
+    && dpkg --add-architecture armel \
+    && apt-get update -q \
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+        libxml2 \
+        libxml2-dev \
+        libxml2-utils \
+        python-tempita \ 
+        realpath 
+
+RUN apt-get install -y --no-install-recommends \
+        gcc-4.9-multilib \
+	ccache \
+        ncurses-dev
+
+RUN apt-get install -y --no-install-recommends \
+        ghc \
+        libghc-missingh-dev \
+        libghc-split-dev \
+        cabal-install \
+    && cabal update \
+    && cabal install data-ordlist
+
+COPY res/ghc-7.8.1-x86_64-unknown-linux-deb7.tar.bz2 /root/ghc-7.8.1-x86_64-unknown-linux-deb7.tar.bz2
+RUN cd /root \
+    && tar -xf ghc-7.8.1-x86_64-unknown-linux-deb7.tar.bz2 \
+    && rm /root/ghc-7.8.1-x86_64-unknown-linux-deb7.tar.bz2
+
+RUN cd /root/ghc-7.8.1 \
+    && ./configure --prefix=/usr/local \
+    && make install
+
+RUN cabal update \
+    && cabal install data-ordlist
+
+RUN apt-get install -y --no-install-recommends \
+	pylint \
+	python \
+	python-dev \
+        python-pip \
+        python-jinja2 \
+        python-ply
+
+RUN pip install --upgrade pip \
+    && pip install --allow-all-external \
+	pexpect \
+	beautifulsoup4 \
+	pyelftools \
+	PyYAML \
+	astroid \
+	sh \
+	six \
+        pysnmp
+
+RUN apt-get install -y --no-install-recommends \
+        crossbuild-essential-armel \
+        crossbuild-essential-armhf \
+        cpio \
+        gcc-arm-none-eabi \
+        qemu \
+	u-boot-tools \
+    && apt-get clean autoclean \
+    && apt-get autoremove --yes \
+    && rm -rf /var/lib/{apt,dpkg,cache,log}/
+    
+RUN ln -s /usr/bin/arm-linux-gnueabi-cpp-4.9 /usr/bin/arm-linux-gnueabi-cpp
+
+COPY res/astyle_2.03_linux.tar.gz /root/astyle_2.03_linux.tar.gz
+RUN cd root \
+    && tar -xf astyle_2.03_linux.tar.gz \
+    && cd astyle/build/gcc \
+    && make \
+    && cp bin/astyle /usr/bin/astyle
+
+RUN mkdir -p /scripts \
+    && cd /scripts \
+    && git clone http://bitbucket.keg.ertos.in.nicta.com.au/scm/sel4/repo.git 
+
+RUN cd /scripts \
+    && git clone http://bitbucket.keg.ertos.in.nicta.com.au/scm/sel4proj/machine_queue.git 
+
+COPY res/console.cf /etc/conserver/console.cf
+
+RUN mkdir -p /root/.ssh
+COPY res/ssh.tar.gz /root/.ssh
+RUN cd /root/.ssh \ 
+    && tar -xf ssh.tar.gz \
+    && chown -R root:root ./* \
+    && rm ssh.tar.gz
+
+# Copy across the qemu tools that are compatible
+COPY res/ertos /opt/ertos
+RUN ln -s /opt/ertos/simulators-x86_64/qemu /usr/bin/qemu
