@@ -33,6 +33,7 @@ RUN sed -i.bak s/JVM_MINIMUM_MEMORY=\"256m\"/JVM_MINIMUM_MEMORY=\"1024m\"/g /opt
 
 COPY res/plugins/hung-build-killer-2.1.4.jar ${BAMBOO_INSTALL_DIR}/atlassian-bamboo/WEB-INF/lib/hung-build-killer-2.1.4.jar
 COPY res/plugins/coverage-report-1.0-SNAPSHOT.jar ${BAMBOO_INSTALL_DIR}/atlassian-bamboo/WEB-INF/lib/coverage-report-1.0-SNAPSHOT.jar
+COPY res/plugins/prepost-build-command-5.6.3.jar ${BAMBOO_INSTALL_DIR}/atlassian-bamboo/WEB-INF/lib/prepost-build-command-5.6.3.jar
  
 VOLUME ["${BAMBOO_HOME}"]
 

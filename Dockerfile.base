@@ -41,12 +41,9 @@ RUN apt-get install -y --no-install-recommends \
         ncurses-dev
 
 RUN apt-get install -y --no-install-recommends \
-        ghc \
-        libghc-missingh-dev \
-        libghc-split-dev \
-        cabal-install \
-    && cabal update \
-    && cabal install data-ordlist
+	ca-certificates \
+	libgmp3-dev \
+	zlib1g-dev 
 
 COPY res/ghc-7.8.1-x86_64-unknown-linux-deb7.tar.bz2 /root/ghc-7.8.1-x86_64-unknown-linux-deb7.tar.bz2
 RUN cd /root \
@@ -57,8 +54,19 @@ RUN cd /root/ghc-7.8.1 \
     && ./configure --prefix=/usr/local \
     && make install
 
-RUN cabal update \
-    && cabal install data-ordlist
+RUN rm -rf /root/ghc-7.8.1
+
+RUN cd /root \
+    && wget http://hackage.haskell.org/package/cabal-install-1.22.7.0/cabal-install-1.22.7.0.tar.gz \
+    && tar -xvf cabal-install-1.22.7.0.tar.gz \
+    && cd cabal-install-1.22.7.0 \
+    && ./bootstrap.sh 
+
+RUN ln -s /root/.cabal/bin/cabal /usr/local/bin/cabal
+
+RUN cabal update --verbose \
+    && cabal install data-ordlist \
+    && cabal install cabal-install --global
 
 RUN apt-get install -y --no-install-recommends \
 	pylint \
@@ -101,7 +109,7 @@ RUN cd root \
 
 RUN mkdir -p /scripts \
     && cd /scripts \
-    && git clone http://bitbucket.keg.ertos.in.nicta.com.au/scm/sel4/repo.git 
+    && git clone -b seL4 http://bitbucket.keg.ertos.in.nicta.com.au/scm/sel4/repo.git 
 
 RUN cd /scripts \
     && git clone http://bitbucket.keg.ertos.in.nicta.com.au/scm/sel4proj/machine_queue.git 
@@ -109,12 +117,15 @@ RUN cd /scripts \
 COPY res/console.cf /etc/conserver/console.cf
 
 RUN mkdir -p /root/.ssh
-COPY res/ssh.tar.gz /root/.ssh
-RUN cd /root/.ssh \ 
+COPY res/ssh.tar.gz /root/ssh.tar.gz
+RUN cd /root \
     && tar -xf ssh.tar.gz \
-    && chown -R root:root ./* \
+    && chown -R root:root ./.ssh/* \
     && rm ssh.tar.gz
 
 # Copy across the qemu tools that are compatible
 COPY res/ertos /opt/ertos
 RUN ln -s /opt/ertos/simulators-x86_64/qemu /usr/bin/qemu
+
+COPY res/welcome_message.txt /root/welcome_message.txt
+RUN cat /root/welcome_message.txt >> /root/.bashrc
