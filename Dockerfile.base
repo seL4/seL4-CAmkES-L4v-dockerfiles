@@ -85,7 +85,8 @@ RUN pip install --upgrade pip \
 	astroid \
 	sh \
 	six \
-        pysnmp
+        pysnmp \
+	pypng
 
 RUN apt-get install -y --no-install-recommends \
         crossbuild-essential-armel \
@@ -94,6 +95,7 @@ RUN apt-get install -y --no-install-recommends \
         gcc-arm-none-eabi \
         qemu \
 	u-boot-tools \
+	imagemagick \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
