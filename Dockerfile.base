@@ -16,7 +16,8 @@ RUN apt-get update -q \
 	texlive-metapost \
 	texlive-latex-extra \
 	vim \
-	wget 
+	wget \
+    sloccount
 
 RUN ln -s /usr/bin/hg /usr/local/bin/hg
 
