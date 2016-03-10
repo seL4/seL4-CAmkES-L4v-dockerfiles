@@ -12,12 +12,13 @@ RUN apt-get update -q \
 	mercurial \
 	rsync \
 	ssh \
+	sloccount \
+	telnet \
 	texlive \
 	texlive-metapost \
 	texlive-latex-extra \
 	vim \
-	wget \
-    sloccount
+	wget
 
 RUN ln -s /usr/bin/hg /usr/local/bin/hg
 
