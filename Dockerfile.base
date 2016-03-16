@@ -111,7 +111,7 @@ RUN apt-get install -y --no-install-recommends \
         libclang-dev \
         libclang1 \
         libglib2.0-dev
-RUN ln -s /usr/lib/llvm-3.6 /opt/clang
+RUN ln -s /usr/lib/llvm-3.5 /opt/clang
 
 # Dependencies of camkes-next
 RUN apt-get install -y --no-install-recommends \
