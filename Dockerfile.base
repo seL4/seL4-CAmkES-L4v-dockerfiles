@@ -89,7 +89,7 @@ RUN pip install --upgrade pip \
 	six \
         pysnmp \
 	pypng \
-    plpylus
+        plyplus
 
 RUN apt-get install -y --no-install-recommends \
         crossbuild-essential-armel \
