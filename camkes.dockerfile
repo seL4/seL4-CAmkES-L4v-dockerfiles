@@ -6,12 +6,13 @@ FROM selfour
 RUN apt-get install -y --no-install-recommends \
         cmake \
         clang \
+	expect \
         libssl-dev \
         libcunit1-dev \
         libsqlite3-dev \
         locales \
         libgmp3-dev \
-        ninja-build 
+        ninja-build
 
 
 # Setup correct version of GHC

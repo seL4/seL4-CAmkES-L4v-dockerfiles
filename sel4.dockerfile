@@ -39,51 +39,6 @@ RUN apt-get install -y --no-install-recommends \
 RUN ln -s /usr/bin/arm-linux-gnueabi-cpp-4.9 /usr/bin/arm-linux-gnueabi-cpp
 
 
-# Get ready for test compilation
-RUN mkdir /root/sel4test \
-    && cd /root/sel4test \
-    && /scripts/repo/repo init -u http://bitbucket.keg.ertos.in.nicta.com.au/scm/sel4/sel4test-manifest.git \
-    && /scripts/repo/repo sync 
-
-WORKDIR /root/sel4test
-
-# Run test beagle compilation
-RUN make beagle_debug_xml_defconfig \
-    && make \
-    && make clean
-
-# Run test KZM compilation
-RUN make kzm_debug_xml_defconfig \
-    && make \
-    && make clean
-
-# Run test odroid-x compilation
-RUN make odroidx_debug_xml_defconfig \
-    && make \
-    && make clean
-
-# Run test odroid-xu compilation
-RUN make odroidxu_debug_xml_defconfig \
-    && make \
-    && make clean
-
-# Run test sabre compilation
-RUN make sabre_debug_xml_defconfig \
-    && make \
-    && make clean
-
-# Run test zynq7000 compilation
-RUN make zynq7000_debug_xml_defconfig \
-    && make \
-    && make clean
-
-# Run test ia32 compilation
-RUN make ia32_debug_xml_defconfig \
-    && make \
-    && make clean
-
-
-
 # Cleanup
 RUN apt-get clean autoclean \
     && apt-get autoremove --yes \

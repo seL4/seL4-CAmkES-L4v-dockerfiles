@@ -6,6 +6,7 @@ RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
         ca-certificates \
     	curl \
+	gettext \
         git \
     	make \
         wget
