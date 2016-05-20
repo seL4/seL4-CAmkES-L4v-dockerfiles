@@ -40,7 +40,7 @@ RUN ln -s /root/.cabal/bin/cabal /usr/local/bin/cabal
 
 RUN cabal update --verbose \
     && cabal install cabal-install --global \
-    && cabal install data-ordlist missingh base-compat=0.9.0 split
+    && cabal install data-ordlist missingh base-compat-0.9.0 split
 
 
 # Get python packages for CAmkES
