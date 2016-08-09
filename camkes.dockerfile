@@ -1,17 +1,19 @@
 # Docker image for running Bamboo Server
-FROM selfour
+FROM selfour_gcc5
 
 
 # Get dependencies
 RUN apt-get install -y --no-install-recommends \
         cmake \
         clang \
-	expect \
+        expect \
         libssl-dev \
         libcunit1-dev \
+        libglib2.0-dev \
         libsqlite3-dev \
         locales \
         libgmp3-dev \
+        pkg-config \
         ninja-build
 
 
@@ -31,7 +33,8 @@ RUN rm -rf /root/ghc-7.8.1
 # Get Cabal
 RUN cd /root \
     && wget http://hackage.haskell.org/package/cabal-install-1.22.7.0/cabal-install-1.22.7.0.tar.gz \
-    && tar -xvf cabal-install-1.22.7.0.tar.gz
+    && tar -xvf cabal-install-1.22.7.0.tar.gz \
+    && rm cabal-install-1.22.7.0.tar.gz
 
 RUN cd /root/cabal-install-1.22.7.0 \
     && ./bootstrap.sh 
@@ -40,17 +43,18 @@ RUN ln -s /root/.cabal/bin/cabal /usr/local/bin/cabal
 
 RUN cabal update --verbose \
     && cabal install cabal-install --global \
-    && cabal install data-ordlist missingh base-compat-0.9.0 split
+    && cabal install data-ordlist missingh-1.3.0.1 base-compat-0.9.0 split
 
 
 # Get python packages for CAmkES
 RUN apt-get install -y --no-install-recommends \
         python-jinja2 \
-        python-ply
+        python-ply \
+        python-pyelftools
 
-RUN pip install --upgrade pip \
-    && pip install --allow-all-external \
-        pyelftools
+
+# CaMKeS is hard coded to look for clang in /opt/clang/
+RUN ln -s /usr/lib/llvm-3.6 /opt/clang
 
 
 # Set up locales (needed by camkes-next)

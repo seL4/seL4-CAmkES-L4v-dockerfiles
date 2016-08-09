@@ -1,12 +1,12 @@
 # Docker image for running Bamboo Server
-FROM debian:jessie
+FROM debian:stretch
 
 # Fetch some basics
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
         ca-certificates \
     	curl \
-	gettext \
+        gettext \
         git \
     	make \
         wget

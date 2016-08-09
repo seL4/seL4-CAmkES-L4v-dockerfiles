@@ -1,10 +1,5 @@
 # Docker image for seL4 
-FROM base_tools
-
-# Use the emdebian packages
-RUN mkdir -p /etc/apt/sources.list.d \
-    && echo "deb http://emdebian.org/tools/debian/ jessie main" > /etc/apt/sources.list.d/crosstools.list \
-    && curl http://emdebian.org/tools/debian/emdebian-toolchain-archive.key | apt-key add -
+FROM base_tools_gcc5
 
 # Add ARM archs
 RUN dpkg --add-architecture armhf \
@@ -17,7 +12,6 @@ RUN apt-get update -q \
         build-essential \
         cpio \
         ccache \
-        gcc-4.9-multilib \
         libxml2-utils \
         ncurses-dev \
         python-pip \
@@ -31,12 +25,13 @@ RUN pip install --allow-all-external \
 
 # Get cross compilers
 RUN apt-get install -y --no-install-recommends \
-        crossbuild-essential-armel \
-        crossbuild-essential-armhf \
-        gcc-arm-none-eabi \
+        gcc-5-multilib \
+        gcc-arm-linux* \
+        g++-arm-linux* \
+        gcc-arm-none* \
         qemu
     
-RUN ln -s /usr/bin/arm-linux-gnueabi-cpp-4.9 /usr/bin/arm-linux-gnueabi-cpp
+#RUN ln -s /usr/bin/arm-linux-gnueabi-cpp-4.9 /usr/bin/arm-linux-gnueabi-cpp
 
 
 # Cleanup
