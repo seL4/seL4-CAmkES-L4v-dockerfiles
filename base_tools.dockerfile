@@ -5,10 +5,11 @@ FROM debian:stretch
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
         ca-certificates \
-    	curl \
+        curl \
         gettext \
         git \
-    	make \
+        make \
+        moreutils \
         wget
 
 
@@ -23,5 +24,3 @@ RUN mkdir -p /scripts \
 RUN apt-get clean autoclean \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
-
-
