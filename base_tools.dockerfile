@@ -12,8 +12,6 @@ RUN apt-get update -q \
         moreutils \
         wget
 
-# Some python libs
-RUN pip install lxml psutil
 
 # Get repo
 RUN mkdir -p /scripts \
