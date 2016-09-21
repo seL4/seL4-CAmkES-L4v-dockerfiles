@@ -6,7 +6,6 @@ ENV JAVA_URL    http://download.oracle.com/otn-pub/java/jdk/8u65-b17
 ENV JAVA_TAR    jdk-8u65-linux-x64.tar.gz
 ENV JAVA_DIR	jdk1.8.0_65
 
-
 # Install java
 RUN cd /root \
     && wget --header "Cookie: oraclelicense=accept-securebackup-cookie" "${JAVA_URL}/${JAVA_TAR}" \
