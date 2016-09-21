@@ -12,26 +12,20 @@ RUN apt-get update -q \
         build-essential \
         cpio \
         ccache \
+        gcc-5-multilib \
+        gcc-5-arm-linux* \
+        g++-5-arm-linux* \
+        gcc-arm-none* \  
         libxml2-utils \
         ncurses-dev \
         python-pip \
         python-tempita \ 
+        qemu \
         realpath 
 
 # Get six for Python
 RUN pip install --allow-all-external \
         six
-
-
-# Get cross compilers
-RUN apt-get install -y --no-install-recommends \
-        gcc-5-multilib \
-        gcc-arm-linux* \
-        g++-arm-linux* \
-        gcc-arm-none* \
-        qemu
-    
-#RUN ln -s /usr/bin/arm-linux-gnueabi-cpp-4.9 /usr/bin/arm-linux-gnueabi-cpp
 
 
 # Cleanup
