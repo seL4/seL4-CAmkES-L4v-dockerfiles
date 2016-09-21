@@ -25,11 +25,9 @@ RUN update-alternatives --install /usr/bin/java java /opt/jdk/${JAVA_DIR}/bin/ja
 RUN cd \
     && wget -nv ${BAMBOO_REMOTE_AGENT_URL} 
 
-RUN mkdir /fscratch
-
 RUN java -Dbamboo.home=/root/remote-agent -jar /root/atlassian-bamboo-agent-installer-5.12.2.jar ${BAMBOO_SERVER_URL} install
 
-#CMD ["sh", "-c", "java", "-Dbamboo.home=/fscratch/remote-agent", "-jar", "/root/atlassian-bamboo-agent-installer-5.12.2.jar", "${BAMBOO_SERVER_URL}", "console"]
+COPY res/bamboo-remote-agent.capabilities /root/remote-agent/bin/bamboo-capabilities.properties
 
 WORKDIR /root
 
