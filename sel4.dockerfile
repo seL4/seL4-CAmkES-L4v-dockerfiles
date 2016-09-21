@@ -12,6 +12,7 @@ RUN apt-get update -q \
         build-essential \
         cpio \
         ccache \
+        gcc-5 \
         gcc-5-multilib \
         gcc-5-arm-linux* \
         g++-5-arm-linux* \
@@ -27,6 +28,11 @@ RUN apt-get update -q \
 RUN pip install --allow-all-external \
         six
 
+# Set default compiler to be gcc5
+COPY res/set_default_cc_to_gcc5.sh /root/set_default_cc_to_gcc5.sh
+RUN chmod +x /root/set_default_cc_to_gcc5.sh \
+    && /root/set_default_cc_to_gcc5.sh
+RUN gcc --version
 
 # Cleanup
 RUN apt-get clean autoclean \
