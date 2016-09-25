@@ -14,7 +14,8 @@ RUN service exim4 restart
 # CakeML
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
-        col 
+        col \
+        time
 
 
 # Cleanup
