@@ -11,15 +11,7 @@ RUN apt-get update -q \
         git \
         make \
         moreutils \
-        resolvconf \
         wget
-
-# Setup nameservers properly
-RUN echo "nameserver 10.13.0.130" > /tmp/out.txt \
-    && cat /etc/resolvconf/resolv.conf.d/original >> /tmp/out.txt \
-    && mv /tmp/out /etc/resolvconf/resolv.conf.d/original \
-    && rm /tmp/out \
-    && service resolvconf restart
 
 # Get repo
 RUN mkdir -p /scripts \
