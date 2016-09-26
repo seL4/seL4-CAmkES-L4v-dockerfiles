@@ -4,6 +4,7 @@ FROM debian:stretch
 # Fetch some basics
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
+        bc \
         ca-certificates \
         curl \
         gettext \
@@ -11,7 +12,6 @@ RUN apt-get update -q \
         make \
         moreutils \
         wget
-
 
 # Get repo
 RUN mkdir -p /scripts \
