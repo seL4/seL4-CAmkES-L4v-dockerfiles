@@ -3,7 +3,10 @@ FROM bamboo-agent-verif
 # Get deps for verification related regressions
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
-        bzip2 
+        bzip2 \
+    && apt-get clean autoclean \
+    && apt-get autoremove --yes \
+    && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 
 # Get isabelle
@@ -19,10 +22,15 @@ RUN perl -MCPAN -e'install "LWP::Simple"' \
     && ./isabelle/bin/isabelle jedit -bf \
     && ./isabelle/bin/isabelle build -bv HOL-Word
 
+
 # Setup mail
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
-        exim4 
+        exim4 \
+    && apt-get clean autoclean \
+    && apt-get autoremove --yes \
+    && rm -rf /var/lib/{apt,dpkg,cache,log}/
+ 
 COPY res/update-exim4.conf.conf /etc/exim4/update-exim4.conf.conf
 RUN service exim4 restart
 
@@ -31,11 +39,8 @@ RUN service exim4 restart
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
         bsdutils \
-        time
-
-
-# Cleanup
-RUN apt-get clean autoclean \
+        time \
+    && apt-get clean autoclean \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
