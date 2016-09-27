@@ -4,6 +4,7 @@ FROM bamboo-agent-verif
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
         bzip2 \
+        librsvg2-bin \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
