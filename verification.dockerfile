@@ -29,7 +29,7 @@ RUN update-exim4.conf && service exim4 restart
 
 # Get addditional deps for verification related regressions
 RUN apt-get update -q \
-    && apt-get install -y --no-install-recommends \
+    && apt-get install -y \
         bzip2 \
         librsvg2-bin \
         python3-pip \
@@ -48,6 +48,7 @@ RUN python3 -m pip install \
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
         bsdutils \
+        bsdmainutils \ 
         time \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
