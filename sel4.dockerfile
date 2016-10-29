@@ -1,10 +1,13 @@
 # Docker image for seL4 
 FROM base_tools_gcc5
 
+# Get unstable sources
+RUN echo "deb http://deb.debian.org/debian sid main contrib non-free" >> /etc/apt/sources.list 
+COPY res/unstable /etc/apt/preferences.d/unstable
+
 # Add ARM archs
 RUN dpkg --add-architecture armhf \
-    && dpkg --add-architecture armel \
-    && apt-get update -q 
+    && dpkg --add-architecture armel 
 
 # Get the basics for seL4 build system
 RUN apt-get update -q \
@@ -16,13 +19,16 @@ RUN apt-get update -q \
         gcc-5-multilib \
         gcc-5-arm-linux* \
         g++-5-arm-linux* \
-        gcc-arm-none* \  
+        binutils-arm-none-eabi \
+        gcc-arm-none-eabi/unstable \
         libxml2-utils \
         ncurses-dev \
-        python-pip \
         python-tempita \ 
         qemu \
-        realpath 
+        realpath \
+    && apt-get clean autoclean \
+    && apt-get autoremove --yes \
+    && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 # Get six for Python
 RUN pip install --allow-all-external \
@@ -31,11 +37,7 @@ RUN pip install --allow-all-external \
 # Set default compiler to be gcc5
 COPY res/set_default_cc_to_gcc5.sh /root/set_default_cc_to_gcc5.sh
 RUN chmod +x /root/set_default_cc_to_gcc5.sh \
-    && /root/set_default_cc_to_gcc5.sh
+    && /root/set_default_cc_to_gcc5.sh \
+    && rm /root/set_default_cc_to_gcc5.sh
 RUN gcc --version
-
-# Cleanup
-RUN apt-get clean autoclean \
-    && apt-get autoremove --yes \
-    && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
