@@ -25,7 +25,7 @@ RUN apt-get update -q \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
-# Get orderedset for CaMKeS VM
+# Get orderedset for CAmkES VM
 RUN pip install --allow-all-external \
         orderedset
 
@@ -48,7 +48,7 @@ RUN cd /root \
     && ./bootstrap.sh \
     && ln -s /root/.cabal/bin/cabal /usr/local/bin/cabal
 
-# Get cabal CaMKeS dependencies
+# Get cabal CAmkES dependencies
 RUN cabal update --verbose \
     && cabal install cabal-install --global \
     && cabal install \
@@ -57,7 +57,7 @@ RUN cabal update --verbose \
         missingh-1.3.0.1 \
         split
 
-# CaMKeS is hard coded to look for clang in /opt/clang/
+# CAmkES is hard coded to look for clang in /opt/clang/
 RUN ln -s /usr/lib/llvm-3.8 /opt/clang
 
 # Set up locales (needed by camkes-next)
