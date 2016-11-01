@@ -6,6 +6,7 @@ RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
         cmake \
         clang \
+        curl \
         expect \
         libssl-dev \
         libclang-dev \
@@ -30,7 +31,7 @@ RUN pip install --allow-all-external \
         orderedset
 
 # Get stack
-curl -sSL https://get.haskellstack.org/ | sh
+RUN curl -sSL https://get.haskellstack.org/ | sh
 
 # CAmkES is hard coded to look for clang in /opt/clang/
 RUN ln -s /usr/lib/llvm-3.8 /opt/clang
