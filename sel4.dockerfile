@@ -10,8 +10,8 @@ RUN dpkg --add-architecture armhf \
     && dpkg --add-architecture armel 
 
 # Get the basics for seL4 build system
-RUN apt-get update -q --no-install-recommends \
-    && apt-get install -y \
+RUN apt-get update -q \
+    && apt-get install -y --no-install-recommends \
         build-essential \
         cpio \
         ccache \
