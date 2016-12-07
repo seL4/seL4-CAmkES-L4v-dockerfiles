@@ -1,5 +1,6 @@
-# Docker image for seL4 
-FROM base_tools_gcc5
+# Dependencies for compiling seL4
+FROM base_tools
+MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
 # Add ARM archs
 RUN dpkg --add-architecture armhf \
@@ -15,8 +16,9 @@ RUN apt-get update -q \
         gcc-5 \
         gcc-5-multilib \
         gcc-5-arm-linux* \
-        g++-5-arm-linux* \
         gcc-arm-none-eabi \
+        g++-5 \
+        g++-5-arm-linux* \
         libcc1-0 \
         libxml2-utils \
         ncurses-dev \
@@ -29,6 +31,9 @@ RUN apt-get update -q \
 
 # Get six for Python
 RUN pip install --allow-all-external \
+        setuptools \
+    && pip install --allow-all-external \
+        ply \
         six
 
 # Set default compiler to be gcc5

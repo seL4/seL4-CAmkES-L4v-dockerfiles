@@ -1,12 +1,12 @@
-# Docker image for running Bamboo Server
-FROM selfour_gcc5
+# Additional dependencies required to build CAmkES
+FROM selfour
+MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
 # Get dependencies
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
         cmake \
         clang \
-        curl \
         expect \
         libssl-dev \
         libclang-dev \
