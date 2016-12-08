@@ -15,9 +15,9 @@ RUN apt-get update -q \
 
 
 # Setup python dep manager
-RUN pip install pip --upgrade \
-    && pip install \
-        setuptools 
+RUN pip install \
+        setuptools \
+    && pip install pip --upgrade 
 
 # Install Google's repo
 RUN mkdir -p /scripts/repo \
