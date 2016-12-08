@@ -29,17 +29,17 @@ RUN apt-get update -q \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
-# Get six for Python
-RUN pip install --allow-all-external \
-        setuptools \
-    && pip install --allow-all-external \
+# Get Python deps
+RUN pip install \
         ply \
         six
 
-# Set default compiler to be gcc5
-COPY res/set_default_cc_to_gcc5.sh /root/set_default_cc_to_gcc5.sh
-RUN chmod +x /root/set_default_cc_to_gcc5.sh \
-    && /root/set_default_cc_to_gcc5.sh \
-    && rm /root/set_default_cc_to_gcc5.sh \
-    && gcc --version
-
+# Set default compiler to be gcc-5
+RUN for file in $(dpkg-query -L gcc | grep /usr/bin/); \
+    do \
+        name=$(basename ${file}); \
+        echo "$name - $file"; \
+        update-alternatives --install "${file}" "${name}" "${file}-5" 60; \
+        update-alternatives --install "${file}" "${name}" "${file}-6" 50; \
+        update-alternatives --auto "${name}"; \
+    done 
