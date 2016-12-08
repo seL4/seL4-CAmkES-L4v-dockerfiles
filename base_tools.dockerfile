@@ -14,6 +14,11 @@ RUN apt-get update -q \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 
+# Setup python dep manager
+RUN pip install pip --upgrade \
+    && pip install \
+        setuptools 
+
 # Install Google's repo
 RUN mkdir -p /scripts/repo \
     && curl https://storage.googleapis.com/git-repo-downloads/repo > /scripts/repo/repo \
