@@ -6,11 +6,13 @@ MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
         libwww-perl \
+        libxml2-dev \
         mlton \
         texlive-fonts-recommended \
         texlive-latex-extra \
         texlive-metapost \
         texlive-bibtex-extra \
+        libxslt-dev \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
