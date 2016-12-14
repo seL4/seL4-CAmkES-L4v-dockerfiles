@@ -2,6 +2,8 @@
 FROM camkes
 MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
+ARG SCM=https://github.com
+
 # Get dependencies
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
@@ -27,7 +29,7 @@ RUN pip install --allow-all-external \
 # Get l4v and setup isabelle
 RUN mkdir /root/verification \
     && cd /root/verification \
-    && /scripts/repo/repo init -u https://github.com/seL4/verification-manifest.git \
+    && /scripts/repo/repo init -u ${SCM}/seL4/verification-manifest.git \
     && /scripts/repo/repo sync \
     && cd l4v \
     && mkdir -p ~/.isabelle/etc \
