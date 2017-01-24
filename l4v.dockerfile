@@ -42,7 +42,7 @@ RUN mkdir /root/verification \
 
 # To perform the Haskell kernel regression, we need cabal
 RUN cd /root \
-    && curl -L -o ghc.tar.bz2 http://www.haskell.org/ghc/dist/7.8.1/ghc-7.8.1-x86_64-unknown-linux-deb7.tar.bz2 \
+    && curl -k -L -o ghc.tar.bz2 http://www.haskell.org/ghc/dist/7.8.1/ghc-7.8.1-x86_64-unknown-linux-deb7.tar.bz2 \
     && tar -xf ghc.tar.bz2 \
     && rm /root/ghc.tar.bz2 \
     && cd /root/ghc-7.8.1 \
