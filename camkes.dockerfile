@@ -22,13 +22,15 @@ RUN apt-get update -q \
         python-pyelftools \
         python-setuptools \
         ninja-build \
+        xxd \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
-# Get orderedset for CAmkES VM
+# Get python deps for CAmkES VM
 RUN pip install --allow-all-external \
-        orderedset
+        orderedset \
+        plyplus
 
 # Get stack
 RUN curl -sSL https://get.haskellstack.org/ | sh
