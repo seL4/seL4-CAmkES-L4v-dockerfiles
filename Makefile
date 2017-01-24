@@ -50,4 +50,14 @@ run_tests:
 rerun_tests: DOCKER_FLAGS += --no-cache
 rerun_tests: l4v
 
+.PHONY: test_sel4
+test_sel4:
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f sel4_tests.dockerfile -t $(sel4_tst_img) .
+retest_sel4: DOCKER_FLAGS += --no-cache
+retest_sel4: test_sel4
 
+.PHONY: test_camkes
+test_camkes:
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f camkes_tests.dockerfile -t $(camkes_tst_img) .
+retest_camkes: DOCKER_FLAGS += --no-cache
+retest_camkes: test_camkes
