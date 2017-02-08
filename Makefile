@@ -25,13 +25,13 @@ rebuild_sel4: DOCKER_FLAGS += --no-cache
 rebuild_sel4: sel4
 
 .PHONY: camkes rebuild_camkes
-camkes: base_tools sel4
+camkes: sel4
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f camkes.dockerfile -t $(camkes_img) .
 rebuild_camkes: DOCKER_FLAGS += --no-cache
 rebuild_camkes: camkes
 
 .PHONY: l4v rebuild_l4v
-l4v: base_tools sel4 camkes
+l4v: camkes
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f l4v.dockerfile -t $(l4v_img) .
 rebuild_l4v: DOCKER_FLAGS += --no-cache
 rebuild_l4v: l4v
@@ -93,8 +93,8 @@ build_user:
 		-f user.dockerfile \
 		-t $(user_img) .
 build_user_sel4: user_base_img = $(sel4_img)
-build_user_sel4: build_user
+build_user_sel4: sel4 build_user
 build_user_camkes: user_base_img = $(camkes_img)
-build_user_camkes: build_user
+build_user_camkes: camkes build_user
 build_user_l4v: user_base_img = $(l4v_img)
-build_user_l4v: build_user
+build_user_l4v: l4v build_user
