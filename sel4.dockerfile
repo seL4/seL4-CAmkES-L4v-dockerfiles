@@ -2,12 +2,9 @@
 FROM base_tools
 MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
-# Add ARM archs
 RUN dpkg --add-architecture armhf \
-    && dpkg --add-architecture armel 
-
-# Get the basics for seL4 build system
-RUN apt-get update -q \
+    && dpkg --add-architecture armel \
+    && apt-get update -q \
     && apt-get install -y --no-install-recommends \
         build-essential \
         cpio \
