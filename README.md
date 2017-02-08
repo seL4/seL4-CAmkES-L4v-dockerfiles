@@ -14,4 +14,20 @@ To build a specific image, specify it with make:
 
 ## To run:
 
-TODO
+To get an environment within the container, run:
+
+    make user
+
+which will give you a terminal with camkes dependencies built. You can be more specific with:
+
+    make user_sel4
+    make user_camkes  # same as make user
+    make user_l4v
+
+The container will map the current working directory from the host to /host within the container. You should be able to read and write files, as the container copies your username and UID.
+
+If you want to map a different folder, you can specify it on the command line:
+
+    make user_sel4 user_host_dir=/scratch/sel4_stuff
+
+
