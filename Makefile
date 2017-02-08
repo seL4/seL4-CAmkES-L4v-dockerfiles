@@ -91,6 +91,7 @@ build_user:
 		--build-arg=UNAME=$(shell whoami) \
 		--build-arg=UID=$(shell id -u) \
 		-f user.dockerfile \
+		--no-cache \
 		-t $(user_img) .
 build_user_sel4: user_base_img = $(sel4_img)
 build_user_sel4: sel4 build_user
