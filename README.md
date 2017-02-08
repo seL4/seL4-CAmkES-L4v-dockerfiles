@@ -28,6 +28,6 @@ The container will map the current working directory from the host to /host with
 
 If you want to map a different folder, you can specify it on the command line:
 
-    make user_sel4 user_host_dir=/scratch/sel4_stuff
+    make user_sel4 HOST_DIR=/scratch/sel4_stuff
 
 

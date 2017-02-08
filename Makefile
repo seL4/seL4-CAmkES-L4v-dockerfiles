@@ -7,7 +7,7 @@ camkes_tst_img ?= camkes_test
 l4v_tst_img ?= l4v_test
 user_img := user_img
 user_base_img := $(sel4_img)
-user_host_dir ?= $(shell pwd)
+HOST_DIR ?= $(shell pwd)
 
 DOCKER_BUILD ?= docker build
 DOCKER_FLAGS ?= --force-rm=true
@@ -80,7 +80,7 @@ user_run:
 	docker run \
 	-it \
 	--rm \
-	-v $(user_host_dir):/host \
+	-v $(HOST_DIR):/host \
 	-v $(shell whoami)-home:/home/$(shell whoami) \
 	$(user_img)
 
