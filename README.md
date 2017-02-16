@@ -1,5 +1,13 @@
 # Dockerfiles for seL4, CAmkES, and L4v dependencies
 
+## TL;DR:
+
+To get a running build environment for sel4 and camkes, run:
+
+    make user
+
+This may take a while.
+
 ## To build:
 
 To build all the images, run:
