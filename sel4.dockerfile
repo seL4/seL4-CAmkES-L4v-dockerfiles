@@ -20,6 +20,7 @@ RUN dpkg --add-architecture armhf \
         gcc-5-arm-linux-gnueabihf \
         gcc-arm-none-eabi \
         g++-5 \
+        g++-5-aarch64-linux-gnu \
         g++-5-arm-linux-gnueabi \
         g++-5-arm-linux-gnueabihf \
         libcc1-0 \
@@ -53,6 +54,7 @@ RUN for compiler in gcc-5-arm-linux-gnueabi \
                     cpp-5-aarch64-linux-gnu \
                     gcc-5-arm-linux-gnueabihf \
                     cpp-5-arm-linux-gnueabihf \
+                    g++-5-aarch64-linux-gnu \
                     g++-5-arm-linux-gnueabi \
                     g++-5-arm-linux-gnueabihf; \
     do \
