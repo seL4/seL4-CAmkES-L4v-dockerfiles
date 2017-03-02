@@ -101,19 +101,19 @@ user_run:
 	-u $(shell whoami) \
 	-v $(HOST_DIR):/host \
 	-v $(shell whoami)-home:/home/$(shell whoami) \
-	$(user_img) bash
-	docker rmi $(user_img)
+	$(user_img)-$(shell id -u) bash
+	docker rmi $(user_img)-$(shell id -u) 
 
 
 .PHONY: build_user
 build_user:
-	sed -i -e '/FROM/c\FROM $(user_base_img)' user.dockerfile
+	sed -i -e '/FROM/c\FROM trustworthysystems/$(user_base_img)' user.dockerfile
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
 		--build-arg=UNAME=$(shell whoami) \
 		--build-arg=UID=$(shell id -u) \
 		-f user.dockerfile \
 		--no-cache \
-		-t $(user_img) .
+		-t $(user_img)-$(shell id -u) .
 build_user_sel4: user_base_img = $(sel4_img)
 build_user_sel4: build_user
 build_user_camkes: user_base_img = $(camkes_img)
