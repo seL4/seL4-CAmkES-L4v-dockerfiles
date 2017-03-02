@@ -12,6 +12,10 @@ HOST_DIR ?= $(shell pwd)
 DOCKER_BUILD ?= docker build
 DOCKER_FLAGS ?= --force-rm=true
 
+
+################################################
+# Build dependencies for sel4/camkes/l4v
+#################################################
 .PHONY: base_tools rebuild_base_tools
 base_tools:
 	docker pull debian:stretch
@@ -37,17 +41,19 @@ l4v: camkes
 rebuild_l4v: DOCKER_FLAGS += --no-cache
 rebuild_l4v: l4v
 
-
 .PHONY: all
 all: base_tools sel4 camkes l4v
 
 .PHONY: rebuild_all
 rebuild_all: rebuild_base_tools rebuild_sel4 rebuild_camkes rebuild_l4v
 
+
+################################################
+# Testing if the dependencies are still working
+# for sel4/camkes/l4v
+#################################################
 .PHONY: run_tests
-run_tests: test_sel4 test_camkes
-	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f l4v_tests.dockerfile -t $(l4v_tst_img) .
-	docker run -it --rm -v /scratch/tmp/verification:/tmp/cache $(l4v_img)  # run as container for caching
+run_tests: test_sel4 test_camkes #test_lv4  # very expensive to test by default
 rerun_tests: DOCKER_FLAGS += --no-cache
 rerun_tests: run_tests
 
@@ -63,6 +69,18 @@ test_camkes: camkes
 retest_camkes: DOCKER_FLAGS += --no-cache
 retest_camkes: test_camkes
 
+.PHONY: test_l4v
+test_l4v: l4v
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f l4v_tests.dockerfile -t $(l4v_tst_img) .
+	docker run -it --rm -v verification_cache:/tmp/cache $(l4v_img)  # run as container for caching
+retest_l4v: DOCKER_FLAGS += --no-cache
+retest_l4v: test_l4v
+
+
+################################################
+# Making docker easier to use by mapping current
+# user into a container.
+#################################################
 .PHONY: user
 user: user_camkes  # use CAmkES as the default
 
@@ -80,9 +98,11 @@ user_run:
 	docker run \
 	-it \
 	--rm \
+	-u $(shell whoami) \
 	-v $(HOST_DIR):/host \
 	-v $(shell whoami)-home:/home/$(shell whoami) \
-	$(user_img)
+	$(user_img) bash
+	docker rmi $(user_img)
 
 
 .PHONY: build_user
@@ -95,8 +115,8 @@ build_user:
 		--no-cache \
 		-t $(user_img) .
 build_user_sel4: user_base_img = $(sel4_img)
-build_user_sel4: sel4 build_user
+build_user_sel4: build_user
 build_user_camkes: user_base_img = $(camkes_img)
-build_user_camkes: camkes build_user
+build_user_camkes: build_user
 build_user_l4v: user_base_img = $(l4v_img)
-build_user_l4v: l4v build_user
+build_user_l4v: build_user

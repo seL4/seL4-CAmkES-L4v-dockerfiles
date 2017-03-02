@@ -1,29 +1,33 @@
-FROM selfour
-
-MAINTAINER luke.mondy@data61.csiro.au
+FROM camkes
 
 # Get user UID and username
 ARG UID
 ARG UNAME
 
-# Create user matching host user
-RUN useradd -u ${UID} ${UNAME}
-
-# Create home folder
-RUN mkdir /home/${UNAME} \
+# Crammed a lot in here to make building the image faster
+RUN useradd -u ${UID} ${UNAME} \
+    && mkdir /home/${UNAME} \
+    && echo 'echo "___                                   "' >> /home/${UNAME}/.bashrc \
+    && echo 'echo " |   _      _ |_      _   _ |_ |_     "' >> /home/${UNAME}/.bashrc \
+    && echo 'echo " |  |  |_| _) |_ \)/ (_) |  |_ | ) \/ "' >> /home/${UNAME}/.bashrc \
+    && echo 'echo "                                   /  "' >> /home/${UNAME}/.bashrc \
+    && echo 'echo " __                                   "' >> /home/${UNAME}/.bashrc \
+    && echo 'echo "(_      _ |_  _  _   _                "' >> /home/${UNAME}/.bashrc \
+    && echo 'echo "__) \/ _) |_ (- ||| _)                "' >> /home/${UNAME}/.bashrc \
+    && echo 'echo "    /                                 "' >> /home/${UNAME}/.bashrc \
+    && echo 'echo "Hello, welcome to the sel4/CAmkES/L4v docker build environment"' >> /home/${UNAME}/.bashrc \
+    && echo 'export PATH=/scripts/repo:$PATH' >> /home/${UNAME}/.bashrc \
+    && echo 'cd /host' >> /home/${UNAME}/.bashrc \
     && chown -R ${UNAME}:${UNAME} /home/${UNAME} \
     && chmod -R ug+rw /home/${UNAME} 
 
-
-USER ${UNAME}
-
-RUN echo 'echo "Hello, welcome to the sel4/CAmkES/L4v build environment"' >> ~/.bashrc
-
-ENV PATH /scripts/repo/:$PATH
-
-WORKDIR /host
-
-# Ensure the home folder is saved in a volume
 VOLUME /home/${UNAME}
 
-CMD bash
+
+
+
+
+
+
+
+
