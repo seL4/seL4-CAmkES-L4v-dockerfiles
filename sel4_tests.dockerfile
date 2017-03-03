@@ -1,5 +1,5 @@
 # Get and compile all configs for seL4 test
-FROM selfour
+FROM sel4
 
 RUN mkdir -p /root/sel4test
 
