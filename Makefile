@@ -107,7 +107,7 @@ user_run:
 
 .PHONY: build_user
 build_user:
-	sed -i -e '/FROM/c\FROM trustworthysystems/$(user_base_img)' user.dockerfile
+	sed -i -e 's/FROM.*/FROM trustworthysystems\/$(user_base_img)/g' user.dockerfile
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
 		--build-arg=UNAME=$(shell whoami) \
 		--build-arg=UID=$(shell id -u) \
