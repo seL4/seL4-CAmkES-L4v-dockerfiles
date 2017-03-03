@@ -1,5 +1,9 @@
 # Dockerfiles for seL4, CAmkES, and L4v dependencies
 
+## Requirements:
+You must have docker installed. See here for instructions: https://docs.docker.com/engine/installation/
+
+
 ## Quick start:
 To get a running build environment for sel4 and camkes, run:
 
@@ -14,10 +18,6 @@ Or to map a particular directory to the /host dir in the container:
 This repository contains dockerfiles which map out the dependencies for seL4, CAmkES, and L4v. It also contains some infrastructure to allow people to use the containers in a useful way.
 
 These dockerfiles are used as the basis for regression testing in the Trustworthy Systems group, and hence should represent a well tested and up to date environment
-
-
-## Requirements:
-You must have docker installed. See here for instructions: https://docs.docker.com/engine/installation/
 
 
 ## To build:
