@@ -1,6 +1,6 @@
 # Dockerfiles for seL4, CAmkES, and L4v dependencies
 
-## TL;DR:
+## Quick start:
 To get a running build environment for sel4 and camkes, run:
 
     make user
@@ -8,6 +8,16 @@ To get a running build environment for sel4 and camkes, run:
 Or to map a particular directory to the /host dir in the container:
 
     make user HOST_DIR=/scratch/sel4_stuff  # as an example
+
+
+## What is this?
+This repository contains dockerfiles which map out the dependencies for seL4, CAmkES, and L4v. It also contains some infrastructure to allow people to use the containers in a useful way.
+
+These dockerfiles are used as the basis for regression testing in the Trustworthy Systems group, and hence should represent a well tested and up to date environment
+
+
+## Requirements:
+You must have docker installed. See here for instructions: https://docs.docker.com/engine/installation/
 
 
 ## To build:
@@ -27,7 +37,7 @@ To get an environment within the container, run:
 
     make user
 
-which will give you a terminal with camkes dependencies built. You can be more specific with:
+which will give you a terminal with CAmkES dependencies built. You can be more specific with:
 
     make user_sel4
     make user_camkes  # alias for 'make user'
@@ -43,6 +53,6 @@ If you want to map a different folder, you can specify it on the command line:
 ## Security
 Running Docker on your machine has its own security risks which you should be aware of. Be sure to read the Docker documentation.
 
-Of particular note in this case, your UID and GID are being baked into an image that exists for the lifetime of your session. Any other user on the host who is part of the docker group could spawn a seperate container of this image, and hence have read and write access to your files.
+Of particular note in this case, your UID and GID are being baked into an image that exists for the lifetime of your session. Any other user on the host who is part of the docker group could spawn a separate container of this image, and hence have read and write access to your files.
 
 Use at your own risk.
