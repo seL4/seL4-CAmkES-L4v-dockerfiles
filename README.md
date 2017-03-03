@@ -1,7 +1,11 @@
 # Dockerfiles for seL4, CAmkES, and L4v dependencies
 
 ## Requirements:
-You must have docker installed. See here for instructions: https://docs.docker.com/engine/installation/
+
+ * docker (See here for instructions: https://docs.docker.com/engine/installation)
+ * make
+
+It is recommended you add yourself to the docker group, so you can run docker commands without using sudo.
 
 
 ## Quick start:
