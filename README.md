@@ -24,18 +24,6 @@ This repository contains dockerfiles which map out the dependencies for seL4, CA
 These dockerfiles are used as the basis for regression testing in the Trustworthy Systems group, and hence should represent a well tested and up to date environment
 
 
-## To build:
-To build all the images, run:
-
-    make all
-
-To build a specific image, specify it with make:
-
-    make sel4
-    make camkes
-    make l4v
-
-
 ## To run:
 To get an environment within the container, run:
 
@@ -53,9 +41,27 @@ If you want to map a different folder, you can specify it on the command line:
 
     make user_sel4 HOST_DIR=/scratch/sel4_stuff
 
+The images will be pulled from DockerHub if your machine does not have them.
+
 
 ## Adding dependencies
-The images and dockerfiles for seL4/CAmkES/L4v only specify enough dependencies to pass the tests in the \*tests.dockerfile. The *extras.dockerfile* acts as a shim between the DockerHub images and the user.dockerfile. You can add dependencies in there, and they will be available in the container. extras.dockerfile has an example inside it commented out.
+The images and dockerfiles for seL4/CAmkES/L4v only specify enough dependencies to pass the tests in the \*tests.dockerfile. The `extras.dockerfile` acts as a shim between the DockerHub images and the `user.dockerfile`. 
+
+Adding dependencies into the `extras.dockerfile` will build them the next time you run `make user`, and then be cached from then on.
+
+
+## To build the local dockerfiles:
+To build the local dockerfiles into images, run:
+
+    make all
+
+To build a specific image, specify it with make:
+
+    make sel4
+    make camkes
+    make l4v
+
+Please note that building images locally does not currently work with the `make user` commands, which all use the DockerHub images.
 
 
 ## Security
@@ -80,7 +86,7 @@ Use at your own risk.
     pull_images_from_dockerhub     # Pull all the above images from DockerHub 
 
 ### Building the local Dockerfiles
-Note: The makefile is not designed to have the "user" container interact with locally build dockerfiles. You may have to do this yourself if you want to use them.
+Please note that building images locally does not currently work with the `make user` commands, which all use the DockerHub images.
 
     base_tools                  
     sel4                        
