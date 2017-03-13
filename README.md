@@ -1,5 +1,13 @@
 # Dockerfiles for seL4, CAmkES, and L4v dependencies
 
+## Requirements:
+
+ * docker (See here for instructions: https://docs.docker.com/engine/installation)
+ * make
+
+It is recommended you add yourself to the docker group, so you can run docker commands without using sudo.
+
+
 ## Quick start:
 To get a running build environment for sel4 and camkes, run:
 
@@ -14,10 +22,6 @@ Or to map a particular directory to the /host dir in the container:
 This repository contains dockerfiles which map out the dependencies for seL4, CAmkES, and L4v. It also contains some infrastructure to allow people to use the containers in a useful way.
 
 These dockerfiles are used as the basis for regression testing in the Trustworthy Systems group, and hence should represent a well tested and up to date environment
-
-
-## Requirements:
-You must have docker installed. See here for instructions: https://docs.docker.com/engine/installation/
 
 
 ## To build:
@@ -48,6 +52,10 @@ The container will map the current working directory from the host to /host with
 If you want to map a different folder, you can specify it on the command line:
 
     make user_sel4 HOST_DIR=/scratch/sel4_stuff
+
+
+## Adding dependencies
+The images and dockerfiles for seL4/CAmkES/L4v only specify enough dependencies to pass the tests in the \*tests.dockerfile. The *extras.dockerfile* acts as a shim between the DockerHub images and the user.dockerfile. You can add dependencies in there, and they will be available in the container. extras.dockerfile has an example inside it commented out.
 
 
 ## Security

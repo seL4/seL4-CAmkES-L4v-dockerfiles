@@ -5,6 +5,7 @@ l4v_img ?= l4v
 sel4_tst_img ?= sel4_test
 camkes_tst_img ?= camkes_test
 l4v_tst_img ?= l4v_test
+extras_img := extras
 user_img := user_img
 user_base_img := $(sel4_img)
 HOST_DIR ?= $(shell pwd)
@@ -81,6 +82,26 @@ retest_l4v: test_l4v
 # Making docker easier to use by mapping current
 # user into a container.
 #################################################
+.PHONY: pull_sel4_image
+pull_sel4_image:
+	docker pull trustworthysystems/sel4
+
+.PHONY: pull_camkes_image
+pull_camkes_image:
+	docker pull trustworthysystems/camkes
+
+.PHONY: pull_l4v_image
+pull_l4v_image:
+	docker pull trustworthysystems/l4v
+
+.PHONY: pull_images_from_dockerhub
+pull_images_from_dockerhub: pull_sel4_image pull_camkes_image pull_l4v_image
+
+
+################################################
+# Making docker easier to use by mapping current
+# user into a container.
+#################################################
 .PHONY: user
 user: user_camkes  # use CAmkES as the default
 
@@ -107,7 +128,8 @@ user_run:
 
 .PHONY: build_user
 build_user:
-	sed -i -e '/FROM/c\FROM trustworthysystems/$(user_base_img)' user.dockerfile
+	sed -i -e '/FROM/c\FROM trustworthysystems/$(user_base_img)' extras.dockerfile
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f extras.dockerfile -t $(extras_img) .
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
 		--build-arg=UNAME=$(shell whoami) \
 		--build-arg=UID=$(shell id -u) \
