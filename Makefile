@@ -118,6 +118,7 @@ user_l4v: build_user_lv4 user_run
 user_run: 
 	docker run \
 	-it \
+	--hostname in-container \
 	--rm \
 	-u $(shell whoami) \
 	-v $(HOST_DIR):/host \
