@@ -1,8 +1,8 @@
 base_img ?= base_tools
-sel4_img ?= selfour
+sel4_img ?= sel4
 camkes_img ?= camkes
 l4v_img ?= l4v
-sel4_tst_img ?= selfour_test
+sel4_tst_img ?= sel4_test
 camkes_tst_img ?= camkes_test
 l4v_tst_img ?= l4v_test
 user_img := user_img
