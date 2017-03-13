@@ -64,3 +64,44 @@ Running Docker on your machine has its own security risks which you should be aw
 Of particular note in this case, your UID and GID are being baked into an image that exists for the lifetime of your session. Any other user on the host who is part of the docker group could spawn a separate container of this image, and hence have read and write access to your files.
 
 Use at your own risk.
+
+## All (useful) commands
+
+### Starting a container from DockerHub
+    user             # Alias for user_camkes
+    user_sel4        # Start a container with seL4 dependencies
+    user_camkes      # Start a container with seL4 + CAmkES dependencies
+    user_l4v         # Start a container with seL4 + CAmkES + L4v dependencies
+
+### Getting the images from DockerHub
+    pull_sel4_image                # Pull the seL4 image from DockerHub 
+    pull_camkes_image              # Pull the CAmkES image from DockerHub 
+    pull_l4v_image                 # Pull the L4v image from DockerHub 
+    pull_images_from_dockerhub     # Pull all the above images from DockerHub 
+
+### Building the local Dockerfiles
+Note: The makefile is not designed to have the "user" container interact with locally build dockerfiles. You may have to do this yourself if you want to use them.
+
+    base_tools                  
+    sel4                        
+    camkes                      
+    l4v                         
+    all
+    
+    rebuild_base_tools          
+    rebuild_sel4                
+    rebuild_camkes              
+    rebuild_l4v                 
+    rebuild_all                 
+
+### Testing the local Dockerfiles
+    test_sel4
+    test_camkes                 
+    test_l4v
+    
+    retest_sel4                 
+    retest_camkes               
+    retest_l4v                  
+    
+    run_tests                   
+    rerun_tests                 
