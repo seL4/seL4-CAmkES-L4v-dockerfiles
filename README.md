@@ -44,6 +44,33 @@ If you want to map a different folder, you can specify it on the command line:
 The images will be pulled from DockerHub if your machine does not have them.
 
 
+### Example of compiling seL4 test
+Start by creating a new workspace on your machine:
+
+    mkdir ~/sel4test
+
+Start up the container:
+
+    make user HOST_DIR=~/sel4test
+    # in-container terminal
+    jblogs@in-container:/host$ 
+
+Get seL4 test:
+
+    jblogs@in-container:/host$ repo init -u https://github.com/seL4/sel4test-manifest.git
+    jblogs@in-container:/host$ repo sync
+    jblogs@in-container:/host$ ls
+    apps configs Kbuild Kconfig kernel libs Makefile projects tools
+
+Compile seL4 test for the sabrelite:
+
+    jblogs@in-container:/host$ make sabre_release_xml_defconfig
+    jblogs@in-container:/host$ make silentoldconfig
+    jblogs@in-container:/host$ make
+    # ... time passes...
+    jblogs@in-container:/host$ ls images
+    sel4test-driver-image-arm-imx6
+
 ## Adding dependencies
 The images and dockerfiles for seL4/CAmkES/L4v only specify enough dependencies to pass the tests in the \*tests.dockerfile. The `extras.dockerfile` acts as a shim between the DockerHub images and the `user.dockerfile`. 
 
