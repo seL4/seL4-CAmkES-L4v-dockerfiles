@@ -1,4 +1,4 @@
-FROM camkes
+FROM extras
 
 # Get user UID and username
 ARG UID
