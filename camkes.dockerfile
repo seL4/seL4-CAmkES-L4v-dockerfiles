@@ -7,6 +7,7 @@ RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
         cmake \
         clang \
+        device-tree-compiler \
         expect \
         libssl-dev \
         libclang-dev \
@@ -21,6 +22,7 @@ RUN apt-get update -q \
         python-ply \
         python-pyelftools \
         python-setuptools \
+        qemu-kvm \
         ninja-build \
         xxd \
     && apt-get clean autoclean \
