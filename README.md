@@ -43,6 +43,15 @@ If you want to map a different folder, you can specify it on the command line:
 
 The images will be pulled from DockerHub if your machine does not have them.
 
+Alternately, you can setup a bash alias, such as this:
+
+    echo 'alias container="make -C /<path>/<to>/seL4-CAmkES-L4v-dockerfiles user HOST_DIR=$(pwd)"' >> ~/.bashrc
+
+Where you replace the path to match where you cloned the git repo of the docker files. This then allows you to run:
+
+    container
+
+to start the container in the current directory you are in.
 
 ### Example of compiling seL4 test
 Start by creating a new workspace on your machine:
