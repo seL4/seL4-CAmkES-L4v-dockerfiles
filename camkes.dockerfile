@@ -16,6 +16,7 @@ RUN apt-get update -q \
         libsqlite3-dev \
         locales \
         libgmp3-dev \
+        ninja-build \
         pkg-config \
         python-dev \
         python-jinja2 \
@@ -23,7 +24,7 @@ RUN apt-get update -q \
         python-pyelftools \
         python-setuptools \
         qemu-kvm \
-        ninja-build \
+        spin \
         xxd \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
@@ -32,7 +33,8 @@ RUN apt-get update -q \
 # Get python deps for CAmkES VM
 RUN pip install --allow-all-external \
         orderedset \
-        plyplus
+        plyplus \
+        pycparser
 
 # Get stack
 RUN curl -sSL https://get.haskellstack.org/ | sh
