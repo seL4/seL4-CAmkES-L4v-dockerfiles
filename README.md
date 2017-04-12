@@ -11,6 +11,8 @@ It is recommended you add yourself to the docker group, so you can run docker co
 ## Quick start:
 To get a running build environment for sel4 and camkes, run:
 
+    git clone https://github.com/SEL4PROJ/seL4-CAmkES-L4v-dockerfiles.git
+    cd seL4-CAmkES-L4v-dockerfiles
     make user
 
 Or to map a particular directory to the /host dir in the container:
@@ -25,6 +27,11 @@ These dockerfiles are used as the basis for regression testing in the Trustworth
 
 
 ## To run:
+Get the repository of Dockerfiles by cloning them from GitHub:
+
+    git clone https://github.com/SEL4PROJ/seL4-CAmkES-L4v-dockerfiles.git
+    cd seL4-CAmkES-L4v-dockerfiles
+
 To get an environment within the container, run:
 
     make user
