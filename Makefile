@@ -112,7 +112,7 @@ user_sel4: build_user_sel4 user_run
 user_camkes: build_user_camkes user_run
 
 .PHONY: user_l4v
-user_l4v: build_user_lv4 user_run
+user_l4v: build_user_l4v user_run
 
 .PHONY: user_run
 user_run: 
