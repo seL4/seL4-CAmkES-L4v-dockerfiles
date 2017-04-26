@@ -104,8 +104,6 @@ To build a specific image, specify it with make:
     make camkes
     make l4v
 
-Please note that building images locally does not currently work with the `make user` commands, which all use the DockerHub images.
-
 
 ## Security
 Running Docker on your machine has its own security risks which you should be aware of. Be sure to read the Docker documentation.
