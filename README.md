@@ -127,8 +127,6 @@ Use at your own risk.
     pull_images_from_dockerhub     # Pull all the above images from DockerHub 
 
 ### Building the local Dockerfiles
-Please note that building images locally does not currently work with the `make user` commands, which all use the DockerHub images.
-
     base_tools                  
     sel4                        
     camkes                      
