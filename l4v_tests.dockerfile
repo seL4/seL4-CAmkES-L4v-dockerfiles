@@ -1,4 +1,4 @@
-FROM l4v
+FROM trustworthysystems/l4v
 
 RUN mkdir -p /root/verification
 

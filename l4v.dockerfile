@@ -1,5 +1,5 @@
 # Dependencies required to verify seL4
-FROM camkes
+FROM trustworthysystems/camkes
 MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
 ARG SCM=https://github.com

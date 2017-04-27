@@ -1,5 +1,5 @@
 # Additional dependencies required to build CAmkES
-FROM sel4
+FROM trustworthysystems/sel4
 MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
 # Get dependencies

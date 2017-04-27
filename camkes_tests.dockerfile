@@ -1,5 +1,5 @@
 # Run camkes tests
-FROM camkes
+FROM trustworthysystems/camkes
 MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
 WORKDIR /root/sel4test
