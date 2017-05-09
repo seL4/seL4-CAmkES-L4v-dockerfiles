@@ -108,7 +108,7 @@ To build a specific image, specify it with make:
 ## Security
 Running Docker on your machine has its own security risks which you should be aware of. Be sure to read the Docker documentation.
 
-Of particular note in this case, your UID and GID are being baked into an image that exists for the lifetime of your session. Any other user on the host who is part of the docker group could spawn a separate container of this image, and hence have read and write access to your files. Of course, if they are part of the docker group, they could do this anyway, but it just makes it a bit easier.
+Of particular note in this case, your UID and GID are being baked into an image. Any other user on the host who is part of the docker group could spawn a separate container of this image, and hence have read and write access to your files. Of course, if they are part of the docker group, they could do this anyway, but it just makes it a bit easier.
 
 Use at your own risk.
 

@@ -125,7 +125,6 @@ user_run:
 		-v $(HOST_DIR):/host \
 		-v $(shell whoami)-home:/home/$(shell whoami) \
 		$(user_img)-$(shell id -u) bash
-	docker rmi $(user_img)-$(shell id -u) 
 
 
 .PHONY: user_run_l4v
@@ -141,7 +140,6 @@ user_run_l4v:
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-e DISPLAY=unix$DISPLAY \
 		$(user_img)-$(shell id -u) bash
-	docker rmi $(user_img)-$(shell id -u) 
 
 
 .PHONY: build_user
@@ -152,7 +150,6 @@ build_user:
 		--build-arg=UNAME=$(shell whoami) \
 		--build-arg=UID=$(shell id -u) \
 		-f user.dockerfile \
-		--no-cache \
 		-t $(user_img)-$(shell id -u) .
 build_user_sel4: user_base_img = $(sel4_img)
 build_user_sel4: build_user
