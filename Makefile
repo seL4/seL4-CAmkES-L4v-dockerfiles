@@ -74,7 +74,7 @@ retest_camkes: test_camkes
 .PHONY: test_l4v
 test_l4v: l4v
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f l4v_tests.dockerfile -t $(l4v_tst_img) .
-	docker run -it --rm -v verification_cache:/tmp/cache $(l4v_img)  # run as container for caching
+	docker run -it --rm -v verification_cache:/tmp/cache $(l4v_tst_img)  # run as container for caching
 retest_l4v: DOCKER_FLAGS += --no-cache
 retest_l4v: test_l4v
 
