@@ -21,13 +21,11 @@ RUN useradd -u ${UID} ${UNAME} \
     && chown -R ${UNAME}:${UNAME} /home/${UNAME} \
     && chmod -R ug+rw /home/${UNAME} 
 
+# If we're running an l4v container, make sure we set it up 
+RUN if [ -d "/isabelle" ]; then \
+        ln -s /isabelle /home/${UNAME}/.isabelle; \
+        chown -R ${UNAME}:${UNAME} /isabelle; \
+    fi
+
 VOLUME /home/${UNAME}
-
-
-
-
-
-
-
-
-
+VOLUME /isabelle

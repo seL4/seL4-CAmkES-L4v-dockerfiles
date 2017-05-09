@@ -27,17 +27,21 @@ RUN pip install --allow-all-external \
 
 
 # Get l4v and setup isabelle
-RUN mkdir /root/verification \
+RUN mkdir /isabelle \
+    && ln -s /isabelle /root/.isabelle \
+    && mkdir /root/verification \
     && cd /root/verification \
     && /scripts/repo/repo init -u ${SCM}/seL4/verification-manifest.git \
     && /scripts/repo/repo sync \
     && cd l4v \
     && mkdir -p ~/.isabelle/etc \
     && cp -i misc/etc/settings ~/.isabelle/etc/settings \
+    && echo ISABELLE_COMPONENT_REPOSITORY=\"http://downloads.ssrg.nicta.com.au/isabelle/components\" >> ~/.isabelle/etc/settings \
     && ./isabelle/bin/isabelle components -a \
     && ./isabelle/bin/isabelle jedit -bf \
     && ./isabelle/bin/isabelle build -bv HOL-Word \
-    && rm -rf /root/verification
+    && rm -rf /root/verification \
+    && rm -rf /tmp/isabelle-
 
 
 # To perform the Haskell kernel regression, we need cabal

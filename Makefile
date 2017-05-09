@@ -113,18 +113,34 @@ user_sel4: build_user_sel4 user_run
 user_camkes: build_user_camkes user_run
 
 .PHONY: user_l4v
-user_l4v: build_user_l4v user_run
+user_l4v: build_user_l4v user_run_l4v
 
 .PHONY: user_run
 user_run: 
 	docker run \
-	-it \
-	--hostname in-container \
-	--rm \
-	-u $(shell whoami) \
-	-v $(HOST_DIR):/host \
-	-v $(shell whoami)-home:/home/$(shell whoami) \
-	$(user_img)-$(shell id -u) bash
+		-it \
+		--hostname in-container \
+		--rm \
+		-u $(shell whoami) \
+		-v $(HOST_DIR):/host \
+		-v $(shell whoami)-home:/home/$(shell whoami) \
+		$(user_img)-$(shell id -u) bash
+	docker rmi $(user_img)-$(shell id -u) 
+
+
+.PHONY: user_run_l4v
+user_run_l4v: 
+	docker run \
+		-it \
+		--hostname in-container \
+		--rm \
+		-u $(shell whoami) \
+		-v $(HOST_DIR):/host \
+		-v $(shell whoami)-home:/home/$(shell whoami) \
+		-v $(shell whoami)-isabelle:/isabelle \
+		-v /tmp/.X11-unix:/tmp/.X11-unix \
+		-e DISPLAY=unix$DISPLAY \
+		$(user_img)-$(shell id -u) bash
 	docker rmi $(user_img)-$(shell id -u) 
 
 
