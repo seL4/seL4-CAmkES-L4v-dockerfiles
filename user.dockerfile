@@ -18,14 +18,11 @@ RUN useradd -u ${UID} ${UNAME} \
     && echo 'echo "Hello, welcome to the sel4/CAmkES/L4v docker build environment"' >> /home/${UNAME}/.bashrc \
     && echo 'export PATH=/scripts/repo:$PATH' >> /home/${UNAME}/.bashrc \
     && echo 'cd /host' >> /home/${UNAME}/.bashrc \
+    && ln -s /isabelle /home/${UNAME}/.isabelle \
+    && mkdir -p /isabelle \
+    && chown -R ${UNAME}:${UNAME} /isabelle \
     && chown -R ${UNAME}:${UNAME} /home/${UNAME} \
     && chmod -R ug+rw /home/${UNAME} 
-
-# If we're running an l4v container, make sure we set it up 
-RUN if [ -d "/isabelle" ]; then \
-        ln -s /isabelle /home/${UNAME}/.isabelle; \
-        chown -R ${UNAME}:${UNAME} /isabelle; \
-    fi
 
 VOLUME /home/${UNAME}
 VOLUME /isabelle
