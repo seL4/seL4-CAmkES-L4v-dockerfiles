@@ -138,7 +138,7 @@ user_run_l4v:
 		-v $(shell whoami)-home:/home/$(shell whoami) \
 		-v $(shell whoami)-isabelle:/isabelle \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e DISPLAY=unix$DISPLAY \
+		-e DISPLAY=$(DISPLAY) \
 		$(user_img)-$(shell id -u) bash
 
 
