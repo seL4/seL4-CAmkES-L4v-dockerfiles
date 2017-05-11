@@ -157,3 +157,15 @@ build_user_camkes: user_base_img = $(camkes_img)
 build_user_camkes: build_user
 build_user_l4v: user_base_img = $(l4v_img)
 build_user_l4v: build_user
+
+.PHONY: clean_isabelle
+clean_isabelle:
+	docker volume rm $(shell whoami)-isabelle
+
+.PHONY: clean_home_dir
+clean_home_dir:
+	docker volume rm $(shell whoami)-home
+
+.PHONY: clean_data
+clean_data: clean_isabelle clean_home_dir
+
