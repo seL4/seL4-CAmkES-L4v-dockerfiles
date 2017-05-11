@@ -169,3 +169,13 @@ clean_home_dir:
 .PHONY: clean_data
 clean_data: clean_isabelle clean_home_dir
 
+.PHONY: clean_images
+clean_images:
+	-docker rmi $(user_img)-$(shell id -u) 
+	-docker rmi extras
+	-docker rmi $(dockerhub_prefix)$(l4v_img)
+	-docker rmi $(dockerhub_prefix)$(camkes_img)
+	-docker rmi $(dockerhub_prefix)$(sel4_img)
+
+.PHONY: clean
+clean: clean_data clean_images
