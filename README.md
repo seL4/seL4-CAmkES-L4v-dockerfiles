@@ -9,6 +9,9 @@ It is recommended you add yourself to the docker group, so you can run docker co
 
 
 ## Quick start:
+First, have a read of the blog post about this:
+https://research.csiro.au/tsblog/getting-started-sel4-camkes-l4v-dependencies
+
 To get a running build environment for sel4 and camkes, run:
 
     git clone https://github.com/SEL4PROJ/seL4-CAmkES-L4v-dockerfiles.git
