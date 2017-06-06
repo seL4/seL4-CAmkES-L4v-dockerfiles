@@ -20,12 +20,6 @@ RUN apt-get update -q \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 
-# Python
-RUN pip install --allow-all-external \
-        lxml \
-        psutil
-
-
 # Get l4v and setup isabelle
 RUN mkdir /isabelle \
     && ln -s /isabelle /root/.isabelle \
