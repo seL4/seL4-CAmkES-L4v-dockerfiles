@@ -8,16 +8,22 @@ RUN apt-get update -q \
         curl \
         git \
         make \
+        python-dev \
         python-pip \
+        python3-dev \
+        python3-pip \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 
 # Setup python dep manager
-RUN pip install \
-        setuptools \
-    && pip install pip --upgrade 
+RUN for p in "pip" "python3 -m pip"; \
+    do \ 
+        ${p} install \
+            setuptools \
+        && ${p} install pip --upgrade; \
+    done
 
 # Install Google's repo
 RUN mkdir -p /scripts/repo \

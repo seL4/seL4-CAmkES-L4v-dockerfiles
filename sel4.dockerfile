@@ -26,7 +26,6 @@ RUN dpkg --add-architecture armhf \
         libcc1-0 \
         libxml2-utils \
         ncurses-dev \
-        python-tempita \ 
         qemu \
         realpath \
     && apt-get clean autoclean \
@@ -71,7 +70,9 @@ RUN for compiler in gcc-5-arm-linux-gnueabi \
 
 
 # Get Python deps
-RUN pip install \
-        ply \
-        six
+RUN for p in "pip" "python3 -m pip"; \
+    do \
+        ${p} install \
+            sel4-deps; \
+    done
 

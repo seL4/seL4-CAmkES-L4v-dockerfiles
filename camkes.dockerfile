@@ -19,10 +19,6 @@ RUN apt-get update -q \
         ninja-build \
         pkg-config \
         python-dev \
-        python-jinja2 \
-        python-ply \
-        python-pyelftools \
-        python-setuptools \
         qemu-kvm \
         spin \
         xxd \
@@ -31,10 +27,11 @@ RUN apt-get update -q \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 # Get python deps for CAmkES VM
-RUN pip install --allow-all-external \
-        orderedset \
-        plyplus \
-        pycparser
+RUN for p in "pip" "python3 -m pip"; \
+    do \
+        ${p} install \
+            camkes-deps; \
+    done
 
 # Get stack
 RUN curl -sSL https://get.haskellstack.org/ | sh
