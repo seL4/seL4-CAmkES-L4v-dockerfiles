@@ -3,7 +3,8 @@ FROM debian:stretch
 MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
 # Fetch some basics
-RUN apt-get update -q \
+RUN sed -i 's/deb.debian.org/httpredir.debian.org/g' /etc/apt/sources.list \
+    && apt-get update -q \
     && apt-get install -y --no-install-recommends \
         curl \
         git \
