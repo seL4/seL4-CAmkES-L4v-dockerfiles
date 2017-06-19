@@ -13,6 +13,4 @@ ENV LC_ALL=en_AU.UTF-8
 RUN /scripts/repo/repo init -u ${SCM}/sel4/camkes-manifest.git \
     && /scripts/repo/repo sync
 
-RUN chmod +x tests/run-all-xml.sh
-
-RUN ./tests/run-all-xml.sh
+RUN /usr/bin/env python tests/run-all-xml.py --jobs=1 | tee results.xml
