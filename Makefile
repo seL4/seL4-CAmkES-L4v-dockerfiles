@@ -8,7 +8,7 @@ l4v_tst_img ?= l4v_test
 extras_img := extras
 user_img := user_img
 user_base_img := $(sel4_img)
-dockerhub_prefix := trustworthysystems/
+DOCKERHUB ?= trustworthysystems/
 HOST_DIR ?= $(shell pwd)
 
 DOCKER_BUILD ?= docker build
@@ -27,19 +27,20 @@ rebuild_base_tools: base_tools
 
 .PHONY: sel4 rebuild_sel4
 sel4: base_tools
-	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f sel4.dockerfile -t $(dockerhub_prefix)$(sel4_img) .
+	@echo ${DOCKERHUB}
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f sel4.dockerfile -t $(DOCKERHUB)$(sel4_img) .
 rebuild_sel4: DOCKER_FLAGS += --no-cache
 rebuild_sel4: sel4
 
 .PHONY: camkes rebuild_camkes
 camkes: sel4
-	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f camkes.dockerfile -t $(dockerhub_prefix)$(camkes_img) .
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f camkes.dockerfile -t $(DOCKERHUB)$(camkes_img) .
 rebuild_camkes: DOCKER_FLAGS += --no-cache
 rebuild_camkes: camkes
 
 .PHONY: l4v rebuild_l4v
 l4v: camkes
-	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f l4v.dockerfile -t $(dockerhub_prefix)$(l4v_img) .
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f l4v.dockerfile -t $(DOCKERHUB)$(l4v_img) .
 rebuild_l4v: DOCKER_FLAGS += --no-cache
 rebuild_l4v: l4v
 
@@ -173,9 +174,9 @@ clean_data: clean_isabelle clean_home_dir
 clean_images:
 	-docker rmi $(user_img)-$(shell id -u) 
 	-docker rmi extras
-	-docker rmi $(dockerhub_prefix)$(l4v_img)
-	-docker rmi $(dockerhub_prefix)$(camkes_img)
-	-docker rmi $(dockerhub_prefix)$(sel4_img)
+	-docker rmi $(DOCKERHUB)$(l4v_img)
+	-docker rmi $(DOCKERHUB)$(camkes_img)
+	-docker rmi $(DOCKERHUB)$(sel4_img)
 
 .PHONY: clean
 clean: clean_data clean_images
