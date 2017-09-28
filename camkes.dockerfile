@@ -9,6 +9,7 @@ RUN apt-get update -q \
         clang \
         device-tree-compiler \
         expect \
+        gdb \
         libssl-dev \
         libclang-dev \
         libcunit1-dev \
