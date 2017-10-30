@@ -2,8 +2,18 @@
 FROM base_tools
 MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
+
 # gcc-5-arm tools have been moved to unstable :(
-RUN head -n 1 /etc/apt/sources.list | sed -e 's/stretch/sid/g' > /etc/apt/sources.list.d/sid.list 
+# Add the apt sources for unstable, and put in a preference for using unstable
+# only for the packages we need 
+RUN head -n 1 /etc/apt/sources.list | sed -e 's/stretch/sid/g' > /etc/apt/sources.list.d/sid.list \
+    && echo 'Package: *' >> /etc/apt/preferences \
+    && echo 'Pin: release a=stable' >> /etc/apt/preferences \
+    && echo 'Pin-Priority: 800' >> /etc/apt/preferences \
+    && echo '' >> /etc/apt/preferences \
+    && echo 'Package: binutils* gcc-5-* g++-5-*' >> /etc/apt/preferences \
+    && echo 'Pin: release a=unstable' >> /etc/apt/preferences \
+    && echo 'Pin-Priority: 900' >> /etc/apt/preferences 
 
 RUN dpkg --add-architecture armhf \
     && dpkg --add-architecture armel \
@@ -32,7 +42,8 @@ RUN dpkg --add-architecture armhf \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
-# Set default compiler to be gcc-5
+# Set default compiler to be gcc-5 (not 6), and 
+# set gcc-5-arm compilers to be default (even though there are no others)
 RUN for compiler in gcc \
                     g++; \
     do \
@@ -44,10 +55,9 @@ RUN for compiler in gcc \
             update-alternatives --install "${file}" "${name}" "${file}-6" 50; \
             update-alternatives --auto "${name}"; \
         done \
-    done
-
-# Set gcc-5-arm compilers to be default (even though there are no others)
-RUN for compiler in gcc-5-arm-linux-gnueabi \
+    done \
+    && \
+    for compiler in gcc-5-arm-linux-gnueabi \
                     cpp-5-arm-linux-gnueabi \
                     gcc-5-aarch64-linux-gnu \
                     cpp-5-aarch64-linux-gnu \
