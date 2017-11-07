@@ -5,7 +5,6 @@ MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 # Get dependencies
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
-        cmake \
         clang \
         device-tree-compiler \
         expect \

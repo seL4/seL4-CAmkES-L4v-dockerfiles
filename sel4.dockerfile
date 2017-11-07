@@ -11,7 +11,7 @@ RUN head -n 1 /etc/apt/sources.list | sed -e 's/stretch/sid/g' > /etc/apt/source
     && echo 'Pin: release a=stable' >> /etc/apt/preferences \
     && echo 'Pin-Priority: 800' >> /etc/apt/preferences \
     && echo '' >> /etc/apt/preferences \
-    && echo 'Package: binutils* gcc-5-* g++-5-*' >> /etc/apt/preferences \
+    && echo 'Package: binutils* cmake* gcc-5-* g++-5-*' >> /etc/apt/preferences \
     && echo 'Pin: release a=unstable' >> /etc/apt/preferences \
     && echo 'Pin-Priority: 900' >> /etc/apt/preferences 
 
@@ -20,6 +20,7 @@ RUN dpkg --add-architecture armhf \
     && apt-get update -q \
     && apt-get install -y --no-install-recommends \
         build-essential \
+        cmake \
         cpio \
         ccache \
         gcc-6-base \
