@@ -23,13 +23,12 @@ RUN apt-get update -q \
 
 # Get l4v and setup isabelle
 RUN mkdir /isabelle \
-    && ln -s /isabelle /root/.isabelle \
+    && mkdir -p ~/.isabelle/etc \
     && mkdir /root/verification \
     && cd /root/verification \
     && /scripts/repo/repo init -u ${SCM}/seL4/verification-manifest.git \
     && /scripts/repo/repo sync \
     && cd l4v \
-    && mkdir -p ~/.isabelle/etc \
     && cp -i misc/etc/settings ~/.isabelle/etc/settings \
     && echo ISABELLE_COMPONENT_REPOSITORY=\"http://downloads.ssrg.nicta.com.au/isabelle/components\" >> ~/.isabelle/etc/settings \
     && ./isabelle/bin/isabelle components -a \
