@@ -26,7 +26,6 @@ RUN dpkg --add-architecture armhf \
     && apt-get install -y --no-install-recommends \
         build-essential \
         ccache \
-        cmake \
         cpio \
         g++-5 \
         gcc-5-multilib \
@@ -42,6 +41,7 @@ RUN dpkg --add-architecture armhf \
         binutils-arm-linux-gnueabi/testing \
         binutils-arm-linux-gnueabihf/testing \
         binutils/testing \
+        cmake/testing \
         libc6-dev-arm64-cross/testing \
         libc6-dev-armel-cross/testing \
         libc6-dev-armhf-cross/testing \
