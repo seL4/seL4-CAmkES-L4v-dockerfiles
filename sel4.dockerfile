@@ -28,44 +28,24 @@ RUN dpkg --add-architecture armhf \
         build-essential \
         ccache \
         cpio \
+        g++-6 \
+        gcc-6-multilib \
         gcc-6-base \
         gcc-arm-none-eabi \
+        g++-6-aarch64-linux-gnu \
+        g++-6-arm-linux-gnueabi \
+        g++-6-arm-linux-gnueabihf \
+        gcc-6-aarch64-linux-gnu \
+        gcc-6-arm-linux-gnueabi \
+        gcc-6-arm-linux-gnueabihf \
+        gcc-6 \
         libcc1-0 \
         libxml2-utils \
         ncurses-dev \
         qemu \
         realpath \
         # TESTING packages!
-        binutils-aarch64-linux-gnu/testing \
-        binutils-arm-linux-gnueabi/testing \
-        binutils-arm-linux-gnueabihf/testing \
-        binutils/testing \
         cmake/testing \
-        libc6/testing \
-        libc6-arm64-cross/sid \
-        libc6-dev/sid \
-        libc6-dev-arm64-cross/sid \
-        libc6-dev-armel-cross/sid \
-        libc6-dev-armhf-cross/sid \
-        # UNSTABLE packages!
-        gcc-5-multilib/sid \
-        g++-5-aarch64-linux-gnu/sid \
-        g++-5-arm-linux-gnueabi/sid \
-        g++-5-arm-linux-gnueabihf/sid \
-        gcc-5-aarch64-linux-gnu/sid \
-        gcc-5-arm-linux-gnueabi/sid \
-        gcc-5-arm-linux-gnueabihf/sid \
-        gcc-5/sid \
-        g++-5/sid \
-        libmpc3/sid \
-        libmpfr6/sid \
-        libasan2-armel-cross/sid \
-        libasan2-armhf-cross/sid \
-        libgcc-5-dev-armel-cross/sid \
-        libgcc-5-dev-armhf-cross/sid \
-        libstdc++-5-dev-arm64-cross/sid \
-        libstdc++-5-dev-armel-cross/sid \
-        libstdc++-5-dev-armhf-cross/sid \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
@@ -79,27 +59,27 @@ RUN for compiler in gcc \
         do \
             name=$(basename ${file}); \
             echo "$name - $file"; \
-            update-alternatives --install "${file}" "${name}" "${file}-5" 60; \
+            #update-alternatives --install "${file}" "${name}" "${file}-5" 60; \
             update-alternatives --install "${file}" "${name}" "${file}-6" 50; \
             update-alternatives --auto "${name}"; \
         done \
     done \
     && \
-    for compiler in gcc-5-arm-linux-gnueabi \
-                    cpp-5-arm-linux-gnueabi \
-                    gcc-5-aarch64-linux-gnu \
-                    cpp-5-aarch64-linux-gnu \
-                    gcc-5-arm-linux-gnueabihf \
-                    cpp-5-arm-linux-gnueabihf \
-                    g++-5-aarch64-linux-gnu \
-                    g++-5-arm-linux-gnueabi \
-                    g++-5-arm-linux-gnueabihf; \
+    for compiler in gcc-6-arm-linux-gnueabi \
+                    cpp-6-arm-linux-gnueabi \
+                    gcc-6-aarch64-linux-gnu \
+                    cpp-6-aarch64-linux-gnu \
+                    gcc-6-arm-linux-gnueabihf \
+                    cpp-6-arm-linux-gnueabihf \
+                    g++-6-aarch64-linux-gnu \
+                    g++-6-arm-linux-gnueabi \
+                    g++-6-arm-linux-gnueabihf; \
     do \
         echo ${compiler}; \
         for file in $(dpkg-query -L ${compiler} | grep /usr/bin/); \
         do \
-            name=$(basename ${file} | sed 's/-5$//g'); \
-            link=$(echo ${file} | sed 's/-5$//g'); \
+            name=$(basename ${file} | sed 's/-6$//g'); \
+            link=$(echo ${file} | sed 's/-6$//g'); \
             echo "$name - $file"; \
             update-alternatives --install "${link}" "${name}" "${file}" 60; \
             update-alternatives --auto "${name}"; \
