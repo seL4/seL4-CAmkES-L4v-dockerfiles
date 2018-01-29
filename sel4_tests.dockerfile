@@ -10,12 +10,17 @@ ARG SCM=https://github.com
 RUN /scripts/repo/repo init -u ${SCM}/sel4/sel4test-manifest.git \
     && /scripts/repo/repo sync
 
-RUN for i in $(find configs/ -type f \( -iname "*defconfig" ! -name "bamboo_*" \) | sort ); \
+RUN err=false; for i in $(find configs/ -type f \( -iname "*defconfig" ! -name "bamboo_*" \) | sort ); \
     do \
         echo $(basename $i) \
-        && make mrproper > /dev/null 2>&1 \
-        && make $(basename $i) > /dev/null 2>&1  \
-        && make silentoldconfig > /dev/null 2>&1  \
-        && make -j 2 > /dev/null 2>&1;  \
-    done
+        && make mrproper          2>&1 1>/dev/null \
+        && make $(basename $i)    2>&1 1>/dev/null \
+        && make silentoldconfig   2>&1 1>/dev/null \
+        && make -j 2              2>&1 1>/dev/null \
+        || err=true; \
+    done; \
+    if [ "$err" = true ]; then \
+        echo "ERROR!"; \
+        exit 1; \
+    fi
 
