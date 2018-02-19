@@ -1,5 +1,6 @@
 # Dependencies for compiling seL4
-FROM base_tools
+ARG BASE_TOOLS=base_tools
+FROM $BASE_TOOLS
 MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
 

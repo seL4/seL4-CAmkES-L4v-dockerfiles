@@ -1,4 +1,5 @@
-FROM extras
+ARG EXTRAS_IMG=extras
+FROM $EXTRAS_IMG
 
 # Get user UID and username
 ARG UID

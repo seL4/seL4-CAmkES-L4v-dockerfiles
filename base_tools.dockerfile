@@ -1,5 +1,6 @@
 # Basic dependencies required for seL4
-FROM debian:stretch
+ARG BASE_IMG=debian:stretch
+FROM $BASE_IMG
 MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
 # Fetch some basics

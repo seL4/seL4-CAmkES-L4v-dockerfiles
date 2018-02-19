@@ -1,5 +1,6 @@
 # Run camkes tests
-FROM trustworthysystems/camkes
+ARG CAMKES_IMG=trustworthysystems/camkes
+FROM $CAMKES_IMG
 MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
 WORKDIR /root/sel4test

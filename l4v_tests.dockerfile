@@ -1,4 +1,5 @@
-FROM trustworthysystems/l4v
+ARG L4V_IMG=trustworthysystems/l4v
+FROM $L4V_IMG
 
 RUN mkdir -p /root/verification
 

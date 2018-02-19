@@ -1,14 +1,14 @@
-base_img ?= base_tools
-sel4_img ?= sel4
-camkes_img ?= camkes
-l4v_img ?= l4v
-sel4_tst_img ?= sel4_test
-camkes_tst_img ?= camkes_test
-l4v_tst_img ?= l4v_test
-extras_img := extras
-user_img := user_img
-user_base_img := $(sel4_img)
 DOCKERHUB ?= trustworthysystems/
+BASE_IMG ?= base_tools
+SEL4_IMG ?= $(DOCKERHUB)sel4
+CAMKES_IMG ?= $(DOCKERHUB)camkes
+L4V_IMG ?= $(DOCKERHUB)l4v
+SEL4_TST_IMG ?= sel4_test
+CAMKES_TST_IMG ?= camkes_test
+L4V_TST_IMG ?= l4v_test
+EXTRAS_IMG := extras
+USER_IMG := user_img
+USER_BASE_IMG := $(SEL4_IMG)
 HOST_DIR ?= $(shell pwd)
 
 DOCKER_BUILD ?= docker build
@@ -21,26 +21,40 @@ DOCKER_FLAGS ?= --force-rm=true
 .PHONY: base_tools rebuild_base_tools
 base_tools:
 	docker pull debian:stretch
-	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f base_tools.dockerfile -t $(base_img) .
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		-f base_tools.dockerfile \
+		-t $(BASE_IMG) \
+		.
 rebuild_base_tools: DOCKER_FLAGS += --no-cache
 rebuild_base_tools: base_tools
 
 .PHONY: sel4 rebuild_sel4
 sel4: base_tools
-	@echo ${DOCKERHUB}
-	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f sel4.dockerfile -t $(DOCKERHUB)$(sel4_img) .
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		--build-arg BASE_IMG=$(BASE_IMG) \
+		-f sel4.dockerfile \
+		-t $(DOCKERHUB)$(SEL4_IMG) \
+		.
 rebuild_sel4: DOCKER_FLAGS += --no-cache
 rebuild_sel4: sel4
 
 .PHONY: camkes rebuild_camkes
 camkes: sel4
-	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f camkes.dockerfile -t $(DOCKERHUB)$(camkes_img) .
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		--build-arg SEL4_IMG=$(SEL4_IMG) \
+		-f camkes.dockerfile \
+		-t $(DOCKERHUB)$(CAMKES_IMG) \
+		.
 rebuild_camkes: DOCKER_FLAGS += --no-cache
 rebuild_camkes: camkes
 
 .PHONY: l4v rebuild_l4v
 l4v: camkes
-	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f l4v.dockerfile -t $(DOCKERHUB)$(l4v_img) .
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		--build-arg CAMKES_IMG=$(CAMKES_IMG) \
+		-f l4v.dockerfile \
+		-t $(DOCKERHUB)$(L4V_IMG) \
+		.
 rebuild_l4v: DOCKER_FLAGS += --no-cache
 rebuild_l4v: l4v
 
@@ -62,20 +76,32 @@ rerun_tests: run_tests
 
 .PHONY: test_sel4
 test_sel4: 
-	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f sel4_tests.dockerfile -t $(sel4_tst_img) .
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		--build-arg SEL4_IMG=$(SEL4_IMG) \
+		-f sel4_tests.dockerfile \
+		-t $(SEL4_TST_IMG) \
+		.
 retest_sel4: DOCKER_FLAGS += --no-cache
 retest_sel4: test_sel4
 
 .PHONY: test_camkes
 test_camkes: 
-	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f camkes_tests.dockerfile -t $(camkes_tst_img) .
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		--build-arg CAMKES_IMG=$(CAMKES_IMG) \
+		-f camkes_tests.dockerfile \
+		-t $(CAMKES_TST_IMG) \
+		.
 retest_camkes: DOCKER_FLAGS += --no-cache
 retest_camkes: test_camkes
 
 .PHONY: test_l4v
 test_l4v:
-	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f l4v_tests.dockerfile -t $(l4v_tst_img) .
-	docker run -it --rm -v verification_cache:/tmp/cache $(l4v_tst_img)  # run as container for caching
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		--build-arg L4V_IMG=$(L4V_IMG) \
+		-f l4v_tests.dockerfile \
+		-t $(L4V_TST_IMG) \
+		.
+	docker run -it --rm -v verification_cache:/tmp/cache $(L4V_TST_IMG)  # run as container for caching
 retest_l4v: DOCKER_FLAGS += --no-cache
 retest_l4v: test_l4v
 
@@ -125,7 +151,7 @@ user_run:
 		-u $(shell whoami) \
 		-v $(HOST_DIR):/host \
 		-v $(shell whoami)-home:/home/$(shell whoami) \
-		$(user_img)-$(shell id -u) bash
+		$(USER_IMG)-$(shell id -u) bash
 
 
 .PHONY: user_run_l4v
@@ -140,23 +166,27 @@ user_run_l4v:
 		-v $(shell whoami)-isabelle:/isabelle \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-e DISPLAY=$(DISPLAY) \
-		$(user_img)-$(shell id -u) bash
+		$(USER_IMG)-$(shell id -u) bash
 
 
 .PHONY: build_user
 build_user:
-	sed -i -e '/FROM/c\FROM trustworthysystems/$(user_base_img)' extras.dockerfile
-	$(DOCKER_BUILD) $(DOCKER_FLAGS) -f extras.dockerfile -t $(extras_img) .
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		--build-arg=USER_BASE_IMG=$(USER_BASE_IMG) \
+		-f extras.dockerfile \
+		-t $(EXTRAS_IMG) \
+		.
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		--build-arg=EXTRAS_IMG=$(EXTRAS_IMG) \
 		--build-arg=UNAME=$(shell whoami) \
 		--build-arg=UID=$(shell id -u) \
 		-f user.dockerfile \
-		-t $(user_img)-$(shell id -u) .
-build_user_sel4: user_base_img = $(sel4_img)
+		-t $(USER_IMG)-$(shell id -u) .
+build_user_sel4: USER_BASE_IMG = $(SEL4_IMG)
 build_user_sel4: build_user
-build_user_camkes: user_base_img = $(camkes_img)
+build_user_camkes: USER_BASE_IMG = $(CAMKES_IMG)
 build_user_camkes: build_user
-build_user_l4v: user_base_img = $(l4v_img)
+build_user_l4v: USER_BASE_IMG = $(L4V_IMG)
 build_user_l4v: build_user
 
 .PHONY: clean_isabelle
@@ -172,11 +202,11 @@ clean_data: clean_isabelle clean_home_dir
 
 .PHONY: clean_images
 clean_images:
-	-docker rmi $(user_img)-$(shell id -u) 
+	-docker rmi $(USER_IMG)-$(shell id -u) 
 	-docker rmi extras
-	-docker rmi $(DOCKERHUB)$(l4v_img)
-	-docker rmi $(DOCKERHUB)$(camkes_img)
-	-docker rmi $(DOCKERHUB)$(sel4_img)
+	-docker rmi $(DOCKERHUB)$(L4V_IMG)
+	-docker rmi $(DOCKERHUB)$(CAMKES_IMG)
+	-docker rmi $(DOCKERHUB)$(SEL4_IMG)
 
 .PHONY: clean
 clean: clean_data clean_images

@@ -1,5 +1,6 @@
 # Get and compile all configs for seL4 test
-FROM trustworthysystems/sel4
+ARG SEL4_IMG=trustworthysystems/sel4
+FROM $SEL4_IMG
 
 RUN mkdir -p /root/sel4test
 
