@@ -28,7 +28,6 @@ RUN dpkg --add-architecture armhf \
         build-essential \
         ccache \
         cpio \
-        g++-5 \
         gcc-5-multilib \
         gcc-6-base \
         gcc-arm-none-eabi \
@@ -54,6 +53,9 @@ RUN dpkg --add-architecture armhf \
         gcc-5-arm-linux-gnueabi/sid \
         gcc-5-arm-linux-gnueabihf/sid \
         gcc-5/sid \
+        g++-5/sid \
+        libmpc3/sid \
+        libmpfr6/sid \
         libasan2-armel-cross/sid \
         libasan2-armhf-cross/sid \
         libgcc-5-dev-armel-cross/sid \
