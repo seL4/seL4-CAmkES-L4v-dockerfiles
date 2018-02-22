@@ -77,7 +77,7 @@ rerun_tests: run_tests
 .PHONY: test_sel4
 test_sel4: 
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
-		--build-arg SEL4_IMG=$(SEL4_IMG) \
+		--build-arg SEL4_IMG=$(DOCKERHUB)$(SEL4_IMG) \
 		-f sel4_tests.dockerfile \
 		-t $(SEL4_TST_IMG) \
 		.
@@ -87,7 +87,7 @@ retest_sel4: test_sel4
 .PHONY: test_camkes
 test_camkes: 
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
-		--build-arg CAMKES_IMG=$(CAMKES_IMG) \
+		--build-arg CAMKES_IMG=$(DOCKERHUB)$(CAMKES_IMG) \
 		-f camkes_tests.dockerfile \
 		-t $(CAMKES_TST_IMG) \
 		.
@@ -97,11 +97,11 @@ retest_camkes: test_camkes
 .PHONY: test_l4v
 test_l4v:
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
-		--build-arg L4V_IMG=$(L4V_IMG) \
+		--build-arg L4V_IMG=$(DOCKERHUB)$(L4V_IMG) \
 		-f l4v_tests.dockerfile \
 		-t $(L4V_TST_IMG) \
 		.
-	docker run -it --rm -v verification_cache:/tmp/cache $(L4V_TST_IMG)  # run as container for caching
+	docker run -it --rm -v verification_cache:/tmp/cache $(DOCKERHUB)$(L4V_TST_IMG)  # run as container for caching
 retest_l4v: DOCKER_FLAGS += --no-cache
 retest_l4v: test_l4v
 
@@ -112,15 +112,15 @@ retest_l4v: test_l4v
 #################################################
 .PHONY: pull_sel4_image
 pull_sel4_image:
-	docker pull trustworthysystems/sel4
+	docker pull $(DOCKERHUB)$(SEL4_IMG)
 
 .PHONY: pull_camkes_image
 pull_camkes_image:
-	docker pull trustworthysystems/camkes
+	docker pull $(DOCKERHUB)$(CAMKES_IMG)
 
 .PHONY: pull_l4v_image
 pull_l4v_image:
-	docker pull trustworthysystems/l4v
+	docker pull $(DOCKERHUB)$(L4V_IMG)
 
 .PHONY: pull_images_from_dockerhub
 pull_images_from_dockerhub: pull_sel4_image pull_camkes_image pull_l4v_image
@@ -172,7 +172,7 @@ user_run_l4v:
 .PHONY: build_user
 build_user:
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
-		--build-arg=USER_BASE_IMG=$(USER_BASE_IMG) \
+		--build-arg=USER_BASE_IMG=$(DOCKERHUB)$(USER_BASE_IMG) \
 		-f extras.dockerfile \
 		-t $(EXTRAS_IMG) \
 		.
