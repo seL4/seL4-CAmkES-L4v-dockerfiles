@@ -1,8 +1,8 @@
 DOCKERHUB ?= trustworthysystems/
 BASE_IMG ?= base_tools
-SEL4_IMG ?= $(DOCKERHUB)sel4
-CAMKES_IMG ?= $(DOCKERHUB)camkes
-L4V_IMG ?= $(DOCKERHUB)l4v
+SEL4_IMG ?= sel4
+CAMKES_IMG ?= camkes
+L4V_IMG ?= l4v
 SEL4_TST_IMG ?= sel4_test
 CAMKES_TST_IMG ?= camkes_test
 L4V_TST_IMG ?= l4v_test
@@ -41,7 +41,7 @@ rebuild_sel4: sel4
 .PHONY: camkes rebuild_camkes
 camkes: sel4
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
-		--build-arg SEL4_IMG=$(SEL4_IMG) \
+		--build-arg SEL4_IMG=$(DOCKERHUB)$(SEL4_IMG) \
 		-f camkes.dockerfile \
 		-t $(DOCKERHUB)$(CAMKES_IMG) \
 		.
@@ -51,7 +51,7 @@ rebuild_camkes: camkes
 .PHONY: l4v rebuild_l4v
 l4v: camkes
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
-		--build-arg CAMKES_IMG=$(CAMKES_IMG) \
+		--build-arg CAMKES_IMG=$(DOCKERHUB)$(CAMKES_IMG) \
 		-f l4v.dockerfile \
 		-t $(DOCKERHUB)$(L4V_IMG) \
 		.
