@@ -28,7 +28,6 @@ RUN dpkg --add-architecture armhf \
         build-essential \
         ccache \
         cpio \
-        gcc-5-multilib \
         gcc-6-base \
         gcc-arm-none-eabi \
         libcc1-0 \
@@ -42,10 +41,14 @@ RUN dpkg --add-architecture armhf \
         binutils-arm-linux-gnueabihf/testing \
         binutils/testing \
         cmake/testing \
-        libc6-dev-arm64-cross/testing \
-        libc6-dev-armel-cross/testing \
-        libc6-dev-armhf-cross/testing \
+        libc6/testing \
+        libc6-arm64-cross/sid \
+        libc6-dev/sid \
+        libc6-dev-arm64-cross/sid \
+        libc6-dev-armel-cross/sid \
+        libc6-dev-armhf-cross/sid \
         # UNSTABLE packages!
+        gcc-5-multilib/sid \
         g++-5-aarch64-linux-gnu/sid \
         g++-5-arm-linux-gnueabi/sid \
         g++-5-arm-linux-gnueabihf/sid \
