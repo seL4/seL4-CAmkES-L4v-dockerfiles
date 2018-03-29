@@ -1,6 +1,7 @@
 DOCKERHUB ?= trustworthysystems/
 BASE_IMG ?= base_tools
 SEL4_IMG ?= sel4
+RISCV_IMG ?= sel4-riscv
 CAMKES_IMG ?= camkes
 L4V_IMG ?= l4v
 SEL4_TST_IMG ?= sel4_test
@@ -37,6 +38,15 @@ sel4: base_tools
 		.
 rebuild_sel4: DOCKER_FLAGS += --no-cache
 rebuild_sel4: sel4
+
+.PHONY: sel4-riscv rebuild_sel4-riscv
+sel4-riscv: 
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		-f sel4-riscv.dockerfile \
+		-t $(DOCKERHUB)$(RISCV_IMG) \
+		.
+rebuild_sel4-riscv: DOCKER_FLAGS += --no-cache
+rebuild_sel4-riscv: sel4-riscv
 
 .PHONY: camkes rebuild_camkes
 camkes: sel4
