@@ -4,22 +4,14 @@ FROM $BASE_TOOLS
 MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
 
-# gcc-5-arm tools have been moved to unstable :(
-# Add the apt sources for unstable, and put in a preference for using unstable
-# only for the packages we need 
-RUN head -n 1 /etc/apt/sources.list | sed -e 's/stretch/sid/g' > /etc/apt/sources.list.d/sid.list \
-    && head -n 1 /etc/apt/sources.list | sed -e 's/stretch/testing/g' > /etc/apt/sources.list.d/testing.list \
+RUN head -n 1 /etc/apt/sources.list | sed -e 's/stretch/testing/g' > /etc/apt/sources.list.d/testing.list \
     && echo 'Package: *' >> /etc/apt/preferences \
     && echo 'Pin: release a=stable' >> /etc/apt/preferences \
     && echo 'Pin-Priority: 900' >> /etc/apt/preferences \
     && echo '' >> /etc/apt/preferences \
     && echo 'Package: *' >> /etc/apt/preferences \
     && echo 'Pin: release a=testing' >> /etc/apt/preferences \
-    && echo 'Pin-Priority: 800' >> /etc/apt/preferences \
-    && echo '' >> /etc/apt/preferences \
-    && echo 'Package: *' >> /etc/apt/preferences \
-    && echo 'Pin: release a=unstable' >> /etc/apt/preferences \
-    && echo 'Pin-Priority: 700' >> /etc/apt/preferences 
+    && echo 'Pin-Priority: 800' >> /etc/apt/preferences 
 
 RUN dpkg --add-architecture armhf \
     && dpkg --add-architecture armel \
@@ -42,6 +34,7 @@ RUN dpkg --add-architecture armhf \
         libcc1-0 \
         libxml2-utils \
         ncurses-dev \
+        ninja-build \
         qemu \
         realpath \
         # TESTING packages!
@@ -88,7 +81,7 @@ RUN for compiler in gcc \
 
 
 # Get Python deps
-RUN for p in "pip" "python3 -m pip"; \
+RUN for p in "pip2" "pip3"; \
     do \
         ${p} install \
             sel4-deps; \

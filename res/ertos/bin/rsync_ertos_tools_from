@@ -1,0 +1,58 @@
+#!/bin/bash
+
+DEST_DIR=/opt/ertos/
+
+if [ -z "$1" ] ; then
+cat <<EOT
+Usage: $0 <machine name to copy from> [destination directory]
+
+ <machine name to copy from>
+    eg. to mirror ERTOS tools from saison, use:
+        $0 saison
+
+    The argument is used as a parameter to rsync, so you can also
+    specify a username if need be, e.g.
+    jcitizen@login.ertos.nicta.com.au
+
+ [destination directory]
+    The default directory is $DEST_DIR.
+    You may wish to specify your own.
+
+EOT
+    exit 1
+fi
+
+DEST_DIR=${2:-$DEST_DIR}
+
+# Create the destination directory if not already existing.
+mkdir -p /opt/ertos || exit 1
+
+# Now rsync from the given machine.
+rsync -avze ssh $1:/opt/ertos/ $DEST_DIR
+
+files="`rsync --dry-run --delete-after -avze ssh $1:/opt/ertos/ $DEST_DIR | grep '^deleting'`"
+
+while [ -n "$files" ] ; do
+    num_deleted_files=`echo "$files" | wc -l`
+    echo "This will also delete $num_deleted_files file(s)."
+    echo -n "Are you sure (yes/no/show)? "
+    read || exit 1
+    case $REPLY in
+        yes)
+            rsync --delete-after -avze ssh $1:/opt/ertos/ $DEST_DIR
+            break
+            ;;
+        show)
+            echo "$files"
+            ;;
+        no)
+            break
+            ;;
+        *)
+            echo "Invalid response."
+            # Try again.
+            ;;
+    esac
+done
+
+echo "Done."

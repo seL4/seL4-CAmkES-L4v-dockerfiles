@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# Pass the BIOS stuffs to qemu.
+# TODO: Detect architecture and call the appropriate qemu, instead of assuming 64-bit Linux.
+
+/opt/ertos/simulators-x86_64/qemu -L /opt/ertos/simulators-x86_64/pc-bios "$@"

@@ -17,6 +17,11 @@ RUN apt-get update -q \
         texlive-latex-extra \
         texlive-metapost \
         texlive-bibtex-extra \
+        # dependencies for testing
+        bc \
+        less \
+        python-psutil \
+        python-lxml \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
@@ -24,14 +29,16 @@ RUN apt-get update -q \
 
 # Get l4v and setup isabelle
 RUN mkdir /isabelle \
-    && mkdir -p ~/.isabelle/etc \
-    && mkdir /root/verification \
+    && mkdir -p ~/.isabelle/etc
+
+COPY res/isabelle_settings /root/.isabelle/etc/settings
+
+RUN mkdir /root/verification \
     && cd /root/verification \
     && /scripts/repo/repo init -u ${SCM}/seL4/verification-manifest.git \
-    && /scripts/repo/repo sync \
-    && cd l4v \
-    && cp -i misc/etc/settings ~/.isabelle/etc/settings \
-    && echo ISABELLE_COMPONENT_REPOSITORY=\"http://downloads.ssrg.nicta.com.au/isabelle/components\" >> ~/.isabelle/etc/settings \
+    && /scripts/repo/repo sync -c
+
+RUN cd /root/verification/l4v \
     && ./isabelle/bin/isabelle components -a \
     && ./isabelle/bin/isabelle jedit -bf \
     && ./isabelle/bin/isabelle build -bv HOL-Word \
@@ -47,11 +54,9 @@ RUN mkdir /isabelle \
 #    && cd /root/ghc-7.8.1 \
 #    && ./configure --prefix=/usr/local \
 #    && make install \
-#    && rm -rf /root/ghc-7.8.1
-
-
-# Get Cabal
-#RUN cd /root \
+#    && rm -rf /root/ghc-7.8.1 
+#
+#RUN cd root \
 #    && curl -L -O http://hackage.haskell.org/package/cabal-install-1.22.7.0/cabal-install-1.22.7.0.tar.gz \
 #    && tar -xf cabal-install-1.22.7.0.tar.gz \
 #    && rm cabal-install-1.22.7.0.tar.gz \
@@ -60,4 +65,4 @@ RUN mkdir /isabelle \
 #    && ln -s /root/.cabal/bin/cabal /usr/local/bin/cabal \
 #    && cabal update --verbose \
 #    && cabal install cabal-install --global 
-#
+

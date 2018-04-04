@@ -1,0 +1,51 @@
+To run images under qemu for the Beagle is a little involved.
+
+In short:
+
+ $ ./beagle_create_image hello-image-arm hello-nand.bin
+ $ qemu-system-arm -M beagle -nographic -mtdblock hello-nand.bin
+
+
+
+In the long:
+
+The beagle emulation only supports booting from a NAND or SD image.
+SD emulation support is not yet sufficient for u-boot to read images from it.
+So the only option left is to put everything into a NAND image.
+
+The NAND image must contain the following (in keeping with the standard Beagle
+NAND layout):
+
+ - x-load (modified to remove NAND ECC correction)
+    at address 0 in NAND
+ - u-boot (modified to remove NAND ECC correction, and boot image automatically)
+    at address 0x80000 in NAND
+ - target image
+    at address 0x280000 in NAND
+
+Binaries are provided for x-load and u-boot for convenience here, as well
+as the modified sources (against their original repositories).
+
+
+To rebuild stuff:
+
+(tested with Codesourcery 2010q1)
+export CROSS_COMPILE=arm-none-eabi-
+
+Build /data/git_root/beagle/qemu-sim/x-load-omap3/:
+
+cd x-load-omap3/
+make omap3530beagle_config
+make
+./signGP x-load.bin
+
+Build /data/git_root/beagle/qemu-sim/u-boot/:
+cd u-boot
+make omap3_beagle_config
+make
+
+Build /data/git_root/beagle/qemu-sim/qemu-maemo.git/:
+cd qemu-maemo/
+./configure --target-list=arm-softmmu
+make
+

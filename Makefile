@@ -14,6 +14,7 @@ HOST_DIR ?= $(shell pwd)
 
 DOCKER_BUILD ?= docker build
 DOCKER_FLAGS ?= --force-rm=true
+INTERNAL ?= no
 
 
 ################################################
@@ -23,6 +24,7 @@ DOCKER_FLAGS ?= --force-rm=true
 base_tools:
 	docker pull debian:stretch
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		--build-arg INTERNAL=$(INTERNAL) \
 		-f base_tools.dockerfile \
 		-t $(BASE_IMG) \
 		.

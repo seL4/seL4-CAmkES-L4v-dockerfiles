@@ -1,0 +1,35 @@
+# Setup components.
+init_components "$USER_HOME/.isabelle/contrib" "$ISABELLE_HOME/Admin/components/main"
+init_components "$USER_HOME/.isabelle/contrib" "$ISABELLE_HOME/Admin/components/bundled"
+
+# 64 bit setup for large C proofs:
+ML_OPTIONS="-H 4096 --maxheap 16384"
+ML_PLATFORM="$ISABELLE_PLATFORM64"
+ML_HOME="$(dirname ${ML_HOME})/$ML_PLATFORM"
+ISABELLE_BUILD_OPTIONS=${OVERRIDE_ISABELLE_BUILD_OPTIONS:-"threads=8"}
+
+# Default to ARM l4v builds
+L4V_ARCH=${L4V_ARCH:-"ARM"}
+
+# Heap input locations. We have a unique set of heap files for each copy of
+# Isabelle the user has checked out, so that users can have multiple sessions
+# running at the same time without too many problems.
+# Also check if we're running under Bamboo. If so, add the plan key, so the heaps
+# don't conflict. (the ${...+x} is just a way to check if it's set)
+if [ ! -z ${bamboo_planKey+x} ]; then
+    PATH_PREFIX="${bamboo_planKey}-"
+fi
+USER_HEAPS=${OVERRIDE_USER_HEAPS:-"/isabelle/${PATH_PREFIX:-}${L4V_ARCH}"}
+ISABELLE_OUTPUT=${OVERRIDE_ISABELLE_OUTPUT:-"$USER_HEAPS"}
+ISABELLE_PATH=${OVERRIDE_ISABELLE_PATH:-"$USER_HEAPS"}
+ISABELLE_BROWSER_INFO=${OVERRIDE_ISABELLE_BROWSER_INFO:-"$ISABELLE_HOME_USER/browser_info"}
+
+JEDIT_JAVA_SYSTEM_OPTIONS="$JEDIT_SYSTEM_OPTIONS" # 2016
+JEDIT_JAVA_OPTIONS="-Xms128m -Xmx4096m -Xss4m"
+ISABELLE_BUILD_JAVA_OPTIONS="-Xms2048m -Xmx6096m -Xss4m"
+
+ISABELLE_COMPONENT_REPOSITORY="http://downloads.ssrg.nicta.com.au/isabelle/components"
+
+# SORRY_BITFIELD_PROOFS="1"
+#SKIP_REFINE_PROOFS="1"
+SKIP_DUPLICATED_PROOFS="1"
