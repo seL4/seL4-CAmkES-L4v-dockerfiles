@@ -31,7 +31,8 @@ RUN apt-get update -q \
 RUN for p in "pip" "python3 -m pip"; \
     do \
         ${p} install \
-            camkes-deps; \
+            camkes-deps \
+            jinja2; \
     done
 
 # Get stack

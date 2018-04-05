@@ -3,6 +3,7 @@ BASE_IMG ?= base_tools
 SEL4_IMG ?= sel4
 RISCV_IMG ?= sel4-riscv
 CAMKES_IMG ?= camkes
+RUST_IMG ?= sel4-rust
 L4V_IMG ?= l4v
 SEL4_TST_IMG ?= sel4_test
 CAMKES_TST_IMG ?= camkes_test
@@ -42,7 +43,7 @@ rebuild_sel4: DOCKER_FLAGS += --no-cache
 rebuild_sel4: sel4
 
 .PHONY: sel4-riscv rebuild_sel4-riscv
-sel4-riscv: 
+sel4-riscv:
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
 		-f sel4-riscv.dockerfile \
 		-t $(DOCKERHUB)$(RISCV_IMG) \
@@ -60,21 +61,32 @@ camkes: sel4
 rebuild_camkes: DOCKER_FLAGS += --no-cache
 rebuild_camkes: camkes
 
-.PHONY: l4v rebuild_l4v
-l4v: camkes
+.PHONY: camkes-rust rebuild_camkes-rust
+camkes-rust: camkes
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
 		--build-arg CAMKES_IMG=$(DOCKERHUB)$(CAMKES_IMG) \
+		-f rust.dockerfile \
+		-t $(DOCKERHUB)$(RUST_IMG) \
+		.
+rebuild_camkes-rust: DOCKER_FLAGS += --no-cache
+rebuild_camkes-rust: camkes-rust
+
+.PHONY: l4v rebuild_l4v
+l4v: camkes camkes-rust
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		--build-arg CAMKES_IMG=$(DOCKERHUB)$(RUST_IMG) \
 		-f l4v.dockerfile \
 		-t $(DOCKERHUB)$(L4V_IMG) \
 		.
 rebuild_l4v: DOCKER_FLAGS += --no-cache
 rebuild_l4v: l4v
+		#--build-arg CAMKES_IMG=$(DOCKERHUB)$(CAMKES_IMG) 
 
 .PHONY: all
-all: base_tools sel4 camkes l4v
+all: base_tools sel4 sel4-riscv camkes camkes-rust l4v
 
 .PHONY: rebuild_all
-rebuild_all: rebuild_base_tools rebuild_sel4 rebuild_camkes rebuild_l4v
+rebuild_all: rebuild_base_tools rebuild_sel4 rebuild_sel4-riscv rebuild_camkes rebuild_camkes-rust rebuild_l4v
 
 
 ################################################
