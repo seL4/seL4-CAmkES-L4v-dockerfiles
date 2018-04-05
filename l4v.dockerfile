@@ -8,15 +8,17 @@ ARG SCM=https://github.com
 # Get dependencies
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
+        librsvg2-bin \
         libwww-perl \
         libxml2-dev \
         libxslt-dev \
         mlton \
         rsync \
+        texlive-bibtex-extra \
         texlive-fonts-recommended \
+        texlive-generic-extra \
         texlive-latex-extra \
         texlive-metapost \
-        texlive-bibtex-extra \
         # dependencies for testing
         bc \
         less \

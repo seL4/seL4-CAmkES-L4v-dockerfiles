@@ -42,8 +42,8 @@ RUN ln -s /usr/bin/hg /usr/local/bin/hg \
 
 # Get simulators
 COPY res/ertos /opt/ertos
-RUN cd /opt/ertos/simulators-x86_64 \
-    && ln -s /opt/ertos/simulators-x86_64/qemu /usr/bin/qemu 
+#RUN cd /opt/ertos/simulators-x86_64 \
+    #&& ln -s /opt/ertos/simulators-x86_64/qemu /usr/bin/qemu 
 
 # Install Google's repo
 RUN mkdir -p /scripts/repo \

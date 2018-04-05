@@ -87,3 +87,13 @@ RUN for p in "pip2" "pip3"; \
             sel4-deps; \
     done
 
+# Get right version of Astyle for seL4
+RUN cd /root \
+    && wget https://sourceforge.net/projects/astyle/files/astyle/astyle%202.04/astyle_2.04_linux.tar.gz/download -O astyle_2.04_linux.tar.gz \
+    && tar -xf astyle_2.04_linux.tar.gz \
+    && rm astyle_2.04_linux.tar.gz \
+    && cd astyle/build/gcc \
+    && make \
+    && cp bin/astyle /usr/bin/astyle \
+    && rm -rf /root/astyle
+
