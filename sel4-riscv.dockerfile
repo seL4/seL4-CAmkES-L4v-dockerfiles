@@ -49,7 +49,7 @@ RUN apt-get update -q \
         # General packages:
         git python-dev repo rsync \
         # For seL4:
-        build-essential realpath libxml2-utils python-pip gcc-multilib ccache ncurses-dev cpio \
+        build-essential cmake realpath libxml2-utils python-pip gcc-multilib ccache ncurses-dev cpio \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/ \
