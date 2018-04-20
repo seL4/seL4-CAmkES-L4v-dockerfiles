@@ -4,6 +4,7 @@ FROM $SEL4_IMG
 MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
 # Get dependencies
+RUN cat /etc/debian_version
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
         clang \
@@ -17,9 +18,7 @@ RUN apt-get update -q \
         libsqlite3-dev \
         locales \
         libgmp3-dev \
-        ninja-build \
         pkg-config \
-        python-dev \
         qemu-kvm \
         spin \
         xxd \
