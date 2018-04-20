@@ -1,9 +1,7 @@
-FROM ubuntu:16.04 as builder
+FROM trustworthysystems/sel4_gcc6 as builder
 
 RUN apt-get update -q \
-    && apt-get install -y --allow-downgrades --no-install-recommends \
-        # General packages:
-        git ca-certificates \
+    && apt-get install -y --no-install-recommends \
         # For RISC-V tools:
         autoconf automake autotools-dev curl libmpc-dev libmpfr-dev libgmp-dev libusb-1.0-0-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev device-tree-compiler pkg-config \
         # For RISC-V QEMU:
@@ -37,36 +35,14 @@ RUN sed -i 's/build_project riscv-gnu-toolchain --prefix=$RISCV/build_project ri
 ## 64-bit
 RUN ./build.sh 
 
-## 32-bit
-RUN ./build-rv32ima.sh
+## 32-bit (not supported for now)
+#RUN ./build-rv32ima.sh
 
 
 # Start a fresh container, and copy the stuff in we need
-#FROM ubuntu:16.04 
 FROM trustworthysystems/sel4_gcc6
 
 COPY --from=builder /opt/riscv /opt/riscv
 
 ENV RISCV /opt/riscv
 ENV PATH "$PATH:$RISCV/bin"
-
-#RUN apt-get update -q \
-#    && apt-get install -y --allow-downgrades --no-install-recommends \
-#        # General packages:
-#        python-dev rsync wget \
-#        # For seL4:
-#        build-essential ninja-build realpath libxml2-utils python-pip gcc-multilib ccache ncurses-dev cpio \
-#    && apt-get clean autoclean \
-#    && apt-get autoremove --yes \
-#    && rm -rf /var/lib/{apt,dpkg,cache,log}/ \
-#    && pip install --upgrade pip \
-#    && pip install setuptools \
-#    && pip install sel4-deps \
-#    && mkdir /tmp/cmake && cd /tmp/cmake \
-#    && wget https://cmake.org/files/v3.8/cmake-3.8.2-Linux-x86_64.tar.gz \
-#    && tar -xvf /tmp/cmake/cmake-3.8.2-Linux-x86_64.tar.gz \
-#    && cd cmake-3.8.2-Linux-x86_64 \
-#    && rsync -av * /usr/ \
-#    && rm -rf /tmp/cmake
-
-
