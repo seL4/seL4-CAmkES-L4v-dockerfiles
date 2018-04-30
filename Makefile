@@ -139,6 +139,10 @@ retest_l4v: test_l4v
 pull_sel4_image:
 	docker pull $(DOCKERHUB)$(SEL4_IMG)
 
+.PHONY: pull_sel4-riscv_image
+pull_sel4-riscv_image:
+	docker pull $(DOCKERHUB)$(RISCV_IMG)
+
 .PHONY: pull_camkes_image
 pull_camkes_image:
 	docker pull $(DOCKERHUB)$(CAMKES_IMG)
@@ -160,6 +164,9 @@ user: user_camkes  # use CAmkES as the default
 
 .PHONY: user_sel4
 user_sel4: build_user_sel4 user_run
+
+.PHONY: user_sel4-riscv
+user_sel4-riscv: build_user_sel4-riscv user_run
 
 .PHONY: user_camkes
 user_camkes: build_user_camkes user_run
@@ -209,6 +216,8 @@ build_user:
 		-t $(USER_IMG)-$(shell id -u) .
 build_user_sel4: USER_BASE_IMG = $(SEL4_IMG)
 build_user_sel4: build_user
+build_user_sel4-riscv: USER_BASE_IMG = $(RISCV_IMG)
+build_user_sel4-riscv: build_user
 build_user_camkes: USER_BASE_IMG = $(CAMKES_IMG)
 build_user_camkes: build_user
 build_user_l4v: USER_BASE_IMG = $(L4V_IMG)
