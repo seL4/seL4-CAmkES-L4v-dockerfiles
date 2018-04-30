@@ -1,4 +1,5 @@
-FROM trustworthysystems/sel4_gcc6 as builder
+ARG SEL4_IMG=trustworthysystems/sel4_gcc6
+FROM $SEL4_IMG as builder
 
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
@@ -40,7 +41,7 @@ RUN ./build.sh
 
 
 # Start a fresh container, and copy the stuff in we need
-FROM trustworthysystems/sel4_gcc6
+FROM $SEL4_IMG 
 
 COPY --from=builder /opt/riscv /opt/riscv
 

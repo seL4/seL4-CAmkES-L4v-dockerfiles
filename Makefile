@@ -45,6 +45,7 @@ rebuild_sel4: sel4
 .PHONY: sel4-riscv rebuild_sel4-riscv
 sel4-riscv:
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		--build-arg SEL4_IMG=$(SEL4_IMG) \
 		-f sel4-riscv.dockerfile \
 		-t $(DOCKERHUB)$(RISCV_IMG) \
 		.
