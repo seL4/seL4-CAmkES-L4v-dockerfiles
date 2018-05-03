@@ -3,8 +3,10 @@ ARG BASE_TOOLS=base_tools
 FROM $BASE_TOOLS
 MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
-
-RUN head -n 1 /etc/apt/sources.list | sed -e 's/stretch/testing/g' > /etc/apt/sources.list.d/testing.list \
+# Add debian testing as a mirror.
+# Add an apt preferences file, which states that stable is preferable than testing when automatically
+# picking packages.
+RUN echo 'deb http://httpredir.debian.org/debian/ testing main' > /etc/apt/sources.list.d/testing.list \
     && echo 'Package: *' >> /etc/apt/preferences \
     && echo 'Pin: release a=stable' >> /etc/apt/preferences \
     && echo 'Pin-Priority: 900' >> /etc/apt/preferences \
@@ -13,10 +15,13 @@ RUN head -n 1 /etc/apt/sources.list | sed -e 's/stretch/testing/g' > /etc/apt/so
     && echo 'Pin: release a=testing' >> /etc/apt/preferences \
     && echo 'Pin-Priority: 800' >> /etc/apt/preferences 
 
+# Add additional architectures for cross-compiled libraries.
+# Install the tools required to compile seL4.
 RUN dpkg --add-architecture armhf \
     && dpkg --add-architecture armel \
     && apt-get update -q \
     && apt-get install -y --no-install-recommends \
+        # STABLE packages!
         build-essential \
         ccache \
         cpio \
@@ -39,12 +44,12 @@ RUN dpkg --add-architecture armhf \
         realpath \
         # TESTING packages!
         cmake/testing \
+        libuv1/testing \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
-# Set default compiler to be gcc-5 (not 6), and 
-# set gcc-5-arm compilers to be default (even though there are no others)
+# Set default compiler to be gcc-6 using update-alternatives
 RUN for compiler in gcc \
                     g++; \
     do \
@@ -80,14 +85,14 @@ RUN for compiler in gcc \
     done
 
 
-# Get Python deps
+# Get seL4 python2/3 deps
 RUN for p in "pip2" "pip3"; \
     do \
-        ${p} install \
+        ${p} install --no-cache-dir \
             sel4-deps; \
     done
 
-# Get right version of Astyle for seL4
+# Get specific version of Astyle used in seL4
 RUN cd /root \
     && wget https://sourceforge.net/projects/astyle/files/astyle/astyle%202.04/astyle_2.04_linux.tar.gz/download -O astyle_2.04_linux.tar.gz \
     && tar -xf astyle_2.04_linux.tar.gz \

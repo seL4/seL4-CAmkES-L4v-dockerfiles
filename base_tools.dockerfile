@@ -1,15 +1,19 @@
-# Basic dependencies required for seL4
+# Use debian stable as our base image
 ARG BASE_IMG=debian:stretch
 FROM $BASE_IMG
 MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
-# Fetch some basics
-RUN sed -i 's/deb.debian.org/httpredir.debian.org/g' /etc/apt/sources.list \
+# Lines 1-2: Add another mirror for debian to pull packages from.
+# Lines 3-4: Do some docker specific tricks with apt.
+# Lines under apt-get: get some basic tools.
+RUN echo 'deb http://httpredir.debian.org/debian/ stretch main' > /etc/apt/sources.list.d/alternate_mirror.list \
+    && echo 'deb http://httpredir.debian.org/debian/ stretch-updates main' > /etc/apt/sources.list.d/alternate_mirror.list \
+    && echo "force-unsafe-io" > /etc/dpkg/dpkg.cfg.d/02apt-speedup \
+    && echo "Acquire::http {No-Cache=True;};" > /etc/apt/apt.conf.d/no-cache \
     && apt-get update -q \
     && apt-get install -y --no-install-recommends \
         bc \
         ca-certificates \
-        cpio \
         curl \
         git \
         jq \
@@ -25,31 +29,32 @@ RUN sed -i 's/deb.debian.org/httpredir.debian.org/g' /etc/apt/sources.list \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 
-# Setup python dep manager
+# Install python dependencies for both python 2 & 3
+# Upgrade pip first, then install setuptools (required for other pip packages)
+# Install some basic python tools
 RUN for p in "pip2" "pip3"; \
     do \ 
-        ${p} install \
+        ${p} install --no-cache-dir --upgrade pip==9.0.3 \
+        && ${p} install --no-cache-dir \
             setuptools \
-        && ${p} install pip --upgrade \
-        && ${p} install \
+        && ${p} install --no-cache-dir \
             pexpect \
             sh; \
     done
 
-# Add nice symlinks
+# Add some symlinks so some programs can find things
 RUN ln -s /usr/bin/hg /usr/local/bin/hg \
     && ln -s /usr/bin/make /usr/bin/gmake
-
-# Get simulators
-COPY res/ertos /opt/ertos
-#RUN cd /opt/ertos/simulators-x86_64 \
-    #&& ln -s /opt/ertos/simulators-x86_64/qemu /usr/bin/qemu 
 
 # Install Google's repo
 RUN mkdir -p /scripts/repo \
     && curl https://storage.googleapis.com/git-repo-downloads/repo > /scripts/repo/repo \
     && chmod a+x /scripts/repo/repo
 
+# Get some simulation (QEMU) binaries, and copy them in
+COPY res/ertos /opt/ertos
+
+# If this is being built inside Trustworthy Systems, get some scripts used to control simulations
 ARG INTERNAL=no
 RUN if [ "$INTERNAL" = "yes" ]; then \
         cd /scripts \

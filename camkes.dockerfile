@@ -4,7 +4,6 @@ FROM $SEL4_IMG
 MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
 # Get dependencies
-RUN cat /etc/debian_version
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
         clang \
@@ -18,6 +17,7 @@ RUN apt-get update -q \
         libsqlite3-dev \
         locales \
         libgmp3-dev \
+        netbase \
         pkg-config \
         qemu-kvm \
         spin \
@@ -26,10 +26,10 @@ RUN apt-get update -q \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
-# Get python deps for CAmkES VM
-RUN for p in "pip" "python3 -m pip"; \
+# Get python deps for CAmkES
+RUN for p in "pip2" "pip3"; \
     do \
-        ${p} install \
+        ${p} install --no-cache-dir \
             camkes-deps \
             jinja2; \
     done
@@ -40,7 +40,7 @@ RUN curl -sSL https://get.haskellstack.org/ | sh
 # CAmkES is hard coded to look for clang in /opt/clang/
 RUN ln -s /usr/lib/llvm-3.8 /opt/clang
 
-# Set up locales (needed by camkes-next)
+# Set up locales. en_AU chosen because we're in Australia.
 RUN echo 'en_AU.UTF-8 UTF-8' > /etc/locale.gen \
     && dpkg-reconfigure --frontend=noninteractive locales \
     && echo "LANG=en_AU.UTF-8" >> /etc/default/locale 

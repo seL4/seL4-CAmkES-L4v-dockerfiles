@@ -43,9 +43,9 @@ rebuild_sel4: DOCKER_FLAGS += --no-cache
 rebuild_sel4: sel4
 
 .PHONY: sel4-riscv rebuild_sel4-riscv
-sel4-riscv:
+sel4-riscv: sel4
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
-		--build-arg SEL4_IMG=$(SEL4_IMG) \
+		--build-arg SEL4_IMG=$(DOCKERHUB)$(SEL4_IMG) \
 		-f sel4-riscv.dockerfile \
 		-t $(DOCKERHUB)$(RISCV_IMG) \
 		.
@@ -84,7 +84,7 @@ rebuild_l4v: l4v
 		#--build-arg CAMKES_IMG=$(DOCKERHUB)$(CAMKES_IMG) 
 
 .PHONY: all
-all: base_tools sel4 sel4-riscv camkes camkes-rust l4v
+all: base_tools sel4 camkes camkes-rust l4v sel4-riscv
 
 .PHONY: rebuild_all
 rebuild_all: rebuild_base_tools rebuild_sel4 rebuild_sel4-riscv rebuild_camkes rebuild_camkes-rust rebuild_l4v
