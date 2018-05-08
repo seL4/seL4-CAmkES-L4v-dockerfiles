@@ -8,6 +8,7 @@ RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
         clang \
         device-tree-compiler \
+        # Required for testing
         expect \
         gdb \
         libssl-dev \
@@ -17,10 +18,13 @@ RUN apt-get update -q \
         libsqlite3-dev \
         locales \
         libgmp3-dev \
+        # Required for stack to use tcp properly
         netbase \
         pkg-config \
         qemu-kvm \
         spin \
+        # Required for rumprun
+        rsync \
         xxd \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
@@ -46,3 +50,12 @@ RUN echo 'en_AU.UTF-8 UTF-8' > /etc/locale.gen \
     && echo "LANG=en_AU.UTF-8" >> /etc/default/locale 
 
 ENV LANG en_AU.UTF-8
+
+# Get a repo that relys on stack, and use it to init the stack cache \
+# then delete the repo, because we don't need it.
+RUN git clone https://github.com/seL4/capdl.git \
+    && cd capdl/capDL-tool \
+    && stack setup \
+    && stack build --only-dependencies \
+    && cd / \
+    && rm -rf capdl.git

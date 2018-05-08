@@ -10,20 +10,19 @@ RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
         librsvg2-bin \
         libwww-perl \
-        libxml2-dev \
         libxslt-dev \
         mlton \
-        rsync \
         texlive-bibtex-extra \
         texlive-fonts-recommended \
         texlive-generic-extra \
         texlive-latex-extra \
         texlive-metapost \
         # dependencies for testing
-        bc \
         less \
         python-psutil \
         python-lxml \
+        # TESTING packages
+        libxml2-dev/testing \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
