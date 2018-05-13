@@ -241,6 +241,7 @@ clean_images:
 	-docker rmi $(DOCKERHUB)$(L4V_IMG)
 	-docker rmi $(DOCKERHUB)$(CAMKES_IMG)
 	-docker rmi $(DOCKERHUB)$(SEL4_IMG)
+	-docker rmi $(DOCKERHUB)$(SEL4_RISCV_IMG)
 
 .PHONY: clean
 clean: clean_data clean_images
