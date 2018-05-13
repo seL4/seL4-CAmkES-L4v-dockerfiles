@@ -3,6 +3,7 @@ BASE_IMG ?= base_tools
 SEL4_IMG ?= sel4
 SEL4_RISCV_IMG ?= sel4-riscv
 CAMKES_IMG ?= camkes
+CAMKES_RISCV_IMG ?= camkes-riscv
 RUST_IMG ?= sel4-rust
 L4V_IMG ?= l4v
 SEL4_TST_IMG ?= sel4_test
@@ -62,6 +63,16 @@ camkes: sel4
 rebuild_camkes: DOCKER_FLAGS += --no-cache
 rebuild_camkes: camkes
 
+.PHONY: camkes-riscv rebuild_camkes-riscv
+camkes-riscv: sel4-riscv
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		--build-arg SEL4_IMG=$(DOCKERHUB)$(SEL4_RISCV_IMG) \
+		-f camkes.dockerfile \
+		-t $(DOCKERHUB)$(CAMKES_RISCV_IMG) \
+		.
+rebuild_camkes-riscv: DOCKER_FLAGS += --no-cache
+rebuild_camkes-riscv: camkes-riscv
+
 .PHONY: camkes-rust rebuild_camkes-rust
 camkes-rust: camkes
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
@@ -84,10 +95,10 @@ rebuild_l4v: l4v
 		#--build-arg CAMKES_IMG=$(DOCKERHUB)$(CAMKES_IMG)
 
 .PHONY: all
-all: base_tools sel4 camkes camkes-rust l4v sel4-riscv
+all: base_tools sel4 camkes camkes-rust l4v sel4-riscv camkes-riscv
 
 .PHONY: rebuild_all
-rebuild_all: rebuild_base_tools rebuild_sel4 rebuild_sel4-riscv rebuild_camkes rebuild_camkes-rust rebuild_l4v
+rebuild_all: rebuild_base_tools rebuild_sel4 rebuild_sel4-riscv rebuild_camkes rebuild_camkes-riscv rebuild_camkes-rust rebuild_l4v
 
 
 ################################################
@@ -147,6 +158,10 @@ pull_sel4-riscv_image:
 pull_camkes_image:
 	docker pull $(DOCKERHUB)$(CAMKES_IMG)
 
+.PHONY: pull_camkes-riscv_image
+pull_camkes_image-riscv:
+	docker pull $(DOCKERHUB)$(CAMKES_RISCV_IMG)
+
 .PHONY: pull_l4v_image
 pull_l4v_image:
 	docker pull $(DOCKERHUB)$(L4V_IMG)
@@ -170,6 +185,9 @@ user_sel4-riscv: build_user_sel4-riscv user_run
 
 .PHONY: user_camkes
 user_camkes: build_user_camkes user_run
+
+.PHONY: user_camkes-riscv
+user_camkes-riscv: build_user_camkes-riscv user_run
 
 .PHONY: user_l4v
 user_l4v: build_user_l4v user_run_l4v
@@ -220,6 +238,8 @@ build_user_sel4-riscv: USER_BASE_IMG = $(SEL4_RISCV_IMG)
 build_user_sel4-riscv: build_user
 build_user_camkes: USER_BASE_IMG = $(CAMKES_IMG)
 build_user_camkes: build_user
+build_user_camkes-riscv: USER_BASE_IMG = $(CAMKES_RISCV_IMG)
+build_user_camkes-riscv: build_user
 build_user_l4v: USER_BASE_IMG = $(L4V_IMG)
 build_user_l4v: build_user
 
@@ -242,6 +262,7 @@ clean_images:
 	-docker rmi $(DOCKERHUB)$(CAMKES_IMG)
 	-docker rmi $(DOCKERHUB)$(SEL4_IMG)
 	-docker rmi $(DOCKERHUB)$(SEL4_RISCV_IMG)
+	-docker rmi $(DOCKERHUB)$(CAMKES_RISCV_IMG)
 
 .PHONY: clean
 clean: clean_data clean_images
