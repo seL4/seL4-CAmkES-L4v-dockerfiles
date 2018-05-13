@@ -81,7 +81,7 @@ l4v: camkes camkes-rust
 		.
 rebuild_l4v: DOCKER_FLAGS += --no-cache
 rebuild_l4v: l4v
-		#--build-arg CAMKES_IMG=$(DOCKERHUB)$(CAMKES_IMG) 
+		#--build-arg CAMKES_IMG=$(DOCKERHUB)$(CAMKES_IMG)
 
 .PHONY: all
 all: base_tools sel4 camkes camkes-rust l4v sel4-riscv
@@ -100,7 +100,7 @@ rerun_tests: DOCKER_FLAGS += --no-cache
 rerun_tests: run_tests
 
 .PHONY: test_sel4
-test_sel4: 
+test_sel4:
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
 		--build-arg SEL4_IMG=$(DOCKERHUB)$(SEL4_IMG) \
 		-f sel4_tests.dockerfile \
@@ -110,7 +110,7 @@ retest_sel4: DOCKER_FLAGS += --no-cache
 retest_sel4: test_sel4
 
 .PHONY: test_camkes
-test_camkes: 
+test_camkes:
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
 		--build-arg CAMKES_IMG=$(DOCKERHUB)$(CAMKES_IMG) \
 		-f camkes_tests.dockerfile \
@@ -175,7 +175,7 @@ user_camkes: build_user_camkes user_run
 user_l4v: build_user_l4v user_run_l4v
 
 .PHONY: user_run
-user_run: 
+user_run:
 	docker run \
 		-it \
 		--hostname in-container \
@@ -187,7 +187,7 @@ user_run:
 
 
 .PHONY: user_run_l4v
-user_run_l4v: 
+user_run_l4v:
 	docker run \
 		-it \
 		--hostname in-container \
@@ -236,7 +236,7 @@ clean_data: clean_isabelle clean_home_dir
 
 .PHONY: clean_images
 clean_images:
-	-docker rmi $(USER_IMG)-$(shell id -u) 
+	-docker rmi $(USER_IMG)-$(shell id -u)
 	-docker rmi extras
 	-docker rmi $(DOCKERHUB)$(L4V_IMG)
 	-docker rmi $(DOCKERHUB)$(CAMKES_IMG)
