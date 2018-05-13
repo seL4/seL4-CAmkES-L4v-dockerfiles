@@ -1,7 +1,7 @@
 DOCKERHUB ?= trustworthysystems/
 BASE_IMG ?= base_tools
 SEL4_IMG ?= sel4
-RISCV_IMG ?= sel4-riscv
+SEL4_RISCV_IMG ?= sel4-riscv
 CAMKES_IMG ?= camkes
 RUST_IMG ?= sel4-rust
 L4V_IMG ?= l4v
@@ -47,7 +47,7 @@ sel4-riscv: sel4
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
 		--build-arg SEL4_IMG=$(DOCKERHUB)$(SEL4_IMG) \
 		-f sel4-riscv.dockerfile \
-		-t $(DOCKERHUB)$(RISCV_IMG) \
+		-t $(DOCKERHUB)$(SEL4_RISCV_IMG) \
 		.
 rebuild_sel4-riscv: DOCKER_FLAGS += --no-cache
 rebuild_sel4-riscv: sel4-riscv
@@ -141,7 +141,7 @@ pull_sel4_image:
 
 .PHONY: pull_sel4-riscv_image
 pull_sel4-riscv_image:
-	docker pull $(DOCKERHUB)$(RISCV_IMG)
+	docker pull $(DOCKERHUB)$(SEL4_RISCV_IMG)
 
 .PHONY: pull_camkes_image
 pull_camkes_image:
@@ -216,7 +216,7 @@ build_user:
 		-t $(USER_IMG)-$(shell id -u) .
 build_user_sel4: USER_BASE_IMG = $(SEL4_IMG)
 build_user_sel4: build_user
-build_user_sel4-riscv: USER_BASE_IMG = $(RISCV_IMG)
+build_user_sel4-riscv: USER_BASE_IMG = $(SEL4_RISCV_IMG)
 build_user_sel4-riscv: build_user
 build_user_camkes: USER_BASE_IMG = $(CAMKES_IMG)
 build_user_camkes: build_user
