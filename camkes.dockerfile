@@ -35,7 +35,8 @@ RUN for p in "pip2" "pip3"; \
     do \
         ${p} install --no-cache-dir \
             camkes-deps \
-            jinja2; \
+            jinja2 \
+            pylint; \
     done
 
 # Get stack
