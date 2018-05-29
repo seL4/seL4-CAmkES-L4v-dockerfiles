@@ -37,7 +37,7 @@ RUN sed -i 's/build_project riscv-gnu-toolchain --prefix=$RISCV/build_project ri
 RUN ./build.sh 
 
 ## 32-bit (not supported for now)
-#RUN ./build-rv32ima.sh
+RUN ./build-rv32ima.sh
 
 
 # Start a fresh container, and copy the stuff in we need
