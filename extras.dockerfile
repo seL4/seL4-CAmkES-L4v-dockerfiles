@@ -8,11 +8,11 @@ FROM $USER_BASE_IMG
 # For example, uncomment this to get cowsay on top of the sel4/camkes/l4v
 # dependencies:
 
-# RUN apt-get update -q \
-#     && apt-get install -y --no-install-recommends \
-#         cowsay \
-#     && apt-get clean autoclean \
-#     && apt-get autoremove --yes \
-#     && rm -rf /var/lib/{apt,dpkg,cache,log}/
-#
-# RUN /usr/games/cowsay "Trustworthy Systems!"
+RUN rm -r /var/lib/apt/lists/* \
+    && apt-get update -q \
+    && apt-get install -y --no-install-recommends \
+        # Add more dependencies here
+        cowsay \
+    && apt-get clean autoclean \
+    && apt-get autoremove --yes \
+    && rm -rf /var/lib/{apt,dpkg,cache,log}/
