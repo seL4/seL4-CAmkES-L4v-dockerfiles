@@ -9,9 +9,6 @@ It is recommended you add yourself to the docker group, so you can run docker co
 
 
 ## Quick start:
-First, have a read of the blog post about this:
-https://research.csiro.au/tsblog/getting-started-sel4-camkes-l4v-dependencies
-
 To get a running build environment for sel4 and camkes, run:
 
     git clone https://github.com/SEL4PROJ/seL4-CAmkES-L4v-dockerfiles.git
@@ -81,14 +78,27 @@ Get seL4 test:
     jblogs@in-container:/host$ ls
     apps configs Kbuild Kconfig kernel libs Makefile projects tools
 
-Compile seL4 test for the sabrelite:
+Compile and simulate seL4 test for x86-64:
 
-    jblogs@in-container:/host$ make sabre_release_xml_defconfig
-    jblogs@in-container:/host$ make silentoldconfig
-    jblogs@in-container:/host$ make
+    jblogs@in-container:/host$ mkdir build-x86
+    jblogs@in-container:/host$ cd build-x86
+    jblogs@in-container:/host$ ../init-build.sh -DPLATFORM=x86_64 -DSIMULATION=TRUE
+    jblogs@in-container:/host$ ninja
     # ... time passes...
-    jblogs@in-container:/host$ ls images
-    sel4test-driver-image-arm-imx6
+    jblogs@in-container:/host$ ./simulate
+    ...
+    Test VSPACE0002 passed
+
+        </testcase>
+
+        <testcase classname="sel4test" name="Test all tests ran">
+
+        </testcase>
+
+    </testsuite>
+
+    All is well in the universe
+
 
 ## Adding dependencies
 The images and dockerfiles for seL4/CAmkES/L4v only specify enough dependencies to pass the tests in the \*tests.dockerfile. The `extras.dockerfile` acts as a shim between the DockerHub images and the `user.dockerfile`. 
