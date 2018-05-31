@@ -40,7 +40,7 @@ RUN for p in "pip2" "pip3"; \
     done
 
 # Get stack
-RUN curl -sSL https://get.haskellstack.org/ | sh
+RUN wget -O - https://get.haskellstack.org/ | sh
 
 # CAmkES is hard coded to look for clang in /opt/clang/
 RUN ln -s /usr/lib/llvm-3.8 /opt/clang

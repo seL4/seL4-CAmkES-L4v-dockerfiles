@@ -14,7 +14,6 @@ RUN echo 'deb http://httpredir.debian.org/debian/ stretch main' > /etc/apt/sourc
     && apt-get install -y --no-install-recommends \
         bc \
         ca-certificates \
-        curl \
         git \
         jq \
         make \
@@ -48,7 +47,7 @@ RUN ln -s /usr/bin/hg /usr/local/bin/hg \
 
 # Install Google's repo
 RUN mkdir -p /scripts/repo \
-    && curl https://storage.googleapis.com/git-repo-downloads/repo > /scripts/repo/repo \
+    && wget -O - https://storage.googleapis.com/git-repo-downloads/repo > /scripts/repo/repo \
     && chmod a+x /scripts/repo/repo
 
 # Get some simulation (QEMU) binaries, and copy them in

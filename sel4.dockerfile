@@ -45,6 +45,7 @@ RUN dpkg --add-architecture armhf \
         # TESTING packages!
         cmake/testing \
         cmake-curses-gui/testing \
+        curl/testing \
         libuv1/testing \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
