@@ -9,7 +9,6 @@ RUN apt-get update -q \
         clang \
         device-tree-compiler \
         # Required for testing
-        expect \
         gdb \
         libssl-dev \
         libclang-dev \

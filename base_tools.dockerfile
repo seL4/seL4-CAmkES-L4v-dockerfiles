@@ -14,6 +14,7 @@ RUN echo 'deb http://httpredir.debian.org/debian/ stretch main' > /etc/apt/sourc
     && apt-get install -y --no-install-recommends \
         bc \
         ca-certificates \
+        expect \
         git \
         jq \
         make \
