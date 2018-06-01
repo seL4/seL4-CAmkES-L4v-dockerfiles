@@ -40,13 +40,13 @@ RUN dpkg --add-architecture armhf \
         libxml2-utils \
         libncurses-dev \
         ninja-build \
-        qemu \
         realpath \
         # TESTING packages!
         cmake/testing \
         cmake-curses-gui/testing \
         curl/testing \
         libuv1/testing \
+        qemu/testing \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
