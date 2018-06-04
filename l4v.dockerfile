@@ -1,6 +1,6 @@
 # Dependencies required to verify seL4
-ARG CAMKES_IMG=trustworthysystems/camkes
-FROM $CAMKES_IMG
+ARG BASE_IMG=trustworthysystems/camkes
+FROM $BASE_IMG
 MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
 ARG SCM=https://github.com

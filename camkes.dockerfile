@@ -1,6 +1,6 @@
 # Additional dependencies required to build CAmkES
-ARG SEL4_IMG=trustworthysystems/sel4
-FROM $SEL4_IMG
+ARG BASE_IMG=trustworthysystems/sel4
+FROM $BASE_IMG
 MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
 # Get dependencies
@@ -20,7 +20,6 @@ RUN apt-get update -q \
         # Required for stack to use tcp properly
         netbase \
         pkg-config \
-        qemu-kvm \
         spin \
         # Required for rumprun
         rsync \

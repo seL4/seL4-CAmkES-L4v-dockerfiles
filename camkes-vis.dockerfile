@@ -1,5 +1,5 @@
-ARG CAMKES_IMG=trustworthysystems/camkes
-FROM $CAMKES_IMG
+ARG BASE_IMG=trustworthysystems/camkes
+FROM $BASE_IMG
 MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
 RUN apt-get update -q \
