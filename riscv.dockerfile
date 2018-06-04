@@ -1,5 +1,6 @@
-ARG SEL4_IMG=trustworthysystems/sel4_gcc6
-FROM $SEL4_IMG as builder
+ARG BASE_IMG=trustworthysystems/sel4_gcc6
+
+FROM $BASE_IMG
 
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
@@ -36,14 +37,5 @@ RUN sed -i 's/build_project riscv-gnu-toolchain --prefix=$RISCV/build_project ri
 ## 64-bit
 RUN ./build.sh 
 
-## 32-bit (not supported for now)
+## 32-bit 
 RUN ./build-rv32ima.sh
-
-
-# Start a fresh container, and copy the stuff in we need
-FROM $SEL4_IMG 
-
-COPY --from=builder /opt/riscv /opt/riscv
-
-ENV RISCV /opt/riscv
-ENV PATH "$PATH:$RISCV/bin"
