@@ -1,27 +1,77 @@
 # Get and compile all configs for seL4 test
-ARG SEL4_IMG=trustworthysystems/sel4
-FROM $SEL4_IMG
+ARG BASE_IMG=trustworthysystems/sel4
+FROM $BASE_IMG
 
 RUN mkdir -p /root/sel4test
 
 WORKDIR /root/sel4test
 
 ARG SCM=https://github.com
-
 RUN /scripts/repo/repo init -u ${SCM}/sel4/sel4test-manifest.git \
     && /scripts/repo/repo sync
 
-RUN err=false; for i in $(find configs/ -type f \( -iname "*defconfig" ! -name "bamboo_*" \) | sort ); \
+RUN for cmd in "-DPLATFORM=sabre -DBAMBOO=TRUE -DAARCH32=TRUE -DSMP=TRUE -DVERIFICATION=TRUE" \
+               "-DPLATFORM=sabre -DBAMBOO=TRUE -DRELEASE=TRUE -DAARCH32=TRUE -DSMP=TRUE" \
+               "-DPLATFORM=sabre -DBAMBOO=TRUE -DAARCH32=TRUE -DSMP=TRUE" \
+               "-DPLATFORM=sabre -DBAMBOO=TRUE -DAARCH32=TRUE -DVERIFICATION=TRUE" \
+               "-DPLATFORM=sabre -DBAMBOO=TRUE -DRELEASE=TRUE -DAARCH32=TRUE" \
+               "-DPLATFORM=sabre -DBAMBOO=TRUE -DAARCH32=TRUE" \
+               "-DPLATFORM=kzm -DBAMBOO=TRUE -DAARCH32=TRUE -DVERIFICATION=TRUE" \
+               "-DPLATFORM=kzm -DBAMBOO=TRUE -DRELEASE=TRUE -DAARCH32=TRUE" \
+               "-DPLATFORM=kzm -DBAMBOO=TRUE -DAARCH32=TRUE" \
+               "-DPLATFORM=omap3 -DBAMBOO=TRUE -DAARCH32=TRUE -DVERIFICATION=TRUE" \
+               "-DPLATFORM=omap3 -DBAMBOO=TRUE -DRELEASE=TRUE -DAARCH32=TRUE" \
+               "-DPLATFORM=omap3 -DBAMBOO=TRUE -DAARCH32=TRUE" \
+               "-DPLATFORM=am335x -DBAMBOO=TRUE -DAARCH32=TRUE -DVERIFICATION=TRUE" \
+               "-DPLATFORM=am335x -DBAMBOO=TRUE -DRELEASE=TRUE -DAARCH32=TRUE" \
+               "-DPLATFORM=am335x -DBAMBOO=TRUE -DAARCH32=TRUE" \
+               "-DPLATFORM=exynos4 -DBAMBOO=TRUE -DAARCH32=TRUE -DVERIFICATION=TRUE" \
+               "-DPLATFORM=exynos4 -DBAMBOO=TRUE -DRELEASE=TRUE -DAARCH32=TRUE" \
+               "-DPLATFORM=exynos4 -DBAMBOO=TRUE -DAARCH32=TRUE" \
+               "-DPLATFORM=exynos5410 -DBAMBOO=TRUE -DAARCH32=TRUE -DVERIFICATION=TRUE" \
+               "-DPLATFORM=exynos5410 -DBAMBOO=TRUE -DRELEASE=TRUE -DAARCH32=TRUE" \
+               "-DPLATFORM=exynos5410 -DBAMBOO=TRUE -DAARCH32=TRUE" \
+               "-DPLATFORM=exynos5410 -DBAMBOO=TRUE -DAARCH32=TRUE -DARM_HYP=TRUE -DVERIFICATION=TRUE" \
+               "-DPLATFORM=exynos5410 -DBAMBOO=TRUE -DRELEASE=TRUE -DAARCH32=TRUE -DARM_HYP=TRUE" \
+               "-DPLATFORM=exynos5410 -DBAMBOO=TRUE -DAARCH32=TRUE -DARM_HYP=TRUE" \
+               "-DPLATFORM=zynq7000 -DBAMBOO=TRUE -DAARCH32=TRUE -DVERIFICATION=TRUE" \
+               "-DPLATFORM=zynq7000 -DBAMBOO=TRUE -DRELEASE=TRUE -DAARCH32=TRUE" \
+               "-DPLATFORM=zynq7000 -DBAMBOO=TRUE -DAARCH32=TRUE" \
+               "-DPLATFORM=tk1 -DBAMBOO=TRUE -DAARCH32=TRUE -DVERIFICATION=TRUE" \
+               "-DPLATFORM=tk1 -DBAMBOO=TRUE -DRELEASE=TRUE -DAARCH32=TRUE" \
+               "-DPLATFORM=tk1 -DBAMBOO=TRUE -DAARCH32=TRUE" \
+               "-DPLATFORM=tk1 -DBAMBOO=TRUE -DAARCH32=TRUE -DARM_HYP=TRUE -DVERIFICATION=TRUE" \
+               "-DPLATFORM=tk1 -DBAMBOO=TRUE -DRELEASE=TRUE -DAARCH32=TRUE -DARM_HYP=TRUE" \
+               "-DPLATFORM=tk1 -DBAMBOO=TRUE -DAARCH32=TRUE -DARM_HYP=TRUE" \
+               "-DPLATFORM=hikey -DBAMBOO=TRUE -DAARCH32=TRUE -DVERIFICATION=TRUE" \
+               "-DPLATFORM=hikey -DBAMBOO=TRUE -DRELEASE=TRUE -DAARCH32=TRUE" \
+               "-DPLATFORM=hikey -DBAMBOO=TRUE -DAARCH32=TRUE" \
+               "-DPLATFORM=hikey -DBAMBOO=TRUE -DAARCH64=TRUE -DVERIFICATION=TRUE" \
+               "-DPLATFORM=hikey -DBAMBOO=TRUE -DRELEASE=TRUE -DAARCH64=TRUE" \
+               "-DPLATFORM=hikey -DBAMBOO=TRUE -DAARCH64=TRUE" \
+               "-DPLATFORM=rpi3 -DBAMBOO=TRUE -DAARCH32=TRUE -DVERIFICATION=TRUE" \
+               "-DPLATFORM=rpi3 -DBAMBOO=TRUE -DAARCH32=TRUE" \
+               "-DPLATFORM=tx1 -DBAMBOO=TRUE -DAARCH64=TRUE -DVERIFICATION=TRUE" \
+               "-DPLATFORM=tx1 -DBAMBOO=TRUE -DRELEASE=TRUE -DAARCH64=TRUE" \
+               "-DPLATFORM=tx1 -DBAMBOO=TRUE -DAARCH64=TRUE" \
+               "-DPLATFORM=ia32 -DBAMBOO=TRUE -DSMP=TRUE -DVERIFICATION=TRUE" \
+               "-DPLATFORM=ia32 -DBAMBOO=TRUE -DRELEASE=TRUE -DSMP=TRUE" \
+               "-DPLATFORM=ia32 -DBAMBOO=TRUE -DSMP=TRUE" \
+               "-DPLATFORM=ia32 -DBAMBOO=TRUE -DVERIFICATION=TRUE" \
+               "-DPLATFORM=ia32 -DBAMBOO=TRUE -DRELEASE=TRUE" \
+               "-DPLATFORM=ia32 -DBAMBOO=TRUE" \
+               "-DPLATFORM=x86_64 -DBAMBOO=TRUE -DSMP=TRUE -DVERIFICATION=TRUE" \
+               "-DPLATFORM=x86_64 -DBAMBOO=TRUE -DRELEASE=TRUE -DSMP=TRUE" \
+               "-DPLATFORM=x86_64 -DBAMBOO=TRUE -DSMP=TRUE" \
+               "-DPLATFORM=x86_64 -DBAMBOO=TRUE -DVERIFICATION=TRUE" \
+               "-DPLATFORM=x86_64 -DBAMBOO=TRUE -DRELEASE=TRUE" \
+               "-DPLATFORM=x86_64 -DBAMBOO=TRUE"; \
     do \
-        echo $(basename $i) \
-        && make mrproper          2>&1 1>/dev/null \
-        && make $(basename $i)    2>&1 1>/dev/null \
-        && make silentoldconfig   2>&1 1>/dev/null \
-        && make -j 2              2>&1 1>/dev/null \
-        || err=true; \
-    done; \
-    if [ "$err" = true ]; then \
-        echo "ERROR!"; \
-        exit 1; \
-    fi
+        mkdir build \
+        && cd build \
+        && ../init-build.sh "$cmd" \
+        && ninja \ 
+        && cd ..\
+        && rm -rf build; \
+    done
 
