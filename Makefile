@@ -34,7 +34,7 @@ DOCKER_FLAGS ?= --force-rm=true
 INTERNAL ?= no
 
 USE_PREBUILT_RISCV ?= no
-RISCV_BASE_DATE ?= 2018_05_31
+RISCV_BASE_DATE ?= 2018_06_04
 
 #################################################
 # Build dependencies for core images
