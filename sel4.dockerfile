@@ -90,6 +90,7 @@ RUN for compiler in gcc \
 RUN for p in "pip2" "pip3"; \
     do \
         ${p} install --no-cache-dir \
+            pylint \
             sel4-deps; \
     done
 
@@ -102,5 +103,12 @@ RUN cd /root \
     && make \
     && cp bin/astyle /usr/bin/astyle \
     && rm -rf /root/astyle
+
+# Set up locales. en_AU chosen because we're in Australia.
+RUN echo 'en_AU.UTF-8 UTF-8' > /etc/locale.gen \
+    && dpkg-reconfigure --frontend=noninteractive locales \
+    && echo "LANG=en_AU.UTF-8" >> /etc/default/locale 
+
+ENV LANG en_AU.UTF-8
 
 
