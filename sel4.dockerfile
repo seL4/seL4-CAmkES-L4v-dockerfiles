@@ -43,6 +43,7 @@ RUN dpkg --add-architecture armhf \
         libncurses-dev \
         libuv1 \
         libxml2-utils \
+        locales \
         ninja-build \
         qemu-system-arm \
         qemu-system-x86 \

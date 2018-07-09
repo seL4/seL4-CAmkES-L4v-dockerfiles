@@ -15,7 +15,6 @@ RUN apt-get update -q \
         libcunit1-dev \
         libglib2.0-dev \
         libsqlite3-dev \
-        locales \
         libgmp3-dev \
         # Required for stack to use tcp properly
         netbase \
