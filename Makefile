@@ -16,6 +16,7 @@ CAMKES_VIS_IMG ?= camkes-vis
 SEL4_RISCV_IMG ?= sel4-riscv
 CAMKES_RISCV_IMG ?= camkes-riscv
 PREBUILT_RISCV_IMG ?= prebuilt_riscv_compilers
+BINARY_DECOMP_IMG ?= binary_decomp
 
 # Test images 
 SEL4_TST_IMG ?= sel4_test
@@ -139,6 +140,16 @@ camkes-vis: camkes
 		.
 rebuild_camkes-vis: DOCKER_FLAGS += --no-cache
 rebuild_camkes-vis: camkes-vis
+
+.PHONY: binary_decomp rebuild_binary_decomp
+binary_decomp: sel4
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		--build-arg SEL4_IMG=$(DOCKERHUB)$(SEL4_IMG) \
+		-f binary_decomp.dockerfile \
+		-t $(DOCKERHUB)$(BINARY_DECOMP_IMG) \
+		.
+rebuild_binary_decomp: DOCKER_FLAGS += --no-cache
+rebuild_binary_decomp: binary_decomp
 
 
 ##################################################
