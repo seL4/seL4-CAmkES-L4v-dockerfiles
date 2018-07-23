@@ -34,7 +34,7 @@ DOCKER_BUILD ?= docker build
 DOCKER_FLAGS ?= --force-rm=true
 INTERNAL ?= no
 
-USE_PREBUILT_RISCV ?= no
+USE_PREBUILT_RISCV ?= yes
 RISCV_BASE_DATE ?= 2018_06_04
 
 #################################################
@@ -155,7 +155,7 @@ rebuild_binary_decomp: binary_decomp
 ##################################################
 
 .PHONY: all
-all: base_tools sel4 camkes camkes-rust camkes-vis l4v sel4-riscv camkes-riscv
+all: base_tools sel4 camkes camkes-rust camkes-vis l4v sel4-riscv camkes-riscv binary_decomp
 
 .PHONY: rebuild_all
 rebuild_all: rebuild_base_tools rebuild_sel4 rebuild_sel4-riscv rebuild_camkes rebuild_camkes-riscv rebuild_camkes-rust rebuild_l4v
