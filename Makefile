@@ -96,7 +96,7 @@ riscv: sel4
 		-t $(DOCKERHUB)$(PREBUILT_RISCV_IMG) \
 		.
 
-sel4-riscv: sel4 riscv
+sel4-riscv: sel4 #riscv
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
 		--build-arg BASE_BUILDER_IMG=$(DOCKERHUB)$(PREBUILT_RISCV_IMG) \
 		--build-arg BASE_IMG=$(DOCKERHUB)$(SEL4_IMG) \

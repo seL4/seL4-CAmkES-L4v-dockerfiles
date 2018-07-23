@@ -50,6 +50,7 @@ RUN ln -s /usr/bin/hg /usr/local/bin/hg \
 RUN mkdir -p /scripts/repo \
     && wget -O - https://storage.googleapis.com/git-repo-downloads/repo > /scripts/repo/repo \
     && chmod a+x /scripts/repo/repo
+ENV PATH "$PATH:/scripts/repo"
 
 # Get some simulation (QEMU) binaries, and copy them in
 COPY res/ertos /opt/ertos

@@ -47,6 +47,7 @@ RUN dpkg --add-architecture armhf \
         ninja-build \
         qemu-system-arm \
         qemu-system-x86 \
+        sloccount \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
@@ -59,7 +60,6 @@ RUN for compiler in gcc \
         do \
             name=$(basename ${file}); \
             echo "$name - $file"; \
-            #update-alternatives --install "${file}" "${name}" "${file}-5" 60; \
             update-alternatives --install "${file}" "${name}" "${file}-6" 50; \
             update-alternatives --auto "${name}"; \
         done \
@@ -88,6 +88,7 @@ RUN for compiler in gcc \
 
 
 # Get seL4 python2/3 deps
+# Pylint is for checking included python scripts
 RUN for p in "pip2" "pip3"; \
     do \
         ${p} install --no-cache-dir \
