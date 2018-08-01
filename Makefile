@@ -97,7 +97,7 @@ riscv: sel4
 		-t $(DOCKERHUB)$(PREBUILT_RISCV_IMG) \
 		.
 
-sel4-riscv: sel4 #riscv
+sel4-riscv: sel4
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
 		--build-arg BASE_BUILDER_IMG=$(DOCKERHUB)$(PREBUILT_RISCV_IMG) \
 		--build-arg BASE_IMG=$(DOCKERHUB)$(SEL4_IMG) \
@@ -108,7 +108,7 @@ rebuild_sel4-riscv: DOCKER_FLAGS += --no-cache
 rebuild_sel4-riscv: sel4-riscv
 
 .PHONY: camkes-riscv rebuild_camkes-riscv
-camkes-riscv: camkes riscv
+camkes-riscv: camkes
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
 		--build-arg BASE_BUILDER_IMG=$(DOCKERHUB)$(PREBUILT_RISCV_IMG) \
 		--build-arg BASE_IMG=$(DOCKERHUB)$(CAMKES_IMG) \
