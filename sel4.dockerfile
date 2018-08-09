@@ -3,11 +3,9 @@ ARG BASE_IMG=base_tools
 FROM $BASE_IMG
 MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 
-# Add debian testing as a mirror.
 # Add an apt preferences file, which states that stable is preferable than testing when automatically
 # picking packages.
-RUN echo 'deb http://httpredir.debian.org/debian/ testing main' > /etc/apt/sources.list.d/testing.list \
-    && echo 'Package: *' >> /etc/apt/preferences \
+RUN echo 'Package: *' >> /etc/apt/preferences \
     && echo 'Pin: release a=testing' >> /etc/apt/preferences \
     && echo 'Pin-Priority: 900' >> /etc/apt/preferences \
     && echo '' >> /etc/apt/preferences \
