@@ -34,16 +34,16 @@ RUN mkdir /isabelle \
 
 COPY res/isabelle_settings /root/.isabelle/etc/settings
 
-RUN mkdir /root/verification \
-    && cd /root/verification \
-    && /scripts/repo/repo init -u ${SCM}/seL4/verification-manifest.git \
-    && /scripts/repo/repo sync -c \
-    && cd /root/verification/l4v \
-    && ./isabelle/bin/isabelle components -a \
-    && ./isabelle/bin/isabelle jedit -bf \
-    && ./isabelle/bin/isabelle build -bv HOL-Word \
-    && rm -rf /root/verification \
-    && rm -rf /tmp/isabelle-
+#RUN mkdir /root/verification \
+#    && cd /root/verification \
+#    && /scripts/repo/repo init -u ${SCM}/seL4/verification-manifest.git \
+#    && /scripts/repo/repo sync -c \
+#    && cd /root/verification/l4v \
+#    && ./isabelle/bin/isabelle components -a \
+#    && ./isabelle/bin/isabelle jedit -bf \
+#    && ./isabelle/bin/isabelle build -bv HOL-Word \
+#    && rm -rf /root/verification \
+#    && rm -rf /tmp/isabelle-
 
 
 # To perform the Haskell kernel regression, we need cabal
