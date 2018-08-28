@@ -3,7 +3,7 @@ init_components "$USER_HOME/.isabelle/contrib" "$ISABELLE_HOME/Admin/components/
 init_components "$USER_HOME/.isabelle/contrib" "$ISABELLE_HOME/Admin/components/bundled"
 
 # 64 bit setup for large C proofs:
-ML_OPTIONS="-H 2000"
+ML_OPTIONS="-H 4096 --maxheap 16384"
 ML_PLATFORM="$ISABELLE_PLATFORM64"
 ML_HOME="$(dirname ${ML_HOME})/$ML_PLATFORM"
 ISABELLE_BUILD_OPTIONS=${OVERRIDE_ISABELLE_BUILD_OPTIONS:-"threads=4"}
