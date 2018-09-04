@@ -28,6 +28,8 @@ RUN dpkg --add-architecture i386 \
         # Required for rumprun
         rsync \
         xxd \
+        dh-autoreconf \
+        gettext \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
