@@ -40,6 +40,9 @@ RUN mkdir /root/verification \
     && /scripts/repo/repo sync -c \
     && cd /root/verification/l4v \
     && ./isabelle/bin/isabelle components -a \
+    && cd /root/verification/l4v/spec/design \
+    && make sandbox \
+    && cd \
     && rm -rf /root/verification \
     && rm -rf /tmp/isabelle-
 
