@@ -264,7 +264,6 @@ user_run:
 		-v /etc/localtime:/etc/localtime:ro \
 		$(USER_IMG)-$(shell id -u) bash
 
-
 .PHONY: user_run_l4v
 user_run_l4v:
 	docker run \
@@ -283,6 +282,13 @@ user_run_l4v:
 
 .PHONY: build_user
 build_user:
+ifeq ($(shell id -u),0)
+	@echo "You are running this as root (either via sudo, or directly)."
+	@echo "This system is designed to run under your own user account."
+	@echo "You can add yourself to the docker group to make this work:"
+	@echo "    sudo su -c usermod -aG docker your_username"
+	@exit 1
+else
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
 		--build-arg=USER_BASE_IMG=$(DOCKERHUB)$(USER_BASE_IMG) \
 		-f extras.dockerfile \
@@ -294,6 +300,7 @@ build_user:
 		--build-arg=UID=$(shell id -u) \
 		-f user.dockerfile \
 		-t $(USER_IMG)-$(shell id -u) .
+endif
 build_user_sel4: USER_BASE_IMG = $(SEL4_IMG)
 build_user_sel4: build_user
 build_user_sel4-riscv: USER_BASE_IMG = $(SEL4_RISCV_IMG)
