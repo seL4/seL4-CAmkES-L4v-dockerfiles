@@ -261,6 +261,7 @@ user_run:
 		-u $(shell whoami) \
 		-v $(HOST_DIR):/host \
 		-v $(shell whoami)-home:/home/$(shell whoami) \
+		-v /etc/localtime:/etc/localtime:ro \
 		$(USER_IMG)-$(shell id -u) bash
 
 
@@ -274,6 +275,7 @@ user_run_l4v:
 		-v $(HOST_DIR):/host \
 		-v $(shell whoami)-home:/home/$(shell whoami) \
 		-v $(shell whoami)-isabelle:/isabelle \
+		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-e DISPLAY=$(DISPLAY) \
 		$(USER_IMG)-$(shell id -u) bash
