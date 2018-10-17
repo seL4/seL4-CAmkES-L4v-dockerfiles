@@ -30,6 +30,7 @@ RUN apt-get update -q \
 
 # Get l4v and setup isabelle
 RUN mkdir /isabelle \
+    && ln -s /isabelle ~/.isabelle \
     && mkdir -p ~/.isabelle/etc
 
 COPY res/isabelle_settings /root/.isabelle/etc/settings

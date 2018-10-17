@@ -21,6 +21,7 @@ RUN useradd -u ${UID} ${UNAME} \
     && echo 'cd /host' >> /home/${UNAME}/.bashrc \
     && mkdir -p /isabelle \
     && chown -R ${UNAME}:${UNAME} /isabelle \
+    && ln -s /isabelle /home/${UNAME}/.isabelle \
     && chown -R ${UNAME}:${UNAME} /home/${UNAME} \
     && chmod -R ug+rw /home/${UNAME} 
 
