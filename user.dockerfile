@@ -7,6 +7,8 @@ ARG UNAME
 
 # Crammed a lot in here to make building the image faster
 RUN useradd -u ${UID} ${UNAME} \
+    && adduser ${UNAME} sudo \
+    && passwd -d ${UNAME} \
     && mkdir /home/${UNAME} \
     && echo 'echo "___                                   "' >> /home/${UNAME}/.bashrc \
     && echo 'echo " |   _      _ |_      _   _ |_ |_     "' >> /home/${UNAME}/.bashrc \
