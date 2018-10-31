@@ -87,4 +87,10 @@ RUN wget https://cakeml.org/regression/artefacts/473/cake-x64-64.tar.gz \
 RUN git clone https://github.com/CakeML/cakeml.git \
     && cd cakeml \
     && git checkout 66a35311787bb43f72e8e758209a4745f288cdfe \
+    # Pre-build the following cakeml directories to speed up subsequent cakeml app builds
+    && for dir in "characteristic" "basis" "misc" "translator" "semantics" "unverified/sexpr-bootstrap" \
+    "compiler/parsing" "semantics/proofs"; \
+        do \
+            cd /cakeml/${dir} && /HOL/bin/Holmake; \
+        done \
     && chmod -R 757 /cakeml
