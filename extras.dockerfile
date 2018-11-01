@@ -13,6 +13,7 @@ RUN rm -r /var/lib/apt/lists/* \
     && apt-get install -y --no-install-recommends \
         # Add more dependencies here
         cowsay \
+        sudo \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/

@@ -9,6 +9,17 @@ ARG UNAME
 RUN useradd -u ${UID} ${UNAME} \
     && adduser ${UNAME} sudo \
     && passwd -d ${UNAME} \
+    && echo 'Defaults        lecture_file = /etc/sudoers.lecture' >> /etc/sudoers \
+    && echo 'Defaults        lecture = always' >> /etc/sudoers \
+    && echo '##################### Warning! #####################################' > /etc/sudoers.lecture \
+    && echo 'This is an ephemeral docker container! You can do things to it using' >> /etc/sudoers.lecture \
+    && echo 'sudo, but when you exit, changes made outside of the /host directory' >> /etc/sudoers.lecture \
+    && echo 'will be lost.' >> /etc/sudoers.lecture \
+    && echo 'If you want your changes to be permanent, add them to the ' >> /etc/sudoers.lecture \
+    && echo '    extras.dockerfile' >> /etc/sudoers.lecture \
+    && echo 'in the seL4-CAmkES-L4v dockerfiles repo.' >> /etc/sudoers.lecture \
+    && echo '####################################################################' >> /etc/sudoers.lecture \
+    && echo '' >> /etc/sudoers.lecture \
     && mkdir /home/${UNAME} \
     && echo 'echo "___                                   "' >> /home/${UNAME}/.bashrc \
     && echo 'echo " |   _      _ |_      _   _ |_ |_     "' >> /home/${UNAME}/.bashrc \
