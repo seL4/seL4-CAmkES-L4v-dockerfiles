@@ -6,8 +6,10 @@ MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
 # Lines 1-2: Add another mirror for debian to pull packages from.
 # Lines 3-4: Do some docker specific tricks with apt.
 # Lines under apt-get: get some basic tools.
-RUN echo 'deb http://httpredir.debian.org/debian/ buster main' > /etc/apt/sources.list.d/alternate_mirror.list \
-    && echo 'deb http://httpredir.debian.org/debian/ buster-updates main' > /etc/apt/sources.list.d/alternate_mirror.list \
+RUN echo 'deb http://httpredir.debian.org/debian/ buster main' >> /etc/apt/sources.list.d/alternate_mirror.list \
+    && echo 'deb http://httpredir.debian.org/debian/ buster-updates main' >> /etc/apt/sources.list.d/alternate_mirror.list \
+    && echo 'deb http://mirror.aarnet.edu.au/debian/ buster main' >> /etc/apt/sources.list.d/alternate_mirror.list \
+    && echo 'deb http://mirror.aarnet.edu.au/debian/ buster-updates main' >> /etc/apt/sources.list.d/alternate_mirror.list \
     && echo "force-unsafe-io" > /etc/dpkg/dpkg.cfg.d/02apt-speedup \
     && echo "Acquire::http {No-Cache=True;};" > /etc/apt/apt.conf.d/no-cache \
     && apt-get update -q \
