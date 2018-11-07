@@ -46,6 +46,7 @@ RUN dpkg --add-architecture armhf \
         qemu-system-arm \
         qemu-system-x86 \
         sloccount \
+        u-boot-tools \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
