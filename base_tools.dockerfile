@@ -10,6 +10,7 @@ RUN echo 'deb http://httpredir.debian.org/debian/ buster main' >> /etc/apt/sourc
     && echo 'deb http://httpredir.debian.org/debian/ buster-updates main' >> /etc/apt/sources.list.d/alternate_mirror.list \
     && echo 'deb http://mirror.aarnet.edu.au/debian/ buster main' >> /etc/apt/sources.list.d/alternate_mirror.list \
     && echo 'deb http://mirror.aarnet.edu.au/debian/ buster-updates main' >> /etc/apt/sources.list.d/alternate_mirror.list \
+    && echo 'deb http://mirror.aarnet.edu.au/debian/ stretch main' >> /etc/apt/sources.list.d/alternate_mirror.list \
     && echo "force-unsafe-io" > /etc/dpkg/dpkg.cfg.d/02apt-speedup \
     && echo "Acquire::http {No-Cache=True;};" > /etc/apt/apt.conf.d/no-cache \
     && apt-get update -q \
