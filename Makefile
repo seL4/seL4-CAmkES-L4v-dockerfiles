@@ -15,6 +15,7 @@ RUST_IMG ?= sel4-rust
 CAMKES_VIS_IMG ?= camkes-vis
 SEL4_RISCV_IMG ?= sel4-riscv
 CAMKES_RISCV_IMG ?= camkes-riscv
+L4V_RISCV_IMG ?= l4v-riscv
 PREBUILT_RISCV_IMG ?= prebuilt_riscv_compilers
 BINARY_DECOMP_IMG ?= binary_decomp
 
@@ -118,6 +119,17 @@ camkes-riscv: camkes
 rebuild_camkes-riscv: DOCKER_FLAGS += --no-cache
 rebuild_camkes-riscv: camkes-riscv
 
+.PHONY: l4v-riscv rebuild_l4v-riscv
+l4v-riscv: l4v
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		--build-arg BASE_BUILDER_IMG=$(DOCKERHUB)$(PREBUILT_RISCV_IMG) \
+		--build-arg BASE_IMG=$(DOCKERHUB)$(L4V_IMG) \
+		-f apply-riscv.dockerfile \
+		-t $(DOCKERHUB)$(L4V_RISCV_IMG) \
+		.
+rebuild_l4v-riscv: DOCKER_FLAGS += --no-cache
+rebuild_l4v-riscv: l4v-riscv
+
 #################################################
 ## Extra features
 #################################################
@@ -155,7 +167,7 @@ rebuild_binary_decomp: binary_decomp
 ##################################################
 
 .PHONY: all
-all: base_tools sel4 camkes camkes-rust camkes-vis l4v sel4-riscv camkes-riscv binary_decomp
+all: base_tools sel4 camkes camkes-rust camkes-vis l4v sel4-riscv camkes-riscv l4v-riscv binary_decomp
 
 .PHONY: rebuild_all
 rebuild_all: rebuild_base_tools rebuild_sel4 rebuild_sel4-riscv rebuild_camkes rebuild_camkes-riscv rebuild_camkes-rust rebuild_l4v
@@ -225,6 +237,10 @@ pull_camkes_image-riscv:
 .PHONY: pull_l4v_image
 pull_l4v_image:
 	docker pull $(DOCKERHUB)$(L4V_IMG)
+
+.PHONY: pull_l4v-riscv_image
+pull_l4v_image-riscv:
+	docker pull $(DOCKERHUB)$(L4V_RISCV_IMG)
 
 .PHONY: pull_images_from_dockerhub
 pull_images_from_dockerhub: pull_sel4_image pull_camkes_image pull_l4v_image
@@ -322,6 +338,8 @@ build_user_camkes-riscv: USER_BASE_IMG = $(CAMKES_RISCV_IMG)
 build_user_camkes-riscv: build_user
 build_user_l4v: USER_BASE_IMG = $(L4V_IMG)
 build_user_l4v: build_user
+build_user_l4v-riscv: USER_BASE_IMG = $(L4V_RISCV_IMG)
+build_user_l4v-riscv: build_user
 
 .PHONY: clean_isabelle
 clean_isabelle:
@@ -343,6 +361,7 @@ clean_images:
 	-docker rmi $(DOCKERHUB)$(SEL4_IMG)
 	-docker rmi $(DOCKERHUB)$(SEL4_RISCV_IMG)
 	-docker rmi $(DOCKERHUB)$(CAMKES_RISCV_IMG)
+	-docker rmi $(DOCKERHUB)$(L4V_RISCV_IMG)
 
 .PHONY: clean
 clean: clean_data clean_images
