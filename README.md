@@ -48,17 +48,31 @@ If you want to map a different folder, you can specify it on the command line:
 
     make user_sel4 HOST_DIR=/scratch/sel4_stuff
 
+You can also specify commands to be executed inside the container by using `EXEC`:
+
+    make user EXEC="bash -c 'echo hello world'"
+
 The images will be pulled from DockerHub if your machine does not have them.
 
-Alternately, you can setup a bash alias, such as this:
+Alternately, you can define a bash function in your `bashrc`, such as this:
 
-    echo $'alias container=\'make -C /<path>/<to>/seL4-CAmkES-L4v-dockerfiles user HOST_DIR=$(pwd)\'' >> ~/.bashrc
+    function container() {
+        if [[ $# > 0 ]]; then
+            make -C /<path>/<to>/seL4-CAmkES-L4v-dockerfiles user HOST_DIR=$(pwd) EXEC="bash -c '""$@""'"
+        else
+            make -C /<path>/<to>/seL4-CAmkES-L4v-dockerfiles user HOST_DIR=$(pwd)
+        fi
+    }
 
 Where you replace the path to match where you cloned the git repo of the docker files. This then allows you to run:
 
     container
 
-to start the container in the current directory you are in.
+to start the container interactively in your current directory, or:
+
+    container "echo hello && echo world"
+
+to execute commands in the container in your current directory.
 
 ### Example of compiling seL4 test
 Start by creating a new workspace on your machine:

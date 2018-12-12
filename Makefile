@@ -34,6 +34,10 @@ HOST_DIR ?= $(shell pwd)
 DOCKER_BUILD ?= docker build
 DOCKER_FLAGS ?= --force-rm=true
 INTERNAL ?= no
+ifndef EXEC
+	EXEC := bash
+	DOCKER_RUN_FLAGS += -it
+endif
 
 USE_PREBUILT_RISCV ?= yes
 RISCV_BASE_DATE ?= 2018_06_04
@@ -271,19 +275,19 @@ user_l4v: build_user_l4v user_run_l4v
 .PHONY: user_run
 user_run:
 	docker run \
-		-it \
+		$(DOCKER_RUN_FLAGS) \
 		--hostname in-container \
 		--rm \
 		-u $(shell whoami) \
 		-v $(HOST_DIR):/host \
 		-v $(shell whoami)-home:/home/$(shell whoami) \
 		-v /etc/localtime:/etc/localtime:ro \
-		$(USER_IMG)-$(shell id -u) bash
+		$(USER_IMG)-$(shell id -u) $(EXEC)
 
 .PHONY: user_run_l4v
 user_run_l4v:
 	docker run \
-		-it \
+		$(DOCKER_RUN_FLAGS) \
 		--hostname in-container \
 		--rm \
 		-u $(shell whoami) \
@@ -293,7 +297,7 @@ user_run_l4v:
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-e DISPLAY=$(DISPLAY) \
-		$(USER_IMG)-$(shell id -u) bash
+		$(USER_IMG)-$(shell id -u) $(EXEC)
 
 
 .PHONY: run_checks
