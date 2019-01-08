@@ -62,8 +62,8 @@ COPY res/ertos /opt/ertos
 ARG INTERNAL=no
 RUN if [ "$INTERNAL" = "yes" ]; then \
         cd /scripts \
-        && git clone http://bitbucket.keg.ertos.in.nicta.com.au/scm/sel4proj/console_reboot.git \
+        && git clone http://bitbucket.ts.data61.csiro.au/scm/sel4proj/console_reboot.git \
         && chmod +x /scripts/console_reboot/simulate/* \
         # Get some useful SEL4 tools
-        && git clone http://bitbucket.keg.ertos.in.nicta.com.au/scm/sel4/sel4_libs.git; \
+        && git clone http://bitbucket.ts.data61.csiro.au/scm/sel4/sel4_libs.git; \
     fi
