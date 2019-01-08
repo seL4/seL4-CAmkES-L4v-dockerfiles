@@ -37,7 +37,7 @@ RUN echo 'deb http://httpredir.debian.org/debian/ buster main' >> /etc/apt/sourc
 # Install some basic python tools
 RUN for p in "pip2" "pip3"; \
     do \ 
-        ${p} install --no-cache-dir --upgrade pip==9.0.3 \
+        ${p} install --no-cache-dir --upgrade pip \
         && ${p} install --no-cache-dir \
             setuptools \
         && ${p} install --no-cache-dir \
