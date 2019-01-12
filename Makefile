@@ -26,7 +26,7 @@ L4V_TST_IMG ?= l4v_test
 
 # Interactive images
 EXTRAS_IMG := extras
-USER_IMG := user_img
+USER_IMG := user_img-$(shell whoami)
 USER_BASE_IMG := $(SEL4_IMG)
 HOST_DIR ?= $(shell pwd)
 
@@ -282,7 +282,7 @@ user_run:
 		-v $(HOST_DIR):/host \
 		-v $(shell whoami)-home:/home/$(shell whoami) \
 		-v /etc/localtime:/etc/localtime:ro \
-		$(USER_IMG)-$(shell id -u) $(EXEC)
+		$(USER_IMG) $(EXEC)
 
 .PHONY: user_run_l4v
 user_run_l4v:
@@ -297,7 +297,7 @@ user_run_l4v:
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-e DISPLAY=$(DISPLAY) \
-		$(USER_IMG)-$(shell id -u) $(EXEC)
+		$(USER_IMG) $(EXEC)
 
 
 .PHONY: run_checks
@@ -331,7 +331,7 @@ build_user: run_checks
 		--build-arg=UNAME=$(shell whoami) \
 		--build-arg=UID=$(shell id -u) \
 		-f user.dockerfile \
-		-t $(USER_IMG)-$(shell id -u) .
+		-t $(USER_IMG) .
 build_user_sel4: USER_BASE_IMG = $(SEL4_IMG)
 build_user_sel4: build_user
 build_user_sel4-riscv: USER_BASE_IMG = $(SEL4_RISCV_IMG)
@@ -358,7 +358,7 @@ clean_data: clean_isabelle clean_home_dir
 
 .PHONY: clean_images
 clean_images:
-	-docker rmi $(USER_IMG)-$(shell id -u)
+	-docker rmi $(USER_IMG)
 	-docker rmi extras
 	-docker rmi $(DOCKERHUB)$(L4V_IMG)
 	-docker rmi $(DOCKERHUB)$(CAMKES_IMG)
