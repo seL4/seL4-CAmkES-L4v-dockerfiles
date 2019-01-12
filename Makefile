@@ -30,6 +30,10 @@ USER_IMG := user_img-$(shell whoami)
 USER_BASE_IMG := $(SEL4_IMG)
 HOST_DIR ?= $(shell pwd)
 
+# Volumes
+DOCKER_VOLUME_HOME ?= $(shell whoami)-home
+DOCKER_VOLUME_ISABELLE ?= $(shell whoami)-isabelle
+
 # Extra vars
 DOCKER_BUILD ?= docker build
 DOCKER_FLAGS ?= --force-rm=true
@@ -280,7 +284,7 @@ user_run:
 		--rm \
 		-u $(shell id -u):$(shell id -g) \
 		-v $(HOST_DIR):/host \
-		-v $(shell whoami)-home:/home/$(shell whoami) \
+		-v $(DOCKER_VOLUME_HOME):/home/$(shell whoami) \
 		-v /etc/localtime:/etc/localtime:ro \
 		$(USER_IMG) $(EXEC)
 
@@ -292,8 +296,8 @@ user_run_l4v:
 		--rm \
 		-u $(shell id -u):$(shell id -g) \
 		-v $(HOST_DIR):/host \
-		-v $(shell whoami)-home:/home/$(shell whoami) \
-		-v $(shell whoami)-isabelle:/isabelle \
+		-v $(DOCKER_VOLUME_HOME):/home/$(shell whoami) \
+		-v $(DOCKER_VOLUME_ISABELLE):/isabelle \
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-e DISPLAY=$(DISPLAY) \
@@ -347,11 +351,11 @@ build_user_l4v-riscv: build_user
 
 .PHONY: clean_isabelle
 clean_isabelle:
-	docker volume rm $(shell whoami)-isabelle
+	docker volume rm $(DOCKER_VOLUME_ISABELLE)
 
 .PHONY: clean_home_dir
 clean_home_dir:
-	docker volume rm $(shell whoami)-home
+	docker volume rm $(DOCKER_VOLUME_HOME)
 
 .PHONY: clean_data
 clean_data: clean_isabelle clean_home_dir
