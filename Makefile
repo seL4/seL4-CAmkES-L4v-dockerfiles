@@ -278,7 +278,7 @@ user_run:
 		$(DOCKER_RUN_FLAGS) \
 		--hostname in-container \
 		--rm \
-		-u $(shell whoami) \
+		-u $(shell id -u):$(shell id -g) \
 		-v $(HOST_DIR):/host \
 		-v $(shell whoami)-home:/home/$(shell whoami) \
 		-v /etc/localtime:/etc/localtime:ro \
@@ -290,7 +290,7 @@ user_run_l4v:
 		$(DOCKER_RUN_FLAGS) \
 		--hostname in-container \
 		--rm \
-		-u $(shell whoami) \
+		-u $(shell id -u):$(shell id -g) \
 		-v $(HOST_DIR):/host \
 		-v $(shell whoami)-home:/home/$(shell whoami) \
 		-v $(shell whoami)-isabelle:/isabelle \
