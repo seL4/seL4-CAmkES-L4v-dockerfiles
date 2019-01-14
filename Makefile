@@ -17,6 +17,7 @@ SEL4_RISCV_IMG ?= sel4-riscv
 CAMKES_RISCV_IMG ?= camkes-riscv
 L4V_RISCV_IMG ?= l4v-riscv
 PREBUILT_RISCV_IMG ?= prebuilt_riscv_compilers
+PREBUILT_CAKEML_IMG ?= prebuilt_cakeml
 BINARY_DECOMP_IMG ?= binary_decomp
 
 # Test images 
@@ -39,8 +40,14 @@ ifndef EXEC
 	DOCKER_RUN_FLAGS += -it
 endif
 
+###########################
+# For 'prebuilt' images, the idea is that for things that take a long
+# time to build, and don't change very much, we should build them 
+# once, and then pull them in as needed.
 USE_PREBUILT_RISCV ?= yes
 RISCV_BASE_DATE ?= 2018_06_04
+USE_CAKEML_RISCV ?= yes
+CAKEML_BASE_DATE ?= 2019_01_13
 
 #################################################
 # Build dependencies for core images
@@ -74,6 +81,14 @@ camkes: sel4
 		-f camkes.dockerfile \
 		-t $(DOCKERHUB)$(CAMKES_IMG) \
 		.
+	# Add in CakeML
+	# Notice it 'overwrites' the camkes tag
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		--build-arg BASE_BUILDER_IMG=$(DOCKERHUB)$(PREBUILT_CAKEML_IMG) \
+		--build-arg BASE_IMG=$(DOCKERHUB)$(CAMKES_IMG) \
+		-f apply-cakeml.dockerfile \
+		-t $(DOCKERHUB)$(CAMKES_IMG) \
+		.
 rebuild_camkes: DOCKER_FLAGS += --no-cache
 rebuild_camkes: camkes
 
@@ -88,9 +103,23 @@ rebuild_l4v: DOCKER_FLAGS += --no-cache
 rebuild_l4v: l4v
 
 ############################################
+## CakeML
+###########################################
+.PHONY: cakeml 
+ifneq ($(USE_PREBUILT_CAKEML),yes)
+	CAKEML_BASE_DATE := latest
+endif
+cakeml:
+	echo $(CAKEML_BASE_DATE)
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		--build-arg BASE_IMG=$(DOCKERHUB)$(CAMKES_IMG):$(CAKEML_BASE_DATE) \
+		-f cakeml.dockerfile \
+		-t $(DOCKERHUB)$(PREBUILT_CAKEML_IMG) \
+		.
+
+############################################
 ## RISC-V
 ###########################################
-.PHONY: sel4-riscv rebuild_sel4-riscv
 ifneq ($(USE_PREBUILT_RISCV),yes)
 	RISCV_BASE_DATE := latest
 endif
@@ -102,6 +131,7 @@ riscv: sel4
 		-t $(DOCKERHUB)$(PREBUILT_RISCV_IMG) \
 		.
 
+.PHONY: sel4-riscv rebuild_sel4-riscv
 sel4-riscv: sel4
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
 		--build-arg BASE_BUILDER_IMG=$(DOCKERHUB)$(PREBUILT_RISCV_IMG) \
