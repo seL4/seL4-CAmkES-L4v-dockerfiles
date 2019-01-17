@@ -1,7 +1,8 @@
-# Additional dependencies required to build CakeML
 ARG BASE_IMG=trustworthysystems/camkes
 FROM $BASE_IMG
-MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
+
+LABEL ORGANISATION="Trustworthy Systems"
+LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 
 # Set up tools to compile CakeML
 RUN git clone https://github.com/HOL-Theorem-Prover/HOL.git \

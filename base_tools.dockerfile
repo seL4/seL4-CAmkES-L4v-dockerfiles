@@ -1,10 +1,10 @@
-# Use debian stable as our base image
 ARG BASE_IMG=debian:buster
 FROM $BASE_IMG
-MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
+LABEL ORGANISATION="Trustworthy Systems"
+LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 
-# Lines 1-2: Add another mirror for debian to pull packages from.
-# Lines 3-4: Do some docker specific tricks with apt.
+# Lines 1-5: Add another mirror for debian to pull packages from.
+# Lines 6-8: Do some docker specific tricks with apt.
 # Lines under apt-get: get some basic tools.
 RUN echo 'deb http://httpredir.debian.org/debian/ buster main' >> /etc/apt/sources.list.d/alternate_mirror.list \
     && echo 'deb http://httpredir.debian.org/debian/ buster-updates main' >> /etc/apt/sources.list.d/alternate_mirror.list \

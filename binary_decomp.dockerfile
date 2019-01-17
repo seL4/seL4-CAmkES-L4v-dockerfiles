@@ -1,6 +1,8 @@
 ARG BASE_IMG=trustworthysystems/sel4
 FROM $BASE_IMG
-MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
+
+LABEL ORGANISATION="Trustworthy Systems"
+LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \

@@ -1,6 +1,10 @@
-ARG BASE_IMG=trustworthysystems/sel4_gcc6
-
+ARG BASE_IMG=trustworthysystems/sel4
 FROM $BASE_IMG
+
+LABEL ORGANISATION="Trustworthy Systems"
+LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
+
+# Get source for RISCV compilers, and build them
 
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \

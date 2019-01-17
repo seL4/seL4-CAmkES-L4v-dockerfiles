@@ -1,7 +1,7 @@
-# Dependencies required to verify seL4
 ARG BASE_IMG=trustworthysystems/camkes
 FROM $BASE_IMG
-MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
+LABEL ORGANISATION="Trustworthy Systems"
+LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 
 ARG SCM=https://github.com
 
@@ -35,6 +35,8 @@ RUN mkdir /isabelle \
 
 COPY res/isabelle_settings /root/.isabelle/etc/settings
 
+# Get a copy of the L4v repo, and build all the isabelle and haskell 
+# components, essentially caching them in the image.
 RUN mkdir /root/verification \
     && cd /root/verification \
     && /scripts/repo/repo init -u ${SCM}/seL4/verification-manifest.git \
@@ -46,25 +48,3 @@ RUN mkdir /root/verification \
     && cd \
     && rm -rf /root/verification \
     && rm -rf /tmp/isabelle-
-
-
-# To perform the Haskell kernel regression, we need cabal
-#RUN cd /root \
-#    && curl -k -L -o ghc.tar.bz2 http://www.haskell.org/ghc/dist/7.8.1/ghc-7.8.1-x86_64-unknown-linux-deb7.tar.bz2 \
-#    && tar -xf ghc.tar.bz2 \
-#    && rm /root/ghc.tar.bz2 \
-#    && cd /root/ghc-7.8.1 \
-#    && ./configure --prefix=/usr/local \
-#    && make install \
-#    && rm -rf /root/ghc-7.8.1 
-#
-#RUN cd root \
-#    && curl -L -O http://hackage.haskell.org/package/cabal-install-1.22.7.0/cabal-install-1.22.7.0.tar.gz \
-#    && tar -xf cabal-install-1.22.7.0.tar.gz \
-#    && rm cabal-install-1.22.7.0.tar.gz \
-#    && cd /root/cabal-install-1.22.7.0 \
-#    && ./bootstrap.sh \
-#    && ln -s /root/.cabal/bin/cabal /usr/local/bin/cabal \
-#    && cabal update --verbose \
-#    && cabal install cabal-install --global 
-

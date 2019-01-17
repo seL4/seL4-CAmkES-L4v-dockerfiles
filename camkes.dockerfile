@@ -1,7 +1,7 @@
-# Additional dependencies required to build CAmkES
 ARG BASE_IMG=trustworthysystems/sel4
 FROM $BASE_IMG
-MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
+LABEL ORGANISATION="Trustworthy Systems"
+LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 
 # Get dependencies
 RUN dpkg --add-architecture i386 \
@@ -60,4 +60,3 @@ RUN git clone https://github.com/seL4/capdl.git \
     && stack build --only-dependencies \
     && cd / \
     && rm -rf capdl
-

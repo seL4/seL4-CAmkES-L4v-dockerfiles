@@ -1,7 +1,7 @@
-# Dependencies for compiling seL4
 ARG BASE_IMG=base_tools
 FROM $BASE_IMG
-MAINTAINER Luke Mondy (luke.mondy@data61.csiro.au)
+LABEL ORGANISATION="Trustworthy Systems"
+LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 
 # Add an apt preferences file, which states that stable is preferable than testing when automatically
 # picking packages.
@@ -111,5 +111,3 @@ RUN echo 'en_AU.UTF-8 UTF-8' > /etc/locale.gen \
     && echo "LANG=en_AU.UTF-8" >> /etc/default/locale 
 
 ENV LANG en_AU.UTF-8
-
-

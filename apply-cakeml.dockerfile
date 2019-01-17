@@ -6,6 +6,9 @@ FROM $BASE_BUILDER_IMG as builder
 
 FROM $BASE_IMG 
 
+LABEL ORGANISATION="Trustworthy Systems"
+LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
+
 COPY --from=builder /HOL /HOL
 COPY --from=builder /cake-x64-32 /cake-x64-32
 COPY --from=builder /cake-x64-64 /cake-x64-64
