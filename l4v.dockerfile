@@ -47,5 +47,4 @@ RUN mkdir /root/verification \
     && make sandbox \
     && cd \
     && rm -rf /root/verification \
-    && rm -rf /tmp/isabelle- \
-    && find ~/.isabelle/contrib -name '*.tar.gz' -delete
+    && rm -rf /tmp/isabelle-
