@@ -26,6 +26,7 @@ RUN dpkg --add-architecture armhf \
         coreutils \
         cpio \
         curl \
+        device-tree-compiler \
         g++-6 \
         g++-6-aarch64-linux-gnu \
         g++-6-arm-linux-gnueabi \

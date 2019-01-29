@@ -8,7 +8,6 @@ RUN dpkg --add-architecture i386 \
     && apt-get update -q \
     && apt-get install -y --no-install-recommends \
         clang \
-        device-tree-compiler \
         fakeroot \
         lib32stdc++-6-dev \
         linux-libc-dev-i386-cross \

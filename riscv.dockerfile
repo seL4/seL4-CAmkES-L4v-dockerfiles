@@ -9,7 +9,7 @@ LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
         # For RISC-V tools:
-        autoconf automake autotools-dev curl libmpc-dev libmpfr-dev libgmp-dev libusb-1.0-0-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev device-tree-compiler pkg-config \
+        autoconf automake autotools-dev curl libmpc-dev libmpfr-dev libgmp-dev libusb-1.0-0-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev pkg-config \
         # For RISC-V QEMU:
         libglib2.0-dev zlib1g-dev libpixman-1-dev  \
     && apt-get clean autoclean \
