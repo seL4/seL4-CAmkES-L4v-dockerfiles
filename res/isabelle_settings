@@ -4,7 +4,7 @@ init_components "$USER_HOME/.isabelle/contrib" "$ISABELLE_HOME/Admin/components/
 
 # 64 bit setup for large C proofs:
 ML_OPTIONS="-H 4096 --maxheap 16384"
-ML_PLATFORM=${ML_PLATFORM:-"$ISABELLE_PLATFORM64"}
+ML_PLATFORM=${OVERRIDE_ML_PLATFORM:-"$ISABELLE_PLATFORM64"}
 ML_HOME="$(dirname ${ML_HOME})/$ML_PLATFORM"
 ISABELLE_BUILD_OPTIONS=${OVERRIDE_ISABELLE_BUILD_OPTIONS:-"threads=4"}
 
