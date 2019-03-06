@@ -7,7 +7,6 @@ LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 RUN dpkg --add-architecture i386 \
     && apt-get update -q \
     && apt-get install -y --no-install-recommends \
-        clang \
         fakeroot \
         lib32stdc++-6-dev \
         linux-libc-dev-i386-cross \
@@ -15,7 +14,6 @@ RUN dpkg --add-architecture i386 \
         # Required for testing
         gdb \
         libssl-dev \
-        libclang-dev \
         libcunit1-dev \
         libglib2.0-dev \
         libsqlite3-dev \

@@ -21,6 +21,7 @@ RUN dpkg --add-architecture armhf \
     && apt-get install -y --no-install-recommends \
         build-essential \
         ccache \
+        clang \
         cmake \
         cmake-curses-gui \
         coreutils \
@@ -39,6 +40,7 @@ RUN dpkg --add-architecture armhf \
         gcc-6-multilib \
         gcc-arm-none-eabi \
         libcc1-0 \
+        libclang-dev \
         libncurses-dev \
         libuv1 \
         libxml2-utils \
