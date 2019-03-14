@@ -19,27 +19,19 @@ RUN apt-get update -q \
 ENV RISCV /opt/riscv
 ENV PATH "$PATH:$RISCV"
 
-RUN git clone https://github.com/riscv/riscv-tools.git 
+RUN git clone https://github.com/riscv/riscv-gnu-toolchain.git
 
-WORKDIR /riscv-tools
+WORKDIR /riscv-gnu-toolchain
 
 RUN git submodule update --init --recursive
 
-RUN git clone https://github.com/heshamelmatary/riscv-qemu.git \
-    && cd riscv-qemu \
-    && git checkout sfence \
-    && git submodule update --init dtc
-
 RUN cd riscv-qemu \
-    && ./configure --target-list=riscv64-softmmu,riscv32-softmmu --prefix=$RISCV \
-    && make -j 8 \
-    && make install
+    && git checkout riscv-qemu-3.1
 
-# Setup riscv-tools/gnu-riscv to build "soft-float" toolchain
-RUN sed -i 's/build_project riscv-gnu-toolchain --prefix=$RISCV/build_project riscv-gnu-toolchain --prefix=$RISCV --with-arch=rv64imafdc --with-abi=lp64 --enable-multilib/g' ./build.sh
+# Setup qemu targets
+RUN sed -i 's/--target-list=riscv64-linux-user,riscv32-linux-user/--target-list=riscv64-softmmu,riscv32-softmmu/g' ./Makefile.in
 
-## 64-bit
-RUN ./build.sh 
+RUN ./configure --prefix=$RISCV --enable-multilib \
+    && make linux \
+    && make build-qemu
 
-## 32-bit 
-RUN ./build-rv32ima.sh
