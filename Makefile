@@ -127,7 +127,7 @@ cakeml:
 ifneq ($(USE_PREBUILT_RISCV),yes)
 	RISCV_BASE_DATE := latest
 endif
-riscv: sel4
+riscv:
 	echo $(RISCV_BASE_DATE)
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
 		--build-arg BASE_IMG=$(DOCKERHUB)$(SEL4_IMG):$(RISCV_BASE_DATE) \
