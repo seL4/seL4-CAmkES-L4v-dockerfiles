@@ -19,6 +19,7 @@ RUN dpkg --add-architecture armhf \
     && dpkg --add-architecture armel \
     && apt-get update -q \
     && apt-get install -y --no-install-recommends \
+        astyle=3.1-2 \
         build-essential \
         ccache \
         clang \
@@ -97,16 +98,6 @@ RUN for p in "pip2" "pip3"; \
             pylint \
             sel4-deps; \
     done
-
-# Get specific version of Astyle used in seL4
-RUN cd /root \
-    && wget https://sourceforge.net/projects/astyle/files/astyle/astyle%202.04/astyle_2.04_linux.tar.gz/download -O astyle_2.04_linux.tar.gz \
-    && tar -xf astyle_2.04_linux.tar.gz \
-    && rm astyle_2.04_linux.tar.gz \
-    && cd astyle/build/gcc \
-    && make \
-    && cp bin/astyle /usr/bin/astyle \
-    && rm -rf /root/astyle
 
 # Set up locales. en_AU chosen because we're in Australia.
 RUN echo 'en_AU.UTF-8 UTF-8' > /etc/locale.gen \
