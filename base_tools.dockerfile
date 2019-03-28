@@ -41,6 +41,8 @@ RUN for p in "pip2" "pip3"; \
         && ${p} install --no-cache-dir \
             setuptools \
         && ${p} install --no-cache-dir \
+            gitlint \
+            nose \ 
             pexpect \
             sh; \
     done
