@@ -14,40 +14,23 @@ SEL4_IMG="${SEL4_IMG:-sel4}"
 CAMKES_IMG="${CAMKES_IMG:-camkes}"
 L4V_IMG="${L4V_IMG:-l4v}"
 
-# Extra feature images
-RUST_IMG="${RUST_IMG:-sel4_rust}"
-CAMKES_VIS_IMG="${CAMKES_VIS_IMG:-camkes_vis}"
-BINARY_DECOMP_IMG="${BINARY_DECOMP_IMG:-binary_decomp}"
 
 # For images that are prebuilt
 PREBUILT_RISCV_IMG="${PREBUILT_RISCV_IMG:-prebuilt_riscv_compilers}"
 PREBUILT_CAKEML_IMG="${PREBUILT_CAKEML_IMG:-prebuilt_cakeml}"
 
 
-# Interactive images
-EXTRAS_IMG="extras"
-USER_IMG="user_img-$(whoami)"
-USER_BASE_IMG="${SEL4_IMG}"
-HOST_DIR="${HOST_DIR:-$(pwd)}"
-
-# Volumes
-DOCKER_VOLUME_HOME="${DOCKER_VOLUME_HOME:-$(whoami)-home}"
-DOCKER_VOLUME_ISABELLE="${DOCKER_VOLUME_ISABELLE:-$(whoami)-isabelle}"
-
 # Extra vars
 DOCKER_BUILD="docker build"
 DOCKER_FLAGS="--force-rm=true"
 INTERNAL="no"
 
-if test -z "$EXEC"; then
-	EXEC="bash"
-	DOCKER_RUN_FLAGS="${DOCKER_RUN_FLAGS} -it"
-fi
 
 ###########################
 # For 'prebuilt' images, the idea is that for things that take a long
 # time to build, and don't change very much, we should build them 
 # once, and then pull them in as needed.
+# TODO: make this work better..
 USE_PREBUILT_RISCV="${USE_PREBUILT_RISCV:-yes}"
 RISCV_BASE_DATE="${RISCV_BASE_DATE:-2018_06_04}"
 USE_CAKEML_RISCV="${USE_CAKEML_RISCV:-yes}"
@@ -222,24 +205,6 @@ for s in $softwares; do
         base_img="${base_img}-${s}"
     fi
 done
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
