@@ -41,9 +41,11 @@ RUN for p in "pip2" "pip3"; \
         && ${p} install --no-cache-dir \
             setuptools \
         && ${p} install --no-cache-dir \
+            aenum \
             gitlint \
             nose \ 
             pexpect \
+            plyplus \
             sh; \
     done
 
