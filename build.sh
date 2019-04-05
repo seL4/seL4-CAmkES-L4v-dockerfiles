@@ -46,14 +46,14 @@ build_internal_image()
     base_img="$1"
     dfile_name="$2"
     img_name="$3"
-    shift 3;
-    other_flags=$@
+    shift 3  # any params left over are just injected into the docker command
+             # presumably as flags
 
     $DOCKER_BUILD $DOCKER_FLAGS \
-        --build-arg base_img="${base_img}" \
-        ${other_flags} \
-        -f "${dfile_name}" \
-        -t "${img_name}" \
+        --build-arg base_img="$base_img" \
+        -f "$dfile_name" \
+        -t "$img_name" \
+        $@ \
         .
 }
 
@@ -62,10 +62,9 @@ build_image()
     base_img="$1"
     dfile_name="$2"
     img_name="$3"
-    shift 3;
-    other_flags=$@
+    shift 3
 
-    build_internal_image "${DOCKERHUB}${base_img}" "${dfile_name}" "${DOCKERHUB}${img_name}" $other_flags
+    build_internal_image "${DOCKERHUB}${base_img}" "$dfile_name" "${DOCKERHUB}${img_name}" $@
 }
 
 apply_software_to_image()
