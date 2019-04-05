@@ -213,8 +213,7 @@ else
 fi
 
 # get a unique, sorted, space seperated list of software to apply.
-#softwares="$(echo $software_to_apply | sed 's/ /\n/g' | sort | uniq | sed 's/\n/ /g')"
-softwares="$(echo $software_to_apply | tr ' ' '\n' | sort | uniq | tr '\n' ' ')"
+softwares=$(echo $software_to_apply | tr ' ' '\n' | sort | uniq | tr '\n' ' ')
 
 base_img="$img_to_build"
 for s in $softwares
