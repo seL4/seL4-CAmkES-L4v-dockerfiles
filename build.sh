@@ -110,7 +110,26 @@ build_l4v()
 ############################################
 # Build prebuildable images
 
-# TODO insert building of prebuilt images
+build_riscv()
+{
+    echo "This will build the RISCV toolchain, and can take a long time."
+    echo "If you just want to use the RISCV compilers, use:"
+    echo "    build.sh -b sel4 -s riscv"
+    echo "It will be much faster."
+    sleep 10
+    build_image ${SEL4_IMG} riscv.dockerfile ${PREBUILT_RISCV_IMG}
+}
+
+build_cakeml()
+{
+    echo "This will build the compiler for CakeML, and can take a long time."
+    echo "If you just want to use the CakeML compilers, use:"
+    echo "    build.sh -b sel4 -s cakeml"
+    echo "It will be much faster."
+    sleep 10
+    build_image ${CAMKES_IMG} cakeml.dockerfile ${PREBUILT_CAKEML_IMG}
+}
+
 
 ############################################
 # Argparsing
@@ -125,7 +144,7 @@ show_help()
                             | sed 's/.\/apply-//' \
                             | sort \
                             | tr "\n" "|")
-    echo "run.sh [-r] -b [sel4|camkes|l4v] -s [${available_software}] -s ..."
+    echo "build.sh [-r] -b [sel4|camkes|l4v|riscv|cakeml] -s [${available_software}] -s ..."
     echo ""
     echo " -r     Rebuild docker images (don't use the docker cache)"
     echo " -v     Verbose mode"
