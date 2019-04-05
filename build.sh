@@ -100,8 +100,6 @@ build_sel4()
 build_camkes()
 {
     build_image ${SEL4_IMG} camkes.dockerfile ${CAMKES_IMG}
-    # Note here we apply the cakeml software, and overwrite the CAMKES_IMG tag
-    apply_software_to_image ${BASE_CAKEML_IMG} apply-cakeml.dockerfile ${CAMKES_IMG} ${CAMKES_IMG}
 }
 
 build_l4v()
