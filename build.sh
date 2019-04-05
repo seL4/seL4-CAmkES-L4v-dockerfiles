@@ -186,7 +186,7 @@ do
         ;;
     s)  software_to_apply="$software_to_apply $OPTARG"
         ;;
-    :)  echo "Option -$OPTARG requires an argument." >&2
+    :)  echo "Option -$opt requires an argument." >&2
         exit 1
         ;;
     esac
