@@ -141,11 +141,9 @@ build_cakeml()
 show_help()
 {
     # TODO:
-    # - learn how to use sed better
     # - learn best way to represent that -s can be supplied multiple times
     available_software=$(find . -name 'apply-*.dockerfile' \
-                            | sed 's/.dockerfile//' \
-                            | sed 's/.\/apply-//' \
+                            | sed 's/.dockerfile//;s@./apply-@@' \
                             | sort \
                             | tr "\n" "|")
     cat <<EOF
