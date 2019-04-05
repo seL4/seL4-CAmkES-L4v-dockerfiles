@@ -1,24 +1,25 @@
 #!/bin/sh
 
+set -efu
+
 ############################################
 # env setup
 
-DOCKERHUB="${DOCKERHUB:-trustworthysystems/}"
+: "${DOCKERHUB:=trustworthysystems/}"
 
 # Base images
-DEBIAN_IMG="${DEBIAN_IMG:-debian:buster}"
-BASETOOLS_IMG="${BASETOOLS_IMG:-base_tools}"
+: "${DEBIAN_IMG:=debian:buster}"
+: "${BASETOOLS_IMG:=base_tools}"
 
 # Core images
-SEL4_IMG="${SEL4_IMG:-sel4}"
-CAMKES_IMG="${CAMKES_IMG:-camkes}"
-L4V_IMG="${L4V_IMG:-l4v}"
+: "${SEL4_IMG:=sel4}"
+: "${CAMKES_IMG:=camkes}"
+: "${L4V_IMG:=l4v}"
 
 
 # For images that are prebuilt
-PREBUILT_RISCV_IMG="${PREBUILT_RISCV_IMG:-prebuilt_riscv_compilers}"
-PREBUILT_CAKEML_IMG="${PREBUILT_CAKEML_IMG:-prebuilt_cakeml}"
-
+: "${PREBUILT_RISCV_IMG:=prebuilt_riscv_compilers}"
+: "${PREBUILT_CAKEML_IMG:=prebuilt_cakeml}"
 
 # Extra vars
 DOCKER_BUILD="docker build"
@@ -31,10 +32,10 @@ INTERNAL="no"
 # time to build, and don't change very much, we should build them 
 # once, and then pull them in as needed.
 # TODO: make this work better..
-USE_PREBUILT_RISCV="${USE_PREBUILT_RISCV:-yes}"
-RISCV_BASE_DATE="${RISCV_BASE_DATE:-2018_06_04}"
-USE_CAKEML_RISCV="${USE_CAKEML_RISCV:-yes}"
-CAKEML_BASE_DATE="${CAKEML_BASE_DATE:-2019_01_13}"
+: "${USE_PREBUILT_RISCV:=yes}"
+: "${RISCV_BASE_DATE:=2018_06_04}"
+: "${USE_CAKEML_RISCV:=yes}"
+: "${CAKEML_BASE_DATE:=2019_01_13}"
 
 
 ############################################
