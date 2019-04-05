@@ -53,7 +53,7 @@ build_internal_image()
         --build-arg base_img="$base_img" \
         -f "$dfile_name" \
         -t "$img_name" \
-        $@ \
+        "$@" \
         .
 }
 
@@ -64,7 +64,7 @@ build_image()
     img_name="$3"
     shift 3
 
-    build_internal_image "${DOCKERHUB}${base_img}" "$dfile_name" "${DOCKERHUB}${img_name}" $@
+    build_internal_image "$DOCKERHUB$base_img" "$dfile_name" "$DOCKERHUB$img_name" $@
 }
 
 apply_software_to_image()
@@ -78,11 +78,11 @@ apply_software_to_image()
     # NOTE: it's OK to supply docker build-args that aren't requested in the Dockerfile
 
     $DOCKER_BUILD $DOCKER_FLAGS \
-		--build-arg BASE_BUILDER_IMG="${DOCKERHUB}${prebuilt_img}" \
-		--build-arg BASE_IMG="${DOCKERHUB}${orig_img}" \
+		--build-arg BASE_BUILDER_IMG="$DOCKERHUB$prebuilt_img" \
+		--build-arg BASE_IMG="$DOCKERHUB$orig_img" \
 		-f "$builder_dfile" \
-		-t "${DOCKERHUB}${new_img}" \
-        $@ \
+		-t "$DOCKERHUB$new_img" \
+        "$@" \
 		.
 }
 ############################################
@@ -93,7 +93,7 @@ apply_software_to_image()
 build_sel4()
 {
     build_internal_image "$DEBIAN_IMG" base_tools.dockerfile "$BASETOOLS_IMG" --build-arg INTERNAL="$INTERNAL"
-    build_internal_image "$BASETOOLS_IMG" sel4.dockerfile "${DOCKERHUB}${SEL4_IMG}"
+    build_internal_image "$BASETOOLS_IMG" sel4.dockerfile "$DOCKERHUB$SEL4_IMG"
 }
 
 build_camkes()
@@ -112,10 +112,10 @@ build_l4v()
 prebuild_warning()
 {
     cat <<EOF
-You have asked to build a 'prebuilt' image for ${img_to_build}.
-If you just want to use the ${img_to_build} compilers, rather
+You have asked to build a 'prebuilt' image for $img_to_build.
+If you just want to use the $img_to_build compilers, rather
 than rebuilt the toolchain itself, use:
-    build.sh -b sel4 -s ${img_to_build}
+    build.sh -b sel4 -s $img_to_build
 It will be much faster! Waiting for 10 seconds incase you
 change your mind
 EOF
@@ -147,7 +147,7 @@ show_help()
                             | sort \
                             | tr "\n" "|")
     cat <<EOF
-    build.sh [-r] -b [sel4|camkes|l4v] -s [${available_software}] -s ...
+    build.sh [-r] -b [sel4|camkes|l4v] -s [$available_software] -s ...
 
      -r     Rebuild docker images (don't use the docker cache)
      -v     Verbose mode
@@ -182,7 +182,7 @@ do
         ;;
     p)  pull_base_first=y
         ;;
-    r)  DOCKER_FLAGS="${DOCKER_FLAGS} --no-cache"
+    r)  DOCKER_FLAGS="$DOCKER_FLAGS --no-cache"
         ;;
     s)  software_to_apply="$software_to_apply $OPTARG"
         ;;
@@ -209,7 +209,7 @@ then
     # If we don't want to pull the base image from Dockerhub, build it
     "build_${img_to_build}"
 else
-    docker pull "${DOCKERHUB}${img_to_build}"
+    docker pull "$DOCKERHUB$img_to_build"
 fi
 
 # get a unique, sorted, space seperated list of software to apply.
@@ -224,8 +224,8 @@ do
         # If not, <shrug />, docker won't pick up the variable anyway, so no harm done.
         prebuilt_img="$(echo PREBUILT_${s}_IMG | tr [a-z] [A-Z])"
         prebuilt_img="$(eval echo \$$prebuilt_img)"
-        apply_software_to_image "${prebuilt_img}" "apply-${s}.dockerfile" "$base_img" "${base_img}-${s}"
-        base_img="${base_img}-${s}"
+        apply_software_to_image "$prebuilt_img" "apply-${s}.dockerfile" "$base_img" "$base_img-$s"
+        base_img="$base_img-$s"
     fi
 done
 
