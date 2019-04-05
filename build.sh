@@ -73,17 +73,16 @@ apply_software_to_image()
     builder_dfile="$2"
     orig_img="$3"
     new_img="$4"
-    shift 4;
-    other_flags=$@
+    shift 4
 
     # NOTE: it's OK to supply docker build-args that aren't requested in the Dockerfile
 
     $DOCKER_BUILD $DOCKER_FLAGS \
 		--build-arg BASE_BUILDER_IMG="${DOCKERHUB}${prebuilt_img}" \
 		--build-arg BASE_IMG="${DOCKERHUB}${orig_img}" \
-        ${other_flags} \
-		-f "${builder_dfile}" \
+		-f "$builder_dfile" \
 		-t "${DOCKERHUB}${new_img}" \
+        $@ \
 		.
 }
 ############################################
@@ -93,18 +92,18 @@ apply_software_to_image()
 
 build_sel4()
 {
-    build_internal_image "$DEBIAN_IMG" base_tools.dockerfile "$BASETOOLS_IMG" "--build-arg INTERNAL=${INTERNAL}"
+    build_internal_image "$DEBIAN_IMG" base_tools.dockerfile "$BASETOOLS_IMG" --build-arg INTERNAL="$INTERNAL"
     build_internal_image "$BASETOOLS_IMG" sel4.dockerfile "${DOCKERHUB}${SEL4_IMG}"
 }
 
 build_camkes()
 {
-    build_image ${SEL4_IMG} camkes.dockerfile ${CAMKES_IMG}
+    build_image "$SEL4_IMG" camkes.dockerfile "$CAMKES_IMG"
 }
 
 build_l4v()
 {
-    build_image ${CAMKES_IMG} l4v.dockerfile ${L4V_IMG}
+    build_image "$CAMKES_IMG" l4v.dockerfile "$L4V_IMG"
 }
 
 ############################################
@@ -123,14 +122,14 @@ prebuild_warning()
 
 build_riscv()
 {
-    prebuild_warning
-    build_image ${SEL4_IMG} riscv.dockerfile ${PREBUILT_RISCV_IMG}
+    prebuild_warning >&2
+    build_image "$SEL4_IMG" riscv.dockerfile "$PREBUILT_RISCV_IMG"
 }
 
 build_cakeml()
 {
-    prebuild_warning
-    build_image ${CAMKES_IMG} cakeml.dockerfile ${PREBUILT_CAKEML_IMG}
+    prebuild_warning >&2
+    build_image "$CAMKES_IMG" cakeml.dockerfile "$PREBUILT_CAKEML_IMG"
 }
 
 
@@ -147,18 +146,20 @@ show_help()
                             | sed 's/.\/apply-//' \
                             | sort \
                             | tr "\n" "|")
-    echo "build.sh [-r] -b [sel4|camkes|l4v] -s [${available_software}] -s ..."
-    echo ""
-    echo " -r     Rebuild docker images (don't use the docker cache)"
-    echo " -v     Verbose mode"
-    echo " -s     Strict mode"
-    echo ""
-    echo "Sneaky hints:"
-    echo " - You can actually run this with \`-b sel4-rust\`, or any other existing image,"
-    echo "   but it will ruin the sorting of the name."
-    echo " - To build 'prebuilt' images, you can run:"
-    echo "       build.sh -b [riscv|cakeml] "
-    echo "   but it will take a while!"
+    cat <<EOF
+    build.sh [-r] -b [sel4|camkes|l4v] -s [${available_software}] -s ...
+
+     -r     Rebuild docker images (don't use the docker cache)
+     -v     Verbose mode
+     -s     Strict mode
+    
+    Sneaky hints:
+     - To build 'prebuilt' images, you can run:
+           build.sh -b [riscv|cakeml] 
+       but it will take a while!
+     - You can actually run this with '-b sel4-rust', or any other existing image,
+       but it will ruin the sorting of the name.
+EOF
 
 }
 
@@ -195,7 +196,7 @@ done
 
 if test -z "$img_to_build"; then
     echo "You need to supply a \`-b\`" >&2
-    show_help
+    show_help >&2
     exit 1
 fi
 
