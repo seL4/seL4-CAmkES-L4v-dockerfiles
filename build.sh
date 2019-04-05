@@ -50,7 +50,7 @@ build_internal_image()
 
     $DOCKER_BUILD $DOCKER_FLAGS \
         --build-arg base_img="${base_img}" \
-        "${other_flags}" \
+        ${other_flags} \
         -f "${dfile_name}" \
         -t "${img_name}" \
         .
@@ -110,23 +110,26 @@ build_l4v()
 ############################################
 # Build prebuildable images
 
+prebuild_warning()
+{
+    echo "You have asked to build a 'prebuilt' image for ${img_to_build}."
+    echo "If you just want to use the ${img_to_build} compilers, rather"
+    echo "than rebuilt the toolchain itself, use:"
+    echo "    build.sh -b sel4 -s ${img_to_build}"
+    echo "It will be much faster! Waiting for 10 seconds incase you"
+    echo "change your mind"
+    sleep 10
+}
+
 build_riscv()
 {
-    echo "This will build the RISCV toolchain, and can take a long time."
-    echo "If you just want to use the RISCV compilers, use:"
-    echo "    build.sh -b sel4 -s riscv"
-    echo "It will be much faster."
-    sleep 10
+    prebuild_warning
     build_image ${SEL4_IMG} riscv.dockerfile ${PREBUILT_RISCV_IMG}
 }
 
 build_cakeml()
 {
-    echo "This will build the compiler for CakeML, and can take a long time."
-    echo "If you just want to use the CakeML compilers, use:"
-    echo "    build.sh -b sel4 -s cakeml"
-    echo "It will be much faster."
-    sleep 10
+    prebuild_warning
     build_image ${CAMKES_IMG} cakeml.dockerfile ${PREBUILT_CAKEML_IMG}
 }
 
@@ -144,7 +147,7 @@ show_help()
                             | sed 's/.\/apply-//' \
                             | sort \
                             | tr "\n" "|")
-    echo "build.sh [-r] -b [sel4|camkes|l4v|riscv|cakeml] -s [${available_software}] -s ..."
+    echo "build.sh [-r] -b [sel4|camkes|l4v] -s [${available_software}] -s ..."
     echo ""
     echo " -r     Rebuild docker images (don't use the docker cache)"
     echo " -v     Verbose mode"
@@ -153,12 +156,14 @@ show_help()
     echo "Sneaky hints:"
     echo " - You can actually run this with \`-b sel4-rust\`, or any other existing image,"
     echo "   but it will ruin the sorting of the name."
+    echo " - To build 'prebuilt' images, you can run:"
+    echo "       build.sh -b [riscv|cakeml] "
+    echo "   but it will take a while!"
 
 }
 
 # init cmdline vars to nothing
 img_to_build=
-img_to_run=
 software_to_apply=
 pull_base_first=
 
