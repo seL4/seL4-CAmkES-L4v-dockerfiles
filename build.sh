@@ -111,12 +111,14 @@ build_l4v()
 
 prebuild_warning()
 {
-    echo "You have asked to build a 'prebuilt' image for ${img_to_build}."
-    echo "If you just want to use the ${img_to_build} compilers, rather"
-    echo "than rebuilt the toolchain itself, use:"
-    echo "    build.sh -b sel4 -s ${img_to_build}"
-    echo "It will be much faster! Waiting for 10 seconds incase you"
-    echo "change your mind"
+    cat <<EOF
+You have asked to build a 'prebuilt' image for ${img_to_build}.
+If you just want to use the ${img_to_build} compilers, rather
+than rebuilt the toolchain itself, use:
+    build.sh -b sel4 -s ${img_to_build}
+It will be much faster! Waiting for 10 seconds incase you
+change your mind
+EOF
     sleep 10
 }
 
