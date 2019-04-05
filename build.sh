@@ -168,14 +168,12 @@ img_to_build=
 software_to_apply=
 pull_base_first=
 
-while getopts "h?epvb:rs:" opt; do
+while getopts "h?pvb:rs:" opt
+do
     case "$opt" in
     h|\?)
         show_help
         exit 0
-        ;;
-    e)  strict=1
-        set -e
         ;;
     v)  verbose=1
         set -x
@@ -194,7 +192,8 @@ while getopts "h?epvb:rs:" opt; do
     esac
 done
 
-if test -z "$img_to_build"; then
+if [ -z "$img_to_build" ]
+then
     echo "You need to supply a \`-b\`" >&2
     show_help >&2
     exit 1
@@ -205,7 +204,8 @@ fi
 ############################################
 # Processing
 
-if test -z "$pull_base_first"; then
+if [ -z "$pull_base_first" ]
+then
     # If we don't want to pull the base image from Dockerhub, build it
     "build_${img_to_build}"
 else
@@ -217,7 +217,8 @@ fi
 softwares="$(echo $software_to_apply | tr ' ' '\n' | sort | uniq | tr '\n' ' ')"
 
 base_img="$img_to_build"
-for s in $softwares; do
+for s in $softwares
+do
     echo $s to install!
     if test -f "apply-${s}.dockerfile"; then
         # Try to resolve if we have a prebuilt image for the software being asked for.
