@@ -175,7 +175,7 @@ rebuild_l4v-riscv: l4v-riscv
 camkes-rust: camkes
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
 		--build-arg BASE_IMG=$(DOCKERHUB)$(CAMKES_IMG) \
-		-f rust.dockerfile \
+		-f apply-rust.dockerfile \
 		-t $(DOCKERHUB)$(RUST_IMG) \
 		.
 rebuild_camkes-rust: DOCKER_FLAGS += --no-cache
@@ -185,7 +185,7 @@ rebuild_camkes-rust: camkes-rust
 camkes-vis: camkes
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
 		--build-arg BASE_IMG=$(DOCKERHUB)$(CAMKES_IMG) \
-		-f camkes-vis.dockerfile \
+		-f apply-camkes_vis.dockerfile \
 		-t $(DOCKERHUB)$(CAMKES_VIS_IMG) \
 		.
 rebuild_camkes-vis: DOCKER_FLAGS += --no-cache
@@ -195,7 +195,7 @@ rebuild_camkes-vis: camkes-vis
 binary_decomp: sel4
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
 		--build-arg SEL4_IMG=$(DOCKERHUB)$(SEL4_IMG) \
-		-f binary_decomp.dockerfile \
+		-f apply-binary_decomp.dockerfile \
 		-t $(DOCKERHUB)$(BINARY_DECOMP_IMG) \
 		.
 rebuild_binary_decomp: DOCKER_FLAGS += --no-cache
