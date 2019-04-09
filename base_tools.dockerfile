@@ -17,6 +17,7 @@ RUN echo 'deb http://httpredir.debian.org/debian/ buster main' >> /etc/apt/sourc
     && apt-get install -y --no-install-recommends \
         bc \
         ca-certificates \
+        devscripts \
         expect \
         git \
         jq \
