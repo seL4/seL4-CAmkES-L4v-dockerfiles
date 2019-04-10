@@ -24,7 +24,7 @@ set -ef
 # Extra vars
 DOCKER_BUILD="docker build"
 DOCKER_FLAGS="--force-rm=true"
-INTERNAL="no"
+: "${INTERNAL:=no}"
 
 
 ###########################
