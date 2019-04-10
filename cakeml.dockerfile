@@ -3,6 +3,7 @@ FROM $BASE_IMG
 
 LABEL ORGANISATION="Trustworthy Systems"
 LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
+LABEL PREBUILT="yes"
 
 # Set up tools to compile CakeML
 RUN git clone https://github.com/HOL-Theorem-Prover/HOL.git \

@@ -3,6 +3,7 @@ FROM $BASE_IMG
 
 LABEL ORGANISATION="Trustworthy Systems"
 LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
+LABEL PREBUILT="yes"
 
 # Get source for RISCV compilers, and build them
 
