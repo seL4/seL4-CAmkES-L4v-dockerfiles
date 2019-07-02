@@ -47,6 +47,8 @@ RUN dpkg --add-architecture armhf \
         libxml2-utils \
         locales \
         ninja-build \
+        protobuf-compiler \
+        python-protobuf \
         qemu-system-arm \
         qemu-system-x86 \
         sloccount \
