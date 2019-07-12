@@ -11,6 +11,7 @@ RUN apt-get update -q \
         librsvg2-bin \
         libwww-perl \
         libxslt-dev \
+        libxml2-dev \
         mlton \
         texlive-bibtex-extra \
         texlive-fonts-recommended \
@@ -21,8 +22,6 @@ RUN apt-get update -q \
         less \
         python-psutil \
         python-lxml \
-        # TESTING packages
-        libxml2-dev/testing \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
