@@ -15,5 +15,5 @@ RUN git clone https://github.com/NICTA/cogent.git \
     && stack build \
     && stack install
 
-ENV PATH "$PATH:$HOME/.local/bin"
+ENV PATH "$PATH:/root/.local/bin"
 
