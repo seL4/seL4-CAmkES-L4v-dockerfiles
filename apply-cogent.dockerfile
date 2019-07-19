@@ -1,6 +1,9 @@
 ARG BASE_IMG=trustworthysystems/camkes
 
-FROM $BASE_IMG as builder
+FROM $BASE_IMG 
+
+LABEL ORGANISATION="Trustworthy Systems"
+LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 
 # The sed line deletes this line:
 # https://github.com/NICTA/cogent/blob/c40bd26b476b4694e5087063c1668d2a7062789f/cogent/stack.yaml#L13 
@@ -12,10 +15,5 @@ RUN git clone https://github.com/NICTA/cogent.git \
     && stack build \
     && stack install
 
+ENV PATH "$PATH:$HOME/.local/bin"
 
-FROM $BASE_IMG 
-
-LABEL ORGANISATION="Trustworthy Systems"
-LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
-
-COPY --from=builder /root/.local/bin/cogent /usr/local/bin/cogent
