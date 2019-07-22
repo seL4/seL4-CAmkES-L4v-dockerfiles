@@ -23,10 +23,11 @@ RUN dpkg --add-architecture i386 \
         pkg-config \
         spin \
         # Required for rumprun
+        dh-autoreconf \
+        genisoimage \
+        gettext \
         rsync \
         xxd \
-        dh-autoreconf \
-        gettext \
         # Required for cakeml
         polyml \
         libpolyml-dev \
