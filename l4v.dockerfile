@@ -46,4 +46,12 @@ RUN mkdir /root/verification \
     && make sandbox \
     && cd \
     && rm -rf /root/verification \
-    && rm -rf /tmp/isabelle-
+    && rm -rf /tmp/isabelle- \
+    && : \
+    && : # Isabelle downloads tar.gz files, and then uncompresses them for its contrib. \
+    && : # We don't need both the uncompressed AND decompressed versions, but Isabelle \
+    && : # checks for the tarballs. To fool it, we now truncate the tars and save disk space. \
+    && : \
+    && cd ~/.isabelle/contrib \
+    && truncate -s0 *.tar.gz \
+    && ls -lah
