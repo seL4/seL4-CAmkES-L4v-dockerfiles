@@ -8,7 +8,7 @@ LABEL PREBUILT="yes"
 # Set up tools to compile CakeML
 RUN git clone https://github.com/HOL-Theorem-Prover/HOL.git \
     && cd HOL \
-    && git checkout 7323105f50960bdec1b33c513576e5d1d313b62f \
+    && git checkout 8384b1c70482d5fbd9ad4d83775cae2a05294515 \
     && mkdir -p tools-poly \
     && echo "val polymllibdir = \"/usr/lib/x86_64-linux-gnu/\";" > tools-poly/poly-includes.ML \
     && poly < tools/smart-configure.sml \
@@ -17,13 +17,13 @@ RUN git clone https://github.com/HOL-Theorem-Prover/HOL.git \
 
 ENV PATH "$PATH:$HOME/HOL/bin"
 
-RUN wget https://cakeml.org/regression/artefacts/473/cake-x64-32.tar.gz \
+RUN wget https://cakeml.org/regression/artefacts/989/cake-x64-32.tar.gz \
     && tar -xvzf cake-x64-32.tar.gz \
     && cd cake-x64-32 \
     && make cake \
     && rm /cake-x64-32.tar.gz
 
-RUN wget https://cakeml.org/regression/artefacts/473/cake-x64-64.tar.gz \
+RUN wget https://cakeml.org/regression/artefacts/989/cake-x64-64.tar.gz \
     && tar -xvzf cake-x64-64.tar.gz \
     && cd cake-x64-64 \
     && make cake \
@@ -31,7 +31,7 @@ RUN wget https://cakeml.org/regression/artefacts/473/cake-x64-64.tar.gz \
 
 RUN git clone https://github.com/CakeML/cakeml.git \
     && cd cakeml \
-    && git checkout 66a35311787bb43f72e8e758209a4745f288cdfe \
+    && git checkout 980410c6c89921c2e8950a5127bd9f32791f50bf \
     # Pre-build the following cakeml directories to speed up subsequent cakeml app builds
     && for dir in "characteristic" "basis" "misc" "translator" "semantics" "unverified/sexpr-bootstrap" \
     "compiler/parsing" "semantics/proofs"; \
