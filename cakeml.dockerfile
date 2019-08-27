@@ -33,8 +33,7 @@ RUN git clone https://github.com/CakeML/cakeml.git \
     && cd cakeml \
     && git checkout 980410c6c89921c2e8950a5127bd9f32791f50bf \
     # Pre-build the following cakeml directories to speed up subsequent cakeml app builds
-    && for dir in "characteristic" "basis" "misc" "translator" "semantics" "unverified/sexpr-bootstrap" \
-    "compiler/parsing" "semantics/proofs"; \
+    && for dir in "basis" "compiler/parsing"; \
         do \
             cd /cakeml/${dir} && /HOL/bin/Holmake; \
         done \
