@@ -40,6 +40,7 @@ RUN dpkg --add-architecture armhf \
         gcc-6-base \
         gcc-6-multilib \
         gcc-arm-none-eabi \
+        libarchive-dev \
         libcc1-0 \
         libclang-dev \
         libncurses-dev \
