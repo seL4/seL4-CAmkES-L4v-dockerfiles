@@ -60,9 +60,6 @@ RUN mkdir -p /scripts/repo \
     && chmod a+x /scripts/repo/repo
 ENV PATH "$PATH:/scripts/repo"
 
-# Get some simulation (QEMU) binaries, and copy them in
-COPY res/ertos /opt/ertos
-
 # If this is being built inside Trustworthy Systems, get some scripts used to control simulations
 ARG INTERNAL=no
 RUN if [ "$INTERNAL" = "yes" ]; then \
