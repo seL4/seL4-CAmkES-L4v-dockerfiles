@@ -3,69 +3,24 @@ FROM $BASE_IMG
 LABEL ORGANISATION="Trustworthy Systems"
 LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 
-# Lines 1-5: Add another mirror for debian to pull packages from.
-# Lines 6-8: Do some docker specific tricks with apt.
-# Lines under apt-get: get some basic tools.
-RUN echo 'deb http://httpredir.debian.org/debian/ buster main' >> /etc/apt/sources.list.d/alternate_mirror.list \
-    && echo 'deb http://httpredir.debian.org/debian/ buster-updates main' >> /etc/apt/sources.list.d/alternate_mirror.list \
-    && echo 'deb http://mirror.aarnet.edu.au/debian/ buster main' >> /etc/apt/sources.list.d/alternate_mirror.list \
-    && echo 'deb http://mirror.aarnet.edu.au/debian/ buster-updates main' >> /etc/apt/sources.list.d/alternate_mirror.list \
-    && echo 'deb http://mirror.aarnet.edu.au/debian/ stretch main' >> /etc/apt/sources.list.d/alternate_mirror.list \
-    && echo "force-unsafe-io" > /etc/dpkg/dpkg.cfg.d/02apt-speedup \
-    && echo "Acquire::http {No-Cache=True;};" > /etc/apt/apt.conf.d/no-cache \
-    && apt-get update -q \
-    && apt-get install -y --no-install-recommends \
-        bc \
-        ca-certificates \
-        devscripts \
-        expect \
-        git \
-        jq \
-        make \
-        mercurial \
-        python-dev \
-        python-pip \
-        python3-dev \
-        python3-pip \
-        wget \
+# ARGS are env vars that are *only available* during the docker build
+# They can be modified at docker build time via '--build-arg VAR="something"'
+ARG SCM=https://bitbucket.ts.data61.csiro.au/scm
+ARG DESKTOP_MACHINE=no
+ARG INTERNAL=yes
+ARG MAKE_CACHES=yes
+
+ARG SCRIPTS_DIR="/scripts"
+ARG REPO_DIR="${SCRIPTS_DIR}/repo"
+
+ARG SCRIPT=base_tools.sh
+
+COPY scripts /tmp/
+
+RUN /bin/bash /tmp/${SCRIPT} \
     && apt-get clean autoclean \
-    && apt-get autoremove --yes \
-    && rm -rf /var/lib/{apt,dpkg,cache,log}/
+    && apt-get autoremove --purge --yes \
+    && rm -rf /var/lib/apt/lists/*
 
-
-# Install python dependencies for both python 2 & 3
-# Upgrade pip first, then install setuptools (required for other pip packages)
-# Install some basic python tools
-RUN for p in "pip2" "pip3"; \
-    do \ 
-        ${p} install --no-cache-dir --upgrade pip==18.1 \
-        && ${p} install --no-cache-dir \
-            setuptools \
-        && ${p} install --no-cache-dir \
-            aenum \
-            gitlint \
-            nose \ 
-            pexpect \
-            plyplus \
-            sh; \
-    done
-
-# Add some symlinks so some programs can find things
-RUN ln -s /usr/bin/hg /usr/local/bin/hg \
-    && ln -s /usr/bin/make /usr/bin/gmake
-
-# Install Google's repo
-RUN mkdir -p /scripts/repo \
-    && wget -O - https://storage.googleapis.com/git-repo-downloads/repo > /scripts/repo/repo \
-    && chmod a+x /scripts/repo/repo
-ENV PATH "$PATH:/scripts/repo"
-
-# If this is being built inside Trustworthy Systems, get some scripts used to control simulations
-ARG INTERNAL=no
-RUN if [ "$INTERNAL" = "yes" ]; then \
-        cd /scripts \
-        && git clone http://bitbucket.ts.data61.csiro.au/scm/sel4proj/console_reboot.git \
-        && chmod +x /scripts/console_reboot/simulate/* \
-        # Get some useful SEL4 tools
-        && git clone http://bitbucket.ts.data61.csiro.au/scm/sel4/sel4_libs.git; \
-    fi
+# ENV variables are available to containers after the build stage
+ENV PATH "${PATH}:${REPO_DIR}"
