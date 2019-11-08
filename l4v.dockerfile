@@ -3,55 +3,22 @@ FROM $BASE_IMG
 LABEL ORGANISATION="Trustworthy Systems"
 LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 
-ARG SCM=https://github.com
+##########################################################
+# Do some setup to prepare for the shell script to be run
+COPY res/isabelle_settings /tmp
+ENV NEW_ISABELLE_SETTINGS "/tmp/isabelle_settings"
+##########################################################
 
-# Get dependencies
-RUN apt-get update -q \
-    && apt-get install -y --no-install-recommends \
-        librsvg2-bin \
-        libwww-perl \
-        libxslt-dev \
-        libxml2-dev \
-        mlton \
-        texlive-bibtex-extra \
-        texlive-fonts-recommended \
-        texlive-generic-extra \
-        texlive-latex-extra \
-        texlive-metapost \
-        # dependencies for testing
-        less \
-        python-psutil \
-        python-lxml \
+# ARGS are env vars that are *only available* during the docker build
+# They can be modified at docker build time via '--build-arg VAR="something"'
+ARG SCM=https://bitbucket.ts.data61.csiro.au/scm
+ARG DESKTOP_MACHINE=no
+ARG INTERNAL=yes
+ARG MAKE_CACHES=yes
+
+COPY scripts /tmp/
+
+RUN /bin/bash /tmp/l4v.sh \
     && apt-get clean autoclean \
-    && apt-get autoremove --yes \
-    && rm -rf /var/lib/{apt,dpkg,cache,log}/
-
-
-# Get l4v and setup isabelle
-RUN mkdir /isabelle \
-    && ln -s /isabelle ~/.isabelle \
-    && mkdir -p ~/.isabelle/etc
-
-COPY res/isabelle_settings /root/.isabelle/etc/settings
-
-# Get a copy of the L4v repo, and build all the isabelle and haskell 
-# components, essentially caching them in the image.
-RUN mkdir /root/verification \
-    && cd /root/verification \
-    && /scripts/repo/repo init -u ${SCM}/seL4/verification-manifest.git \
-    && /scripts/repo/repo sync -c \
-    && cd /root/verification/l4v \
-    && ./isabelle/bin/isabelle components -a \
-    && cd /root/verification/l4v/spec/haskell \
-    && make sandbox \
-    && cd \
-    && rm -rf /root/verification \
-    && rm -rf /tmp/isabelle- \
-    && : \
-    && : # Isabelle downloads tar.gz files, and then uncompresses them for its contrib. \
-    && : # We don't need both the uncompressed AND decompressed versions, but Isabelle \
-    && : # checks for the tarballs. To fool it, we now truncate the tars and save disk space. \
-    && : \
-    && cd ~/.isabelle/contrib \
-    && truncate -s0 *.tar.gz \
-    && ls -lah
+    && apt-get autoremove --purge --yes \
+    && rm -rf /var/lib/apt/lists/*
