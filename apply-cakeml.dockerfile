@@ -9,10 +9,15 @@ FROM $BASE_IMG
 LABEL ORGANISATION="Trustworthy Systems"
 LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 
-COPY --from=builder /HOL /HOL
-COPY --from=builder /cake-x64-32 /cake-x64-32
-COPY --from=builder /cake-x64-64 /cake-x64-64
-COPY --from=builder /cakeml /cakeml
+ARG HOL_DIR="/HOL"
+ARG CAKEML_DIR="/cakeml"
+ARG CAKEML32_BIN_DIR="/cake-x64-32"
+ARG CAKEML64_BIN_DIR="/cake-x64-64"
 
 
-ENV PATH "$PATH:$HOME/HOL/bin"
+COPY --from=builder ${HOL_DIR} ${HOL_DIR}
+COPY --from=builder ${CAKEML32_BIN_DIR} ${CAKEML32_BIN_DIR}
+COPY --from=builder ${CAKEML64_BIN_DIR} ${CAKEML64_BIN_DIR}
+COPY --from=builder ${CAKEML_DIR} ${CAKEML_DIR}
+
+ENV PATH "${PATH}:${HOL_DIR}/bin"
