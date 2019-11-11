@@ -152,6 +152,8 @@ show_help()
      -r     Rebuild docker images (don't use the docker cache)
      -v     Verbose mode
      -s     Strict mode
+     -p     Pull base image first. Rather than build the base image, 
+            get it from the web first
     
     Sneaky hints:
      - To build 'prebuilt' images, you can run:
@@ -175,8 +177,7 @@ do
         show_help
         exit 0
         ;;
-    v)  verbose=1
-        set -x
+    v)  set -x
         ;;
     b)  img_to_build=$OPTARG
         ;;
@@ -213,16 +214,16 @@ else
 fi
 
 # get a unique, sorted, space seperated list of software to apply.
-softwares=$(echo $software_to_apply | tr ' ' '\n' | sort | uniq | tr '\n' ' ')
+softwares=$(echo "$software_to_apply" | tr ' ' '\n' | sort -u | tr '\n' ' ')
 
 base_img="$img_to_build"
 for s in $softwares
 do
-    echo $s to install!
+    echo "$s to install!"
     if test -f "apply-${s}.dockerfile"; then
         # Try to resolve if we have a prebuilt image for the software being asked for.
         # If not, <shrug />, docker won't pick up the variable anyway, so no harm done.
-        prebuilt_img="$(echo PREBUILT_${s}_IMG | tr [a-z] [A-Z])"
+        prebuilt_img="$(echo "PREBUILT_${s}_IMG" | tr "[:lower:]" "[:upper:]")"
         prebuilt_img="$(eval echo \$$prebuilt_img)"
         apply_software_to_image "$prebuilt_img" "apply-${s}.dockerfile" "$base_img" "$base_img-$s"
         base_img="$base_img-$s"
