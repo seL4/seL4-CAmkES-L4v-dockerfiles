@@ -102,6 +102,20 @@ RUN for p in "pip2" "pip3"; \
             sel4-deps; \
     done
 
+# Build seL4test for a few platforms to populate binary artifact caches.
+# This should improve build times by caching libraries that rarely change.
+RUN mkdir -p ~/.sel4_cache && mkdir sel4test && cd sel4test \
+    && repo init -u https://github.com/seL4/sel4test-manifest.git \
+    && repo sync -j 4 \
+    && mkdir build \
+    && cd build \
+    && for plat in "sabre" "ia32" "x86_64" "tx1" "tk1 -DARM_HYP=ON"; \
+    do \
+       ../init-build.sh -DPLATFORM=$plat && ninja && rm -rf *; \
+    done \
+    && cd / \
+    && rm -rf sel4test
+
 # Set up locales. en_AU chosen because we're in Australia.
 RUN echo 'en_AU.UTF-8 UTF-8' > /etc/locale.gen \
     && dpkg-reconfigure --frontend=noninteractive locales \

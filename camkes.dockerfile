@@ -50,11 +50,15 @@ ENV PATH "$PATH:$HOME/.local/bin"
 # CAmkES is hard coded to look for clang in /opt/clang/
 RUN ln -s /usr/lib/llvm-3.8 /opt/clang
 
-# Get a repo that relys on stack, and use it to init the stack cache \
+# Get a project that relys on stack, and use it to init the capDL-tool cache \
 # then delete the repo, because we don't need it.
-RUN git clone https://github.com/seL4/capdl.git \
-    && cd capdl/capDL-tool \
-    && stack setup \
-    && stack build --only-dependencies \
+RUN mkdir camkes && cd camkes \
+    && repo init -u https://github.com/seL4/camkes-manifest.git \
+    && repo sync -j 4 \
+    && mkdir build \
+    && cd build \
+    && ../init-build.sh \
+    && ninja \
+    && rm -rf * \
     && cd / \
-    && rm -rf capdl
+    && rm -rf camkes
