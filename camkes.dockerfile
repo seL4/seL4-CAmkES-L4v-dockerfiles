@@ -3,62 +3,18 @@ FROM $BASE_IMG
 LABEL ORGANISATION="Trustworthy Systems"
 LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 
-# Get dependencies
-RUN dpkg --add-architecture i386 \
-    && apt-get update -q \
-    && apt-get install -y --no-install-recommends \
-        fakeroot \
-        lib32stdc++-6-dev \
-        linux-libc-dev-i386-cross \
-        linux-libc-dev:i386 \
-        # Required for testing
-        gdb \
-        libssl-dev \
-        libcunit1-dev \
-        libglib2.0-dev \
-        libsqlite3-dev \
-        libgmp3-dev \
-        # Required for stack to use tcp properly
-        netbase \
-        pkg-config \
-        spin \
-        # Required for rumprun
-        dh-autoreconf \
-        genisoimage \
-        gettext \
-        rsync \
-        xxd \
-        # Required for cakeml
-        polyml \
-        libpolyml-dev \
+# ARGS are env vars that are *only available* during the docker build
+# They can be modified at docker build time via '--build-arg VAR="something"'
+ARG SCM=https://bitbucket.ts.data61.csiro.au/scm
+ARG INTERNAL=yes
+ARG DESKTOP_MACHINE=no
+ARG MAKE_CACHES=yes
+
+ARG SCRIPT=camkes.sh
+
+COPY scripts /tmp/
+
+RUN /bin/bash /tmp/${SCRIPT} \
     && apt-get clean autoclean \
-    && apt-get autoremove --yes \
-    && rm -rf /var/lib/{apt,dpkg,cache,log}/
-
-# Get python deps for CAmkES
-RUN for p in "pip2" "pip3"; \
-    do \
-        ${p} install --no-cache-dir \
-            camkes-deps \
-            jinja2; \
-    done
-
-# Get stack
-RUN wget -O - https://get.haskellstack.org/ | sh
-ENV PATH "$PATH:$HOME/.local/bin"
-
-# CAmkES is hard coded to look for clang in /opt/clang/
-RUN ln -s /usr/lib/llvm-3.8 /opt/clang
-
-# Get a project that relys on stack, and use it to init the capDL-tool cache \
-# then delete the repo, because we don't need it.
-RUN mkdir camkes && cd camkes \
-    && repo init -u https://github.com/seL4/camkes-manifest.git \
-    && repo sync -j 4 \
-    && mkdir build \
-    && cd build \
-    && ../init-build.sh \
-    && ninja \
-    && rm -rf * \
-    && cd / \
-    && rm -rf camkes
+    && apt-get autoremove --purge --yes \
+    && rm -rf /var/lib/apt/lists/*
