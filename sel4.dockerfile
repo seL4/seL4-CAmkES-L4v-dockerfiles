@@ -3,122 +3,20 @@ FROM $BASE_IMG
 LABEL ORGANISATION="Trustworthy Systems"
 LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 
-# Add an apt preferences file, which states that stable is preferable than testing when automatically
-# picking packages.
-RUN echo 'Package: *' >> /etc/apt/preferences \
-    && echo 'Pin: release a=testing' >> /etc/apt/preferences \
-    && echo 'Pin-Priority: 900' >> /etc/apt/preferences \
-    && echo '' >> /etc/apt/preferences \
-    && echo 'Package: *' >> /etc/apt/preferences \
-    && echo 'Pin: release a=unstable' >> /etc/apt/preferences \
-    && echo 'Pin-Priority: 800' >> /etc/apt/preferences 
+# ARGS are env vars that are *only available* during the docker build
+# They can be modified at docker build time via '--build-arg VAR="something"'
+ARG SCM=https://bitbucket.ts.data61.csiro.au/scm
+ARG DESKTOP_MACHINE=no
+ARG INTERNAL=yes
+ARG MAKE_CACHES=yes
 
-# Add additional architectures for cross-compiled libraries.
-# Install the tools required to compile seL4.
-RUN dpkg --add-architecture armhf \
-    && dpkg --add-architecture armel \
-    && apt-get update -q \
-    && apt-get install -y --no-install-recommends \
-        astyle=3.1-2 \
-        build-essential \
-        ccache \
-        clang \
-        cmake \
-        cmake-curses-gui \
-        coreutils \
-        cpio \
-        curl \
-        device-tree-compiler \
-        g++-6 \
-        g++-6-aarch64-linux-gnu \
-        g++-6-arm-linux-gnueabi \
-        g++-6-arm-linux-gnueabihf \
-        gcc-6 \
-        gcc-6-aarch64-linux-gnu \
-        gcc-6-arm-linux-gnueabi \
-        gcc-6-arm-linux-gnueabihf \
-        gcc-6-base \
-        gcc-6-multilib \
-        gcc-arm-none-eabi \
-        libarchive-dev \
-        libcc1-0 \
-        libclang-dev \
-        libncurses-dev \
-        libuv1 \
-        libxml2-utils \
-        locales \
-        ninja-build \
-        protobuf-compiler \
-        python-protobuf \
-        qemu-system-arm \
-        qemu-system-x86 \
-        sloccount \
-        u-boot-tools \
+ARG SCRIPT=sel4.sh
+
+COPY scripts /tmp/
+
+RUN /bin/bash /tmp/${SCRIPT} \
     && apt-get clean autoclean \
-    && apt-get autoremove --yes \
-    && rm -rf /var/lib/{apt,dpkg,cache,log}/
-
-# Set default compiler to be gcc-6 using update-alternatives
-RUN for compiler in gcc \
-                    g++; \
-    do \
-        for file in $(dpkg-query -L ${compiler} | grep /usr/bin/); \
-        do \
-            name=$(basename ${file}); \
-            echo "$name - $file"; \
-            update-alternatives --install "${file}" "${name}" "${file}-6" 50; \
-            update-alternatives --auto "${name}"; \
-        done \
-    done \
-    && \
-    for compiler in gcc-6-arm-linux-gnueabi \
-                    cpp-6-arm-linux-gnueabi \
-                    gcc-6-aarch64-linux-gnu \
-                    cpp-6-aarch64-linux-gnu \
-                    gcc-6-arm-linux-gnueabihf \
-                    cpp-6-arm-linux-gnueabihf \
-                    g++-6-aarch64-linux-gnu \
-                    g++-6-arm-linux-gnueabi \
-                    g++-6-arm-linux-gnueabihf; \
-    do \
-        echo ${compiler}; \
-        for file in $(dpkg-query -L ${compiler} | grep /usr/bin/); \
-        do \
-            name=$(basename ${file} | sed 's/-6$//g'); \
-            link=$(echo ${file} | sed 's/-6$//g'); \
-            echo "$name - $file"; \
-            update-alternatives --install "${link}" "${name}" "${file}" 60; \
-            update-alternatives --auto "${name}"; \
-        done \
-    done
-
-
-# Get seL4 python2/3 deps
-# Pylint is for checking included python scripts
-RUN for p in "pip2" "pip3"; \
-    do \
-        ${p} install --no-cache-dir \
-            pylint \
-            sel4-deps; \
-    done
-
-# Build seL4test for a few platforms to populate binary artifact caches.
-# This should improve build times by caching libraries that rarely change.
-RUN mkdir -p ~/.sel4_cache && mkdir sel4test && cd sel4test \
-    && repo init -u https://github.com/seL4/sel4test-manifest.git \
-    && repo sync -j 4 \
-    && mkdir build \
-    && cd build \
-    && for plat in "sabre" "ia32" "x86_64" "tx1" "tk1 -DARM_HYP=ON"; \
-    do \
-       ../init-build.sh -DPLATFORM=$plat && ninja && rm -rf *; \
-    done \
-    && cd / \
-    && rm -rf sel4test
-
-# Set up locales. en_AU chosen because we're in Australia.
-RUN echo 'en_AU.UTF-8 UTF-8' > /etc/locale.gen \
-    && dpkg-reconfigure --frontend=noninteractive locales \
-    && echo "LANG=en_AU.UTF-8" >> /etc/default/locale 
+    && apt-get autoremove --purge --yes \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV LANG en_AU.UTF-8
