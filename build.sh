@@ -16,6 +16,8 @@ set -ef
 : "${CAMKES_IMG:=camkes}"
 : "${L4V_IMG:=l4v}"
 
+# Allow override of which 'version' (aka tag) of an image to pull in
+: "${IMG_POSTFIX:=:latest}"
 
 # For images that are prebuilt
 : "${PREBUILT_RISCV_IMG:=prebuilt_riscv_compilers}"
@@ -92,18 +94,21 @@ apply_software_to_image()
 
 build_sel4()
 {
+    # Don't need $IMG_POSTFIX here, because:
+    # - debian is just debian
+    # - basetools doesn't get pushed out, and is built here anyway
     build_internal_image "$DEBIAN_IMG" base_tools.dockerfile "$BASETOOLS_IMG" --build-arg INTERNAL="$INTERNAL"
     build_internal_image "$BASETOOLS_IMG" sel4.dockerfile "$DOCKERHUB$SEL4_IMG"
 }
 
 build_camkes()
 {
-    build_image "$SEL4_IMG" camkes.dockerfile "$CAMKES_IMG"
+    build_image "$SEL4_IMG$IMG_POSTFIX" camkes.dockerfile "$CAMKES_IMG"
 }
 
 build_l4v()
 {
-    build_image "$CAMKES_IMG" l4v.dockerfile "$L4V_IMG"
+    build_image "$CAMKES_IMG$IMG_POSTFIX" l4v.dockerfile "$L4V_IMG"
 }
 
 ############################################
@@ -125,13 +130,13 @@ EOF
 build_riscv()
 {
     prebuild_warning >&2
-    build_image "$SEL4_IMG" riscv.dockerfile "$PREBUILT_RISCV_IMG"
+    build_image "$SEL4_IMG$IMG_POSTFIX" riscv.dockerfile "$PREBUILT_RISCV_IMG"
 }
 
 build_cakeml()
 {
     prebuild_warning >&2
-    build_image "$CAMKES_IMG" cakeml.dockerfile "$PREBUILT_CAKEML_IMG"
+    build_image "$CAMKES_IMG$IMG_POSTFIX" cakeml.dockerfile "$PREBUILT_CAKEML_IMG"
 }
 
 
@@ -210,7 +215,7 @@ then
     # If we don't want to pull the base image from Dockerhub, build it
     "build_${img_to_build}"
 else
-    docker pull "$DOCKERHUB$img_to_build"
+    docker pull "$DOCKERHUB$img_to_build$IMG_POSTFIX"
 fi
 
 # get a unique, sorted, space seperated list of software to apply.
@@ -225,7 +230,7 @@ do
         # If not, <shrug />, docker won't pick up the variable anyway, so no harm done.
         prebuilt_img="$(echo "PREBUILT_${s}_IMG" | tr "[:lower:]" "[:upper:]")"
         prebuilt_img="$(eval echo \$$prebuilt_img)"
-        apply_software_to_image "$prebuilt_img" "apply-${s}.dockerfile" "$base_img" "$base_img-$s"
+        apply_software_to_image "$prebuilt_img" "apply-${s}.dockerfile" "$base_img$IMG_POSTFIX" "$base_img-$s"
         base_img="$base_img-$s"
     fi
 done
