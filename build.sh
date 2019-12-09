@@ -50,7 +50,7 @@ build_internal_image()
              # presumably as flags
 
     $DOCKER_BUILD $DOCKER_FLAGS \
-        --build-arg base_img="$base_img" \
+        --build-arg BASE_IMG="$base_img" \
         -f "$dfile_name" \
         -t "$img_name" \
         "$@" \
