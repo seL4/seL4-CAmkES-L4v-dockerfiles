@@ -18,9 +18,8 @@ as_root apt-get install -y --no-install-recommends \
         xvfb \
         # end of list
 
-for p in "pip2" "pip3";
-do
-    as_root ${p} install --no-cache-dir \
+for pip in "pip2" "pip3"; do
+    as_root ${pip} install --no-cache-dir \
         ansi2html \
         graphviz \
         pydotplus \

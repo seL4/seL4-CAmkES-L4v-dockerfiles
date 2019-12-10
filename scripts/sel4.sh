@@ -116,8 +116,8 @@ fi
 
 # Get seL4 python2/3 deps
 # Pylint is for checking included python scripts
-for p in "pip2" "pip3"; do
-    as_root ${p} install --no-cache-dir \
+for pip in "pip2" "pip3"; do
+    as_root ${pip} install --no-cache-dir \
         pylint \
         sel4-deps \
         # end of list

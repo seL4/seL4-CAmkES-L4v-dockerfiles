@@ -64,8 +64,8 @@ as_root apt-get install -y --no-install-recommends \
 
 
 # Get python deps for CAmkES
-for p in "pip2" "pip3"; do
-    as_root ${p} install --no-cache-dir \
+for pip in "pip2" "pip3"; do
+    as_root ${pip} install --no-cache-dir \
         camkes-deps \
         jinja2 \
         # end of list 

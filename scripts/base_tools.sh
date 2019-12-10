@@ -58,11 +58,11 @@ as_root apt-get install -y --no-install-recommends \
 # Install python dependencies for both python 2 & 3
 # Upgrade pip first, then install setuptools (required for other pip packages)
 # Install some basic python tools
-for p in "pip2" "pip3"; do 
-    as_root ${p} install --no-cache-dir --upgrade pip==18.1 
-    as_root ${p} install --no-cache-dir \
+for pip in "pip2" "pip3"; do 
+    as_root ${pip} install --no-cache-dir --upgrade pip==18.1 
+    as_root ${pip} install --no-cache-dir \
         setuptools 
-    as_root ${p} install --no-cache-dir \
+    as_root ${pip} install --no-cache-dir \
         aenum \
         gitlint \
         nose \
