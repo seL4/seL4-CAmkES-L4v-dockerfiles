@@ -18,7 +18,7 @@ as_root apt-get install -y --no-install-recommends \
         libgmp-dev \
         # end of list
     
-mkdir "$SMTSOLVERS_DIR"
+try_nonroot_first mkdir "$SMTSOLVERS_DIR"|| chown_dir_to_user "$SMTSOLVERS_DIR"
 (
     cd "$SMTSOLVERS_DIR"
     git clone https://github.com/SRI-CSL/yices2

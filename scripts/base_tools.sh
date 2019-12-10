@@ -78,10 +78,10 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
     as_root ln -s /usr/bin/make /usr/bin/gmake
 fi
 
-mkdir -p "$SCRIPTS_DIR"
+try_nonroot_first mkdir -p "$SCRIPTS_DIR" || chown_dir_to_user "$SCRIPTS_DIR"
 
 # Install Google's repo
-mkdir -p "$REPO_DIR"
+try_nonroot_first mkdir -p "$REPO_DIR" || chown_dir_to_user "$REPO_DIR"
 wget -O - https://storage.googleapis.com/git-repo-downloads/repo > "$REPO_DIR/repo"
 chmod a+x "$REPO_DIR/repo"
 echo "export PATH=\$PATH:$REPO_DIR" >> "$HOME/.bashrc"

@@ -11,7 +11,7 @@ test -d "$DIR" || DIR=$PWD
 # Where will cogent libraries go
 : "${COGENT_DIR:=/usr/local/cogent}"
 
-git clone https://github.com/NICTA/cogent.git "$COGENT_DIR"
+try_nonroot_first git clone https://github.com/NICTA/cogent.git "$COGENT_DIR" || chown_dir_to_user "$COGENT_DIR"
 (
     cd "$COGENT_DIR/cogent/"
     stack build
