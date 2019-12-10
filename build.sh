@@ -222,6 +222,7 @@ fi
 softwares=$(echo "$software_to_apply" | tr ' ' '\n' | sort -u | tr '\n' ' ')
 
 base_img="$img_to_build"
+base_img_postfix="$IMG_POSTFIX"
 for s in $softwares
 do
     echo "$s to install!"
@@ -230,8 +231,9 @@ do
         # If not, <shrug />, docker won't pick up the variable anyway, so no harm done.
         prebuilt_img="$(echo "PREBUILT_${s}_IMG" | tr "[:lower:]" "[:upper:]")"
         prebuilt_img="$(eval echo \$$prebuilt_img)"
-        apply_software_to_image "$prebuilt_img" "apply-${s}.dockerfile" "$base_img$IMG_POSTFIX" "$base_img-$s"
+        apply_software_to_image "$prebuilt_img" "apply-${s}.dockerfile" "$base_img$base_img_postfix" "$base_img-$s"
         base_img="$base_img-$s"
+        base_img_postfix="" # only apply the postfix in the first loop
     fi
 done
 
