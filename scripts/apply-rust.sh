@@ -4,7 +4,7 @@ set -exuo pipefail
 
 # Source common functions
 DIR="${BASH_SOURCE%/*}"
-if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
+test -d "$DIR" || DIR=$PWD
 # shellcheck source=utils/common.sh
 . "$DIR/utils/common.sh"
 
