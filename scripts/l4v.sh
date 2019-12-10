@@ -36,12 +36,14 @@ as_root apt-get install -y --no-install-recommends \
         texlive-generic-extra \
         texlive-latex-extra \
         texlive-metapost \
+        # end of list
 
 # dependencies for testing
 as_root apt-get install -y --no-install-recommends \
         less \
         python-psutil \
         python-lxml \
+        # end of list
 
 
 # Get l4v and setup isabelle

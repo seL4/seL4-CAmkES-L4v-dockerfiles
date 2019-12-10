@@ -52,7 +52,8 @@ as_root apt-get install -y --no-install-recommends \
         python-pip \
         python3-dev \
         python3-pip \
-        wget
+        wget \
+        # end of list
 
 # Install python dependencies for both python 2 & 3
 # Upgrade pip first, then install setuptools (required for other pip packages)
@@ -67,7 +68,8 @@ for p in "pip2" "pip3"; do
         nose \
         pexpect \
         plyplus \
-        sh
+        sh \
+        # end of list
 done
 
 # Add some symlinks so some programs can find things

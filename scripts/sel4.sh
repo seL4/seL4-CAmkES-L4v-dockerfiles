@@ -74,13 +74,15 @@ as_root apt-get install -y --no-install-recommends \
     qemu-system-arm \
     qemu-system-x86 \
     sloccount \
-    u-boot-tools
+    u-boot-tools \
+    # end of list
 
 
 if [ "$DESKTOP_MACHINE" = "no" ] ; then
     # Set default compiler to be gcc-6 using update-alternatives
     for compiler in gcc \
-                    g++; \
+                    g++ \
+                    # end of list
         do
         for file in $(dpkg-query -L ${compiler} | grep /usr/bin/); do
             name=$(basename ${file})
@@ -98,7 +100,8 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
                     cpp-6-arm-linux-gnueabihf \
                     g++-6-aarch64-linux-gnu \
                     g++-6-arm-linux-gnueabi \
-                    g++-6-arm-linux-gnueabihf; \
+                    g++-6-arm-linux-gnueabihf \
+                    # end of list
     do
         echo ${compiler}
         for file in $(dpkg-query -L ${compiler} | grep /usr/bin/); do
@@ -116,7 +119,8 @@ fi
 for p in "pip2" "pip3"; do
     as_root ${p} install --no-cache-dir \
         pylint \
-        sel4-deps
+        sel4-deps \
+        # end of list
 done
 
 

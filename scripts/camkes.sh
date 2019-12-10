@@ -27,7 +27,8 @@ as_root apt-get install -y --no-install-recommends \
     fakeroot \
     lib32stdc++-6-dev \
     linux-libc-dev-i386-cross \
-    linux-libc-dev:i386 
+    linux-libc-dev:i386 \
+    # end of list
 
 # Required for testing
 as_root apt-get install -y --no-install-recommends \
@@ -36,13 +37,15 @@ as_root apt-get install -y --no-install-recommends \
     libcunit1-dev \
     libglib2.0-dev \
     libsqlite3-dev \
-    libgmp3-dev 
+    libgmp3-dev \
+    # end of list
 
 # Required for stack to use tcp properly
 as_root apt-get install -y --no-install-recommends \
     netbase \
     pkg-config \
-    spin 
+    spin \
+    # end of list 
         
 # Required for rumprun
 as_root apt-get install -y --no-install-recommends \
@@ -50,19 +53,22 @@ as_root apt-get install -y --no-install-recommends \
     genisoimage \
     gettext \
     rsync \
-    xxd 
+    xxd \
+    # end of list 
 
 # Required for cakeml
 as_root apt-get install -y --no-install-recommends \
     polyml \
-    libpolyml-dev
+    libpolyml-dev \
+    # end of list 
 
 
 # Get python deps for CAmkES
 for p in "pip2" "pip3"; do
     as_root ${p} install --no-cache-dir \
         camkes-deps \
-        jinja2
+        jinja2 \
+        # end of list 
 done
 
 # Get stack

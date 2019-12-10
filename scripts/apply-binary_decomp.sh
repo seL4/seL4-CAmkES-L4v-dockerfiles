@@ -15,7 +15,8 @@ as_root apt-get update -q
 as_root apt-get install -y --no-install-recommends \
         autoconf \
         gperf \
-        libgmp-dev
+        libgmp-dev \
+        # end of list
     
 mkdir "$SMTSOLVERS_DIR"
 (

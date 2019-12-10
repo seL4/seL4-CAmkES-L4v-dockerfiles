@@ -15,12 +15,14 @@ as_root apt-get install -y --no-install-recommends \
         python-pyqt5 \
         python-pyqt5.qtsvg \
         xauth \
-        xvfb
+        xvfb \
+        # end of list
 
 for p in "pip2" "pip3";
 do
     as_root ${p} install --no-cache-dir \
         ansi2html \
         graphviz \
-        pydotplus
+        pydotplus \
+        # end of list
 done
