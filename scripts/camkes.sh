@@ -28,6 +28,8 @@ as_root apt-get install -y --no-install-recommends \
     lib32stdc++-6-dev \
     linux-libc-dev-i386-cross \
     linux-libc-dev:i386 \
+    pkg-config \
+    spin \
     # end of list
 
 # Required for testing
@@ -43,8 +45,6 @@ as_root apt-get install -y --no-install-recommends \
 # Required for stack to use tcp properly
 as_root apt-get install -y --no-install-recommends \
     netbase \
-    pkg-config \
-    spin \
     # end of list 
         
 # Required for rumprun
