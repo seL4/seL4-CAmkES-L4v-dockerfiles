@@ -20,20 +20,6 @@ test -d "$DIR" || DIR=$PWD
 # tmp space for building 
 : "${TEMP_DIR:=/tmp}"
 
-if [ "$DESKTOP_MACHINE" = "no" ] ; then
-    # Add an apt preferences file, which states that stable is preferable than testing when automatically
-    # picking packages.
-    as_root tee -a /etc/apt/preferences > /dev/null << EOF
-    Package: *
-    Pin: release a=testing
-    Pin-Priority: 900
-    
-    Package: *
-    Pin: release a=unstable
-    Pin-Priority: 800
-EOF
-fi
-
 # Add additional architectures for cross-compiled libraries.
 # Install the tools required to compile seL4.
 as_root apt-get update -q
