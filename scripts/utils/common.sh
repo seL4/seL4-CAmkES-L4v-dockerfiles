@@ -6,6 +6,21 @@ command_exists() {
 	command -v "$@" > /dev/null 2>&1
 }
 
+
+# Determine a working command to run things as root
+ROOT_CMD=""
+if command_exists sudo; then
+    ROOT_CMD='sudo -E bash -c'
+elif command_exists su; then
+    ROOT_CMD='su -c'
+else
+    cat >&2 <<-'EOF'
+    Error: this installer needs the ability to run commands as root.
+    We are unable to find either "sudo" or "su" available to make this happen.
+EOF
+    exit 1
+fi
+
 as_root() {
     # A function inspired from get.docker.com and https://stackoverflow.com/a/32280085
     # Designed to pick the best way to run a command as root
@@ -18,17 +33,7 @@ as_root() {
     user="$(id -un 2>/dev/null || true)"
 
     if [ "$user" != 'root' ]; then
-        if command_exists sudo; then
-            shell_cmd='sudo -E bash -c'
-        elif command_exists su; then
-            shell_cmd='su -c'
-        else
-            cat >&2 <<-'EOF'
-            Error: this installer needs the ability to run commands as root.
-            We are unable to find either "sudo" or "su" available to make this happen.
-EOF
-            exit 1
-        fi
+        shell_cmd="$ROOT_CMD"
     fi
     printf -v cmd_str '%s ' "${cmd[@]}"
     set -x
