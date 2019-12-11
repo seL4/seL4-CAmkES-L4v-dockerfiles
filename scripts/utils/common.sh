@@ -55,8 +55,6 @@ try_nonroot_first() {
 
 chown_dir_to_user() {
     set +x
-    local dir
-    dir="$1"
-    as_root chown -R "$(id -un)":"$(id -gn)" "$dir" 
+    as_root chown -R "$(id -u)":"$(id -g)" "$1"
     set -x
 }
