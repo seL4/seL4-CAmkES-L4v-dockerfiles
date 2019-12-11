@@ -21,10 +21,3 @@ RUN /bin/bash /tmp/${SCRIPT} \
     && apt-get clean autoclean \
     && apt-get autoremove --purge --yes \
     && rm -rf /var/lib/apt/lists/*
-
-# Docker doesn't know the HOME variable at this level, so we have to set it by
-# hand here. I don't like it, but it works for now. We currently build as `root`
-# so this should work fine.
-ARG HOME="/root"
-# Doubley make sure that the PATH is set right
-ENV PATH "${PATH}:${HOME}/.local/bin"

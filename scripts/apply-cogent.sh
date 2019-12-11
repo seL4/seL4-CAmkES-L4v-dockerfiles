@@ -16,6 +16,5 @@ try_nonroot_first git clone https://github.com/NICTA/cogent.git "$COGENT_DIR" ||
     cd "$COGENT_DIR/cogent/"
     stack build
     stack install  # installs the binary to $HOME/.local/bin
+    as_root ln -s "$HOME/.local/bin/cogent" /usr/local/bin/cogent
 ) || exit 1
-
-echo "export PATH=\"\$PATH:\$HOME/.local/bin\"" >> "$HOME/.bashrc"
