@@ -11,8 +11,9 @@ test -d "$DIR" || DIR=$PWD
 # tmp space for building 
 : "${TEMP_DIR:=/tmp}"
 
+try_nonroot_first mkdir -p "$TEMP_DIR" || chown_dir_to_user "$TEMP_DIR"
 # Get rust nightly
-wget -O - https://sh.rustup.rs > "$TEMP_DIR/rustup.sh"
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > "$TEMP_DIR/rustup.sh"
 sh "$TEMP_DIR/rustup.sh" -y --default-toolchain nightly
 rm "$TEMP_DIR/rustup.sh"
 
