@@ -34,8 +34,9 @@ try_nonroot_first mkdir "$SMTSOLVERS_DIR" || chown_dir_to_user "$SMTSOLVERS_DIR"
     CVC_TAR="cvc4-1.5-3.tar.gz"
     SONOLAR_TAR="sonolar-2014-12-04-x86_64-linux.tar.gz"
 
-    wget "http://downloads.ssrg.nicta.com.au/downloads/isabelle/components/$CVC_TAR"
-    wget "http://www.informatik.uni-bremen.de/agbs/florian/sonolar/$SONOLAR_TAR"
+    # Force wget to use ipv4 as docker doesn't like ipv6
+    wget -4 "http://downloads.ssrg.nicta.com.au/downloads/isabelle/components/$CVC_TAR"
+    wget -4 "http://www.informatik.uni-bremen.de/agbs/florian/sonolar/$SONOLAR_TAR"
     echo "bf3bb4de0d3b39503de436f4385c7a8b8040626addebff5c230b4f4f929ae358 $SONOLAR_TAR" > checksums
     echo "a3343c4255ac2d1f64f83d4feba2ed076da23e429f145da0066a9cd66e932162 $CVC_TAR" >> checksums
     if sha256sum -c checksums; then
