@@ -17,7 +17,9 @@ ARG SCRIPT=base_tools.sh
 
 COPY scripts /tmp/
 
-RUN /bin/bash /tmp/${SCRIPT} \
+# ip4v forces curl to use ipv4. Weirdness happens with docker and ipv6.
+RUN echo ipv4 >> ~/.curlrc \
+    && /bin/bash /tmp/${SCRIPT} \
     && apt-get clean autoclean \
     && apt-get autoremove --purge --yes \
     && rm -rf /var/lib/apt/lists/*
