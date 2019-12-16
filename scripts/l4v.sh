@@ -30,6 +30,7 @@ as_root apt-get install -y --no-install-recommends \
         libwww-perl \
         libxslt-dev \
         libxml2-dev \
+        openssh-client \
         mlton \
         texlive-bibtex-extra \
         texlive-fonts-recommended \
