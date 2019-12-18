@@ -21,6 +21,10 @@ test -d "$DIR" || DIR=$PWD
 : "${CAKEML_DIR:=/usr/local/bin/cakeml}"
 : "${CAKEML32_BIN_DIR:=/usr/local/bin/cake-x64-32}"
 : "${CAKEML64_BIN_DIR:=/usr/local/bin/cake-x64-64}"
+: "${CAKEML_BUILD_NUMBER:=989}"
+: "${HOL_COMMIT:=8384b1c70482d5fbd9ad4d83775cae2a05294515}"
+: "${CAKEML_COMMIT:=980410c6c89921c2e8950a5127bd9f32791f50bf}"
+: "${CAKEML_REMOTE:=https://github.com/CakeML/cakeml.git}"
 
 : "${TMP_DIR:=/tmp}"
 
@@ -28,15 +32,13 @@ test -d "$DIR" || DIR=$PWD
 try_nonroot_first git clone https://github.com/HOL-Theorem-Prover/HOL.git "$HOL_DIR" || chown_dir_to_user "$HOL_DIR"
 (
     cd "$HOL_DIR"
-    git checkout 8384b1c70482d5fbd9ad4d83775cae2a05294515
+    git checkout $HOL_COMMIT
     mkdir -p tools-poly
     echo "val polymllibdir =\"/usr/lib/x86_64-linux-gnu/\";" > tools-poly/poly-includes.ML
     poly < tools/smart-configure.sml
     bin/build
     chmod -R 757 "$PWD"
 ) || exit 1
-
-echo "export PATH=\"\$PATH:$HOL_DIR/bin\"" >> "$HOME/.bashrc"
 
 get_cakeml()
 {
@@ -57,14 +59,14 @@ get_cakeml()
 }
 
 # These are known-good cakemls
-get_cakeml "$CAKEML32_BIN_DIR" "https://cakeml.org/regression/artefacts/989/cake-x64-32.tar.gz"
-get_cakeml "$CAKEML64_BIN_DIR" "https://cakeml.org/regression/artefacts/989/cake-x64-64.tar.gz"
+get_cakeml "$CAKEML32_BIN_DIR" "https://cakeml.org/regression/artefacts/${CAKEML_BUILD_NUMBER}/cake-x64-32.tar.gz"
+get_cakeml "$CAKEML64_BIN_DIR" "https://cakeml.org/regression/artefacts/${CAKEML_BUILD_NUMBER}/cake-x64-64.tar.gz"
 
 if [ "$MAKE_CACHES" = "yes" ] ; then
-    try_nonroot_first git clone https://github.com/CakeML/cakeml.git "$CAKEML_DIR" || chown_dir_to_user "$CAKEML_DIR"
+    try_nonroot_first git clone "$CAKEML_REMOTE" "$CAKEML_DIR" || chown_dir_to_user "$CAKEML_DIR"
     (
         cd "$CAKEML_DIR"
-        git checkout 980410c6c89921c2e8950a5127bd9f32791f50bf
+        git checkout $CAKEML_COMMIT
         # Pre-build the following cakeml directories to speed up subsequent cakeml app builds
         for dir in "basis" "compiler/parsing";
             do
