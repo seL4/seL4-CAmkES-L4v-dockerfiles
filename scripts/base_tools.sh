@@ -28,9 +28,7 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
     as_root tee -a /etc/apt/sources.list.d/alternate_mirror.list > /dev/null << EOF
     deb http://httpredir.debian.org/debian/ buster main
     deb http://httpredir.debian.org/debian/ buster-updates main
-    deb http://mirror.aarnet.edu.au/debian/ buster main
-    deb http://mirror.aarnet.edu.au/debian/ buster-updates main
-    deb http://mirror.aarnet.edu.au/debian/ stretch main
+    deb http://httpredir.debian.org/debian/ stretch main
 EOF
 
     echo "force-unsafe-io" | as_root tee /etc/dpkg/dpkg.cfg.d/02apt-speedup > /dev/null
