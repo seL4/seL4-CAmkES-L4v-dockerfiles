@@ -22,6 +22,7 @@ set -ef
 # For images that are prebuilt
 : "${PREBUILT_RISCV_IMG:=prebuilt_riscv_compilers}"
 : "${PREBUILT_CAKEML_IMG:=prebuilt_cakeml}"
+: "${PREBUILT_SYSINIT_IMG:=prebuilt_sysinit}"
 
 # Extra vars
 DOCKER_BUILD="docker build"
@@ -137,6 +138,12 @@ build_cakeml()
 {
     prebuild_warning >&2
     build_image "$CAMKES_IMG$IMG_POSTFIX" cakeml.dockerfile "$PREBUILT_CAKEML_IMG"
+}
+
+build_sysinit()
+{
+    prebuild_warning >&2
+    build_image "$CAMKES_IMG$IMG_POSTFIX" sysinit.dockerfile "$PREBUILT_SYSINIT_IMG"
 }
 
 
