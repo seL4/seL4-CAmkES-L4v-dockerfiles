@@ -50,7 +50,7 @@ get_cakeml()
     try_nonroot_first mkdir "$dir" || chown_dir_to_user "$dir"
     (
         cd "$dir"
-        wget "$url" --directory-prefix="$TMP_DIR"
+        wget -4 "$url" --directory-prefix="$TMP_DIR"
         tar -xvzf "$TMP_DIR/$filename" --strip 1  # Don't untar the top container directory
         rm "$TMP_DIR/$filename"                   # clean up tar
 
