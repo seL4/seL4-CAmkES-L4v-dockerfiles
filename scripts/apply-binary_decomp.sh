@@ -21,16 +21,6 @@ as_root apt-get install -y --no-install-recommends \
 try_nonroot_first mkdir "$SMTSOLVERS_DIR" || chown_dir_to_user "$SMTSOLVERS_DIR"
 (
     cd "$SMTSOLVERS_DIR"
-    git clone https://github.com/SRI-CSL/yices2
-    (
-        cd yices2
-        git checkout -b yices-260 Yices-2.6.0
-        autoconf
-        mkdir deploy
-        ./configure --prefix="$PWD"/deploy
-        make
-        make install
-    ) || exit 1
     CVC_TAR="cvc4-1.5-3.tar.gz"
     SONOLAR_TAR="sonolar-2014-12-04-x86_64-linux.tar.gz"
 
@@ -51,8 +41,5 @@ try_nonroot_first mkdir "$SMTSOLVERS_DIR" || chown_dir_to_user "$SMTSOLVERS_DIR"
     echo "SONOLAR: offline: /smtsolvers/sonolar-2014-12-04-x86_64-linux/bin/sonolar --input-format=smtlib2" >> solverlist
     echo "CVC4: offline: /smtsolvers/cvc4-1.5-3/x86_64-linux/cvc4 --lang smt" >> solverlist
     echo "SONOLAR-word8: offline: /smtsolvers/sonolar-2014-12-04-x86_64-linux/bin/sonolar --input-format=smtlib2" >> solverlist
-    echo "  config: mem_mode = 8" >> solverlist
-    echo "Yices2: offline: /smtsolvers/yices2/deploy/bin/yices-smt2" >> solverlist
-    echo "Yices2-word8: offline: /smtsolvers/yices2/deploy/bin/yices-smt2" >> solverlist
     echo "  config: mem_mode = 8" >> solverlist
 ) || exit 1
