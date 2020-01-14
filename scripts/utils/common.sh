@@ -2,6 +2,17 @@
 
 set -exuo pipefail
 
+#####################
+# Common vars
+
+# Apt is being run in a script
+: "${DEBIAN_FRONTEND:=noninteractive}"
+export DEBIAN_FRONTEND
+
+# Common vars
+#####################
+
+
 command_exists() {
 	command -v "$@" > /dev/null 2>&1
 }
