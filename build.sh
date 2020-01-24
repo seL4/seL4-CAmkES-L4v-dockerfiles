@@ -55,8 +55,11 @@ build_internal_image()
     shift 3  # any params left over are just injected into the docker command
              # presumably as flags
 
+             
+    build_args_to_pass_to_docker=$(echo $build_args | grep "=" | awk '{print "--build-arg", $1}')
     $DOCKER_BUILD $DOCKER_FLAGS \
         --build-arg BASE_IMG="$base_img" \
+        $build_args_to_pass_to_docker \
         -f "$DOCKERFILE_DIR/$dfile_name" \
         -t "$img_name" \
         "$@" \
@@ -162,11 +165,12 @@ show_help()
                             | sort \
                             | tr "\n" "|")
     cat <<EOF
-    build.sh [-r] -b [sel4|camkes|l4v] -s [$available_software] -s ...
+    build.sh [-r] -b [sel4|camkes|l4v] -s [$available_software] -s ... -e MAKE_CACHES=no -e ...
 
      -r     Rebuild docker images (don't use the docker cache)
      -v     Verbose mode
      -s     Strict mode
+     -e     Build arguments (NAME=VALUE) to docker build. Use a -e for each build arg.
      -p     Pull base image first. Rather than build the base image, 
             get it from the web first
     
@@ -185,7 +189,7 @@ img_to_build=
 software_to_apply=
 pull_base_first=
 
-while getopts "h?pvb:rs:" opt
+while getopts "h?pvb:rs:e:" opt
 do
     case "$opt" in
     h|\?)
@@ -201,6 +205,8 @@ do
     r)  DOCKER_FLAGS="$DOCKER_FLAGS --no-cache"
         ;;
     s)  software_to_apply="$software_to_apply $OPTARG"
+        ;;
+    e)  build_args="$build_args\n$OPTARG"
         ;;
     :)  echo "Option -$opt requires an argument." >&2
         exit 1
