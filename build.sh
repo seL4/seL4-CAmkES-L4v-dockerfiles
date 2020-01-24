@@ -19,6 +19,9 @@ set -ef
 # Allow override of which 'version' (aka tag) of an image to pull in
 : "${IMG_POSTFIX:=:latest}"
 
+# Dockerfile directory location
+: "${DOCKERFILE_DIR:=dockerfiles}"
+
 # For images that are prebuilt
 : "${PREBUILT_RISCV_IMG:=prebuilt_riscv_compilers}"
 : "${PREBUILT_CAKEML_IMG:=prebuilt_cakeml}"
@@ -54,7 +57,7 @@ build_internal_image()
 
     $DOCKER_BUILD $DOCKER_FLAGS \
         --build-arg BASE_IMG="$base_img" \
-        -f "$dfile_name" \
+        -f "$DOCKERFILE_DIR/$dfile_name" \
         -t "$img_name" \
         "$@" \
         .
@@ -83,7 +86,7 @@ apply_software_to_image()
     $DOCKER_BUILD $DOCKER_FLAGS \
 		--build-arg BASE_BUILDER_IMG="$DOCKERHUB$prebuilt_img" \
 		--build-arg BASE_IMG="$DOCKERHUB$orig_img" \
-		-f "$builder_dfile" \
+		-f "$DOCKERFILE_DIR/$builder_dfile" \
 		-t "$DOCKERHUB$new_img" \
         "$@" \
 		.
@@ -154,7 +157,7 @@ show_help()
 {
     # TODO:
     # - learn best way to represent that -s can be supplied multiple times
-    available_software=$(find . -name 'apply-*.dockerfile' \
+    available_software=$(cd "$DOCKERFILE_DIR"; find . -name 'apply-*.dockerfile' \
                             | sed 's/.dockerfile//;s@./apply-@@' \
                             | sort \
                             | tr "\n" "|")
@@ -233,7 +236,7 @@ base_img_postfix="$IMG_POSTFIX"
 for s in $softwares
 do
     echo "$s to install!"
-    if test -f "apply-${s}.dockerfile"; then
+    if test -f "$DOCKERFILE_DIR/apply-${s}.dockerfile"; then
         # Try to resolve if we have a prebuilt image for the software being asked for.
         # If not, <shrug />, docker won't pick up the variable anyway, so no harm done.
         prebuilt_img="$(echo "PREBUILT_${s}_IMG" | tr "[:lower:]" "[:upper:]")"
