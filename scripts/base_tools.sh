@@ -99,10 +99,10 @@ if [ "$INTERNAL" = "yes" ]; then
         cd "$SCRIPTS_DIR"
         if [ "$INTERNAL" = "yes" ]; then
             # This repo is not released externally
-            git clone http://bitbucket.ts.data61.csiro.au/scm/sel4proj/console_reboot.git
+            git clone --depth=1 http://bitbucket.ts.data61.csiro.au/scm/sel4proj/console_reboot.git
             chmod +x console_reboot/simulate/*
         fi
         # Get some useful SEL4 tools
-        git clone "${SCM}/sel4/sel4_libs.git"
+        git clone --depth=1 "${SCM}/sel4/sel4_libs.git"
     ) || exit 1
 fi

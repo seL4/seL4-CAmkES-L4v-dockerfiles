@@ -20,6 +20,8 @@ test -d "$DIR" || DIR=$PWD
 # tmp space for building 
 : "${TEMP_DIR:=/tmp}"
 
+: "${GCC_V8_AS_DEFAULT:=yes}"
+
 # Add additional architectures for cross-compiled libraries.
 # Install the tools required to compile seL4.
 as_root apt-get update -q
@@ -45,6 +47,16 @@ as_root apt-get install -y --no-install-recommends \
     gcc-6-arm-linux-gnueabihf \
     gcc-6-base \
     gcc-6-multilib \
+    g++-8 \
+    g++-8-aarch64-linux-gnu \
+    g++-8-arm-linux-gnueabi \
+    g++-8-arm-linux-gnueabihf \
+    gcc-8 \
+    gcc-8-aarch64-linux-gnu \
+    gcc-8-arm-linux-gnueabi \
+    gcc-8-arm-linux-gnueabihf \
+    gcc-8-base \
+    gcc-8-multilib \
     gcc-arm-none-eabi \
     libarchive-dev \
     libcc1-0 \
@@ -68,7 +80,14 @@ as_root apt-get install -y --no-install-recommends -t bullseye \
     # end of list
 
 if [ "$DESKTOP_MACHINE" = "no" ] ; then
-    # Set default compiler to be gcc-6 using update-alternatives
+    if [ "$GCC_V8_AS_DEFAULT" = "yes" ] ; then
+        compiler_version=8
+    else
+        compiler_version=6
+    fi
+    # Set default compiler to be gcc-8 using update-alternatives
+    # This is necessary particularly for the cross-compilers, whom sometimes don't put 
+    # a genericly named version of themselves in the PATH.
     for compiler in gcc \
                     g++ \
                     # end of list
@@ -76,32 +95,35 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
         for file in $(dpkg-query -L ${compiler} | grep /usr/bin/); do
             name=$(basename ${file})
             echo "$name - $file"
-            as_root update-alternatives --install "${file}" "${name}" "${file}-6" 50 || :  # don't stress if it doesn't work
+            as_root update-alternatives --install "${file}" "${name}" "${file}-${compiler_version}" 50 || :  # don't stress if it doesn't work
             as_root update-alternatives --auto "${name}" || :
         done
     done
 
-    for compiler in gcc-6-arm-linux-gnueabi \
-                    cpp-6-arm-linux-gnueabi \
-                    gcc-6-aarch64-linux-gnu \
-                    cpp-6-aarch64-linux-gnu \
-                    gcc-6-arm-linux-gnueabihf \
-                    cpp-6-arm-linux-gnueabihf \
-                    g++-6-aarch64-linux-gnu \
-                    g++-6-arm-linux-gnueabi \
-                    g++-6-arm-linux-gnueabihf \
+    for compiler in gcc-${compiler_version}-arm-linux-gnueabi \
+                    cpp-${compiler_version}-arm-linux-gnueabi \
+                    g++-${compiler_version}-arm-linux-gnueabi \
+                    gcc-${compiler_version}-aarch64-linux-gnu \
+                    cpp-${compiler_version}-aarch64-linux-gnu \
+                    g++-${compiler_version}-aarch64-linux-gnu \
+                    gcc-${compiler_version}-arm-linux-gnueabihf \
+                    cpp-${compiler_version}-arm-linux-gnueabihf \
+                    g++-${compiler_version}-arm-linux-gnueabihf \
                     # end of list
     do
         echo ${compiler}
         for file in $(dpkg-query -L ${compiler} | grep /usr/bin/); do
-            name=$(basename ${file} | sed 's/-6$//g')
-            link=$(echo ${file} | sed 's/-6$//g')
+            name=$(basename ${file} | sed "s/-${compiler_version}\$//g")
+            link=$(echo ${file} | sed "s/-${compiler_version}\$//g")
             echo "$name - $file"
-            as_root update-alternatives --install "${link}" "${name}" "${file}" 60 || :
-            as_root update-alternatives --auto "${name}" || :
+            (
+                as_root update-alternatives --install "${link}" "${name}" "${file}" 60 && \
+                as_root update-alternatives --auto "${name}"
+            ) || : # Don't worry if this fails
         done
     done
 fi
+
 
 # Get seL4 python2/3 deps
 # Pylint is for checking included python scripts
@@ -127,7 +149,7 @@ if [ "$MAKE_CACHES" = "yes" ] ; then
             cd build
             for plat in "sabre" "ia32" "x86_64" "tx1" "tk1 -DARM_HYP=ON"; do 
                 ../init-build.sh -DPLATFORM=$plat  # no "" around plat, so HYP still works
-                ninja
+                ninja || exit 1
                 rm -rf ./*
             done
         ) || exit 1

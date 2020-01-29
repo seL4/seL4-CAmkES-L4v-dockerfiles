@@ -10,6 +10,9 @@ ARG DESKTOP_MACHINE=no
 ARG INTERNAL=yes
 ARG MAKE_CACHES=yes
 
+# Use GCC v8 as default? If no, GCC v6 is used
+ARG GCC_V8_AS_DEFAULT=yes
+
 ARG SCRIPT=sel4.sh
 
 COPY scripts /tmp/
