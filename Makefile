@@ -159,14 +159,14 @@ endif
 build_user: run_checks
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
 		--build-arg=USER_BASE_IMG=$(DOCKERHUB)$(USER_BASE_IMG) \
-		-f extras.dockerfile \
+		-f dockerfiles/extras.dockerfile \
 		-t $(EXTRAS_IMG) \
 		.
 	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
 		--build-arg=EXTRAS_IMG=$(EXTRAS_IMG) \
 		--build-arg=UNAME=$(shell whoami) \
 		--build-arg=UID=$(shell id -u) \
-		-f user.dockerfile \
+		-f dockerfiles/user.dockerfile \
 		-t $(USER_IMG) .
 build_user_sel4: USER_BASE_IMG = $(SEL4_IMG)
 build_user_sel4: build_user
