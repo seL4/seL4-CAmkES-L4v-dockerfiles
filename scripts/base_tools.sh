@@ -25,12 +25,20 @@ test -d "$DIR" || DIR=$PWD
 
 
 if [ "$DESKTOP_MACHINE" = "no" ] ; then
+    # Add additional mirrors for different Debian releases
     as_root tee -a /etc/apt/sources.list.d/alternate_mirror.list > /dev/null << EOF
     deb http://httpredir.debian.org/debian/ buster main
     deb http://httpredir.debian.org/debian/ buster-updates main
     deb http://httpredir.debian.org/debian/ stretch main
+    deb http://httpredir.debian.org/debian/ bullseye main
 EOF
 
+    # Tell apt that we should prefer packages from Buster
+    as_root tee -a /etc/apt/apt.conf.d/70debconf << EOF
+APT::Default-Release "buster";
+EOF
+
+    # These commands supposedly speed-up and better dockerize apt.
     echo "force-unsafe-io" | as_root tee /etc/dpkg/dpkg.cfg.d/02apt-speedup > /dev/null
     echo "Acquire::http {No-Cache=True;};" | as_root tee /etc/apt/apt.conf.d/no-cache > /dev/null
 
