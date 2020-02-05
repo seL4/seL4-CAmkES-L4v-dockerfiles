@@ -11,6 +11,10 @@ test -d "$DIR" || DIR=$PWD
 # tmp space for building 
 : "${TEMP_DIR:=/tmp}"
 
+# Not strictly necessary, but it makes the apt operations in
+# ../dockerfiles/apply-rust.dockerfile work.
+as_root apt-get update -q
+
 try_nonroot_first mkdir -p "$TEMP_DIR" || chown_dir_to_user "$TEMP_DIR"
 # Get rust nightly
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > "$TEMP_DIR/rustup.sh"

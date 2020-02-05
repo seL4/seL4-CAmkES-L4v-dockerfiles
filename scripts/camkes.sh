@@ -75,9 +75,6 @@ done
 wget -O - https://get.haskellstack.org/ | sh
 echo "export PATH=\"\$PATH:\$HOME/.local/bin\"" >> "$HOME/.bashrc"
 
-# CAmkES is hard coded to look for clang in /opt/clang/
-as_root ln -s /usr/lib/llvm-3.8 /opt/clang
-
 if [ "$MAKE_CACHES" = "yes" ] ; then
     # Get a project that relys on stack, and use it to init the capDL-tool cache \
     # then delete the repo, because we don't need it.

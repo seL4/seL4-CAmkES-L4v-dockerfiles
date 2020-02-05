@@ -11,6 +11,10 @@ test -d "$DIR" || DIR=$PWD
 # Where will cogent libraries go
 : "${COGENT_DIR:=/usr/local/cogent}"
 
+# Not strictly necessary, but it makes the apt operations in
+# ../dockerfiles/apply-cogent.dockerfile work.
+as_root apt-get update -q
+
 try_nonroot_first git clone https://github.com/NICTA/cogent.git "$COGENT_DIR" || chown_dir_to_user "$COGENT_DIR"
 (
     cd "$COGENT_DIR/cogent/"

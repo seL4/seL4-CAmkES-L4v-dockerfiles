@@ -28,6 +28,10 @@ test -d "$DIR" || DIR=$PWD
 
 : "${TMP_DIR:=/tmp}"
 
+# Not strictly necessary, but it makes the apt operations in
+# ../dockerfiles/cakeml.dockerfile work.
+as_root apt-get update -q
+
 # Set up tools to compile CakeML
 try_nonroot_first git clone https://github.com/HOL-Theorem-Prover/HOL.git "$HOL_DIR" || chown_dir_to_user "$HOL_DIR"
 (

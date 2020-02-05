@@ -46,19 +46,19 @@ fi
 
 as_root apt-get update -q
 as_root apt-get install -y --no-install-recommends \
-        bc \
-        ca-certificates \
-        devscripts \
-        expect \
-        git \
-        jq \
-        make \
-        mercurial \
-        python-dev \
-        python-pip \
-        python3-dev \
-        python3-pip \
-        wget \
+        bc=1.07.1-2+b1 \
+        ca-certificates=20190110 \
+        devscripts=2.19.5+deb10u1 \
+        expect=5.45.4-2 \
+        git=1:2.20.1-2+deb10u1 \
+        jq=1.5+dfsg-2+b1 \
+        make=4.2.1-1.2 \
+        mercurial=4.8.2-1+deb10u1 \
+        python-dev=2.7.16-1 \
+        python-pip=18.1-5 \
+        python3-dev=3.7.3-1 \
+        python3-pip=18.1-5 \
+        wget=1.20.1-1.1 \
         # end of list
 
 # Install python dependencies for both python 2 & 3
