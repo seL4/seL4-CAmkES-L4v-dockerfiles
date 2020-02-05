@@ -29,7 +29,6 @@ as_root apt-get install -y --no-install-recommends \
     astyle=3.1-2 \
     build-essential \
     ccache \
-    clang \
     cmake \
     cmake-curses-gui \
     coreutils \
@@ -49,7 +48,6 @@ as_root apt-get install -y --no-install-recommends \
     gcc-arm-none-eabi \
     libarchive-dev \
     libcc1-0 \
-    libclang-dev \
     libncurses-dev \
     libuv1 \
     libxml2-utils \
@@ -63,6 +61,11 @@ as_root apt-get install -y --no-install-recommends \
     u-boot-tools \
     # end of list
 
+# We need to get clang 8 from Debian Bullseye
+as_root apt-get install -y --no-install-recommends -t bullseye \
+    clang=1:8.0-48.3 \
+    libclang-dev=1:8.0-48.3 \
+    # end of list
 
 if [ "$DESKTOP_MACHINE" = "no" ] ; then
     # Set default compiler to be gcc-6 using update-alternatives
