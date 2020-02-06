@@ -115,7 +115,7 @@ user_run:
 		--hostname in-container \
 		--rm \
 		-u $(shell id -u):$(shell id -g) \
-		-v $(HOST_DIR):/host \
+		-v $(HOST_DIR):/host:z \
 		-v $(DOCKER_VOLUME_HOME):/home/$(shell whoami) \
 		-v /etc/localtime:/etc/localtime:ro \
 		$(USER_IMG) $(EXEC)
@@ -127,7 +127,7 @@ user_run_l4v:
 		--hostname in-container \
 		--rm \
 		-u $(shell id -u):$(shell id -g) \
-		-v $(HOST_DIR):/host \
+		-v $(HOST_DIR):/host:z \
 		-v $(DOCKER_VOLUME_HOME):/home/$(shell whoami) \
 		-v $(DOCKER_VOLUME_ISABELLE):/isabelle \
 		-v /etc/localtime:/etc/localtime:ro \
