@@ -148,7 +148,7 @@ endif
 
 	# Figure out if any trustworthy systems docker images are potentially too old
 	@for img in $(shell docker images --filter=reference='trustworthysystems/*:latest' -q); do \
-		if [ $$(( ( $$(date +%s) - $$(date --date=$$(docker inspect --format='{{.Created}}' $${img}) +%s) ) / (60*60*24) )) -gt 30 ]; then \
+		if [ $$(( ( $$(date +%s) - $$(date --date=$$(docker inspect --format='{{json .Created}}' $${img} | tr -d '"') +%s) ) / (60*60*24) )) -gt 30 ]; then \
 			echo "The docker image: $$(docker inspect --format='{{(index .RepoTags 0)}}' $${img}) is getting a bit old (more than 30 days). You should consider updating it."; \
 			sleep 2; \
 		fi; \
