@@ -82,11 +82,11 @@ done
 wget -O - https://get.haskellstack.org/ | sh
 echo "export PATH=\"\$PATH:\$HOME/.local/bin\"" >> "$HOME/.bashrc"
 
-groupadd stack
+as_root groupadd stack
 
-echo "allow-different-user: true" >> /root/.stack/config.yaml
-chmod a+x /root && chgrp -R stack /root/.stack
-chmod -R g=u /root/.stack
+echo "allow-different-user: true" >> "$HOME/.stack/config.yaml"
+chmod a+x "$HOME" && chgrp -R stack "$HOME/.stack"
+chmod -R g=u "$HOME/.stack"
 
 # CAmkES is hard coded to look for clang in /opt/clang/
 as_root ln -s /usr/lib/llvm-3.8 /opt/clang
