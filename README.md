@@ -121,15 +121,58 @@ Adding dependencies into the `extras.dockerfile` will build them the next time y
 
 
 ## To build the local dockerfiles:
-To build the local dockerfiles into images, run:
 
-    make all
+To build the Dockerfiles locally, you will need to use the included `build.sh` script. It has a help menu:
 
-To build a specific image, specify it with make:
+```
+./build.sh -h
+    build.sh [-r] -b [sel4|camkes|l4v] -s [binary_decomp|cakeml|camkes_vis|cogent|riscv|rust|sysinit|] -s ... -e MAKE_CACHES=no -e ...
 
-    make sel4
-    make camkes
-    make l4v
+     -r     Rebuild docker images (don't use the docker cache)
+     -v     Verbose mode
+     -s     Strict mode
+     -e     Build arguments (NAME=VALUE) to docker build. Use a -e for each build arg.
+     -p     Pull base image first. Rather than build the base image, 
+            get it from the web first
+    
+    Sneaky hints:
+     - To build 'prebuilt' images, you can run:
+           build.sh -b [riscv|cakeml] 
+       but it will take a while!
+     - You can actually run this with '-b sel4-rust', or any other existing image,
+       but it will ruin the sorting of the name.
+```
+
+### Example builds
+
+To build the seL4 image, run:
+
+`./build.sh -b sel4`
+
+Note that the `-b` flag stands for the `base image`. There are 3 base images: `sel4`, `camkes`, and `l4v`. Each base image includes the previous one, i.e.: the `camkes` image has everything the `sel4` image has, plus the camkes dependencies.
+
+To add additional software to the image, you can use the `-s` flag, to add `software`. For example:
+
+`./build.sh -b sel4 -s riscv  # This adds the RISCV compilers`
+
+`./build.sh -b sel4 -s riscv -s rust  # This adds the RISCV compilers and a rust compiler`
+
+You can also pass configuration variables through to docker (in docker terms, these are `BUILD_ARGS`) by using the `-e` flag. For example, you can tell the seL4 image to use GCC version 6 (instead of 8 ) by running:
+
+`./build.sh -b sel4 -e GCC_V8_AS_DEFAULT=no`
+
+Or to turn off priming the build caches:
+
+`./build.sh -b sel4 -e MAKE_CACHES=no`
+
+Or combined:
+
+`./build.sh -b sel4 -e GCC_V8_AS_DEFAULT=no -e MAKE_CACHES=no`
+
+To speed things up, you can ask to pull the base image from DockerHub first with the `-p` flag:
+
+`./build.sh -p -b sel4 -s riscv  # This adds the RISCV compilers`
+
 
 
 ## Security
@@ -138,42 +181,3 @@ Running Docker on your machine has its own security risks which you should be aw
 Of particular note in this case, your UID and GID are being baked into an image. Any other user on the host who is part of the docker group could spawn a separate container of this image, and hence have read and write access to your files. Of course, if they are part of the docker group, they could do this anyway, but it just makes it a bit easier.
 
 Use at your own risk.
-
-## All (useful) commands
-
-### Starting a container from DockerHub
-    user             # Alias for user_camkes
-    user_sel4        # Start a container with seL4 dependencies
-    user_camkes      # Start a container with seL4 + CAmkES dependencies
-    user_l4v         # Start a container with seL4 + CAmkES + L4v dependencies
-
-### Getting the images from DockerHub
-    pull_sel4_image                # Pull the seL4 image from DockerHub 
-    pull_camkes_image              # Pull the CAmkES image from DockerHub 
-    pull_l4v_image                 # Pull the L4v image from DockerHub 
-    pull_images_from_dockerhub     # Pull all the above images from DockerHub 
-
-### Building the local Dockerfiles
-    base_tools                  
-    sel4                        
-    camkes                      
-    l4v                         
-    all
-    
-    rebuild_base_tools          
-    rebuild_sel4                
-    rebuild_camkes              
-    rebuild_l4v                 
-    rebuild_all                 
-
-### Testing the local Dockerfiles
-    test_sel4
-    test_camkes                 
-    test_l4v
-    
-    retest_sel4                 
-    retest_camkes               
-    retest_l4v                  
-    
-    run_tests                   
-    rerun_tests                 
