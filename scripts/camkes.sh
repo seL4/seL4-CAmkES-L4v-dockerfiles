@@ -17,6 +17,9 @@ test -d "$DIR" || DIR=$PWD
 # Docker may set this variable - fill if not set
 : "${SCM:=https://github.com}"
 
+# Haskell stack install directory 
+: "${STACK_ROOT:=/etc/stack}"
+
 # tmp space for building 
 : "${TEMP_DIR:=/tmp}"
 
@@ -28,6 +31,7 @@ possibly_toggle_apt_snapshot
 as_root dpkg --add-architecture i386
 as_root apt-get update -q
 as_root apt-get install -y --no-install-recommends \
+    acl \
     fakeroot \
     linux-libc-dev-i386-cross \
     linux-libc-dev:i386 \
@@ -84,9 +88,11 @@ echo "export PATH=\"\$PATH:\$HOME/.local/bin\"" >> "$HOME/.bashrc"
 
 as_root groupadd stack
 
-echo "allow-different-user: true" >> "$HOME/.stack/config.yaml"
-chmod a+x "$HOME" && chgrp -R stack "$HOME/.stack"
-chmod -R g=u "$HOME/.stack"
+try_nonroot_first mkdir -p "$STACK_ROOT" || chown_dir_to_user "$STACK_ROOT"
+as_root setfacl -Rm "g:stack:rwx" "$STACK_ROOT"
+echo "allow-different-user: true" >> "$STACK_ROOT/config.yaml"
+chmod a+x "$HOME" && chgrp -R stack "$STACK_ROOT"
+chmod -R g=u "$STACK_ROOT"
 
 # CAmkES is hard coded to look for clang in /opt/clang/
 as_root ln -s /usr/lib/llvm-3.8 /opt/clang
