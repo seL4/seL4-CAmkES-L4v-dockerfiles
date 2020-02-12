@@ -165,11 +165,11 @@ show_help()
                             | sort \
                             | tr "\n" "|")
     cat <<EOF
-    build.sh [-r] -b [sel4|camkes|l4v] -s [$available_software] -s ... -e MAKE_CACHES=no -e ...
+    build.sh [-r] [-v] [-p] -b [sel4|camkes|l4v] -s [$available_software] -s ... -e MAKE_CACHES=no -e ...
 
      -r     Rebuild docker images (don't use the docker cache)
      -v     Verbose mode
-     -s     Strict mode
+     -s     Software packages to install on top of the base image. Use -s for each package.
      -e     Build arguments (NAME=VALUE) to docker build. Use a -e for each build arg.
      -p     Pull base image first. Rather than build the base image, 
             get it from the web first
