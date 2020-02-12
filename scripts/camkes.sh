@@ -32,6 +32,10 @@ as_root apt-get install -y --no-install-recommends \
     spin \
     # end of list
 
+as_root apt-get install -y --no-install-recommends -t bullseye \
+    lib32stdc++-8-dev \
+    # end of list
+
 # Required for testing
 as_root apt-get install -y --no-install-recommends \
     gdb \
