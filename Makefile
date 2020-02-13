@@ -166,6 +166,8 @@ build_user: run_checks
 		--build-arg=EXTRAS_IMG=$(EXTRAS_IMG) \
 		--build-arg=UNAME=$(shell whoami) \
 		--build-arg=UID=$(shell id -u) \
+		--build-arg=GID=$(shell id -g) \
+		--build-arg=GROUP=$(shell id -gn) \
 		-f dockerfiles/user.dockerfile \
 		-t $(USER_IMG) .
 build_user_sel4: USER_BASE_IMG = $(SEL4_IMG)

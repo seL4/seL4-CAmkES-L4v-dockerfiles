@@ -4,9 +4,12 @@ FROM $EXTRAS_IMG
 # Get user UID and username
 ARG UID
 ARG UNAME
+ARG GID
+ARG GROUP
 
 # Crammed a lot in here to make building the image faster
-RUN useradd -u ${UID} ${UNAME} \
+RUN groupadd -g ${GID} ${GROUP} \
+    && useradd -u ${UID} -g ${GID} ${UNAME} \
     && adduser ${UNAME} sudo \
     && passwd -d ${UNAME} \
     && echo 'Defaults        lecture_file = /etc/sudoers.lecture' >> /etc/sudoers \
@@ -33,9 +36,9 @@ RUN useradd -u ${UID} ${UNAME} \
     && echo 'export PATH=/scripts/repo:$PATH' >> /home/${UNAME}/.bashrc \
     && echo 'cd /host' >> /home/${UNAME}/.bashrc \
     && mkdir -p /isabelle \
-    && chown -R ${UNAME}:${UNAME} /isabelle \
+    && chown -R ${UNAME}:${GROUP} /isabelle \
     && ln -s /isabelle /home/${UNAME}/.isabelle \
-    && chown -R ${UNAME}:${UNAME} /home/${UNAME} \
+    && chown -R ${UNAME}:${GROUP} /home/${UNAME} \
     && chmod -R ug+rw /home/${UNAME} 
 
 VOLUME /home/${UNAME}
