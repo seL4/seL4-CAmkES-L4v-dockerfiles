@@ -44,6 +44,27 @@ ifndef EXEC
 	DOCKER_RUN_FLAGS += -it
 endif
 
+# Extra arguments to pass to `docker run` if it is or is not `podman` - these
+# are constructed in a very verbose way to be obvious about why we want to do
+# certain things under regular `docker` vs` podman`
+CHECK_DOCKER_IS_PODMAN  := docker --version | grep -q podman
+IF_DOCKER_IS_PODMAN     := $(CHECK_DOCKER_IS_PODMAN) && echo
+IF_DOCKER_IS_NOT_PODMAN := $(CHECK_DOCKER_IS_PODMAN) || echo
+# If we're not `podman` then we'll use the `-u` and `-g` options to set the
+# user in the container
+EXTRA_DOCKER_IS_NOT_PODMAN_RUN_ARGS := $(shell $(IF_DOCKER_IS_NOT_PODMAN) \
+    "-u $(shell id -u):$(shell id -g)" \
+)
+# If we are `podman` then we'll prefer to use `--userns=keep-id` to set up and
+# use the appropriate sub{u,g}id mappings rather than end up using UID 0 in the
+# container
+EXTRA_DOCKER_IS_PODMAN_RUN_ARGS     := $(shell $(IF_DOCKER_IS_PODMAN) \
+    "--userns=keep-id" \
+)
+# And we'll jam them into one variable to reduce noise in `docker run` lines
+EXTRA_DOCKER_RUN_ARGS   := $(EXTRA_DOCKER_IS_NOT_PODMAN_RUN_ARGS) \
+                           $(EXTRA_DOCKER_IS_PODMAN_RUN_ARGS)
+
 ###########################
 # For 'prebuilt' images, the idea is that for things that take a long
 # time to build, and don't change very much, we should build them 
@@ -114,7 +135,7 @@ user_run:
 		$(DOCKER_RUN_FLAGS) \
 		--hostname in-container \
 		--rm \
-		-u $(shell id -u):$(shell id -g) \
+		$(EXTRA_DOCKER_RUN_ARGS) \
 		-v $(HOST_DIR):/host:z \
 		-v $(DOCKER_VOLUME_HOME):/home/$(shell whoami) \
 		-v /etc/localtime:/etc/localtime:ro \
@@ -126,7 +147,7 @@ user_run_l4v:
 		$(DOCKER_RUN_FLAGS) \
 		--hostname in-container \
 		--rm \
-		-u $(shell id -u):$(shell id -g) \
+		$(EXTRA_DOCKER_RUN_ARGS) \
 		-v $(HOST_DIR):/host:z \
 		-v $(DOCKER_VOLUME_HOME):/home/$(shell whoami) \
 		-v $(DOCKER_VOLUME_ISABELLE):/isabelle:exec \
