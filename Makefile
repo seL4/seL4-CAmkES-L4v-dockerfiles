@@ -47,7 +47,8 @@ endif
 # Extra arguments to pass to `docker run` if it is or is not `podman` - these
 # are constructed in a very verbose way to be obvious about why we want to do
 # certain things under regular `docker` vs` podman`
-CHECK_DOCKER_IS_PODMAN  := docker --version | grep -q podman
+# Note that `docker --version` will not say "podman" if symlinked.
+CHECK_DOCKER_IS_PODMAN  := docker --help 2>1 | grep -q podman
 IF_DOCKER_IS_PODMAN     := $(CHECK_DOCKER_IS_PODMAN) && echo
 IF_DOCKER_IS_NOT_PODMAN := $(CHECK_DOCKER_IS_PODMAN) || echo
 # If we're not `podman` then we'll use the `-u` and `-g` options to set the
