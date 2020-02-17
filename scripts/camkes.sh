@@ -91,8 +91,8 @@ as_root groupadd stack
 try_nonroot_first mkdir -p "$STACK_ROOT" || chown_dir_to_user "$STACK_ROOT"
 as_root setfacl -Rm "g:stack:rwx" "$STACK_ROOT"
 echo "allow-different-user: true" >> "$STACK_ROOT/config.yaml"
-chmod a+x "$HOME" && chgrp -R stack "$STACK_ROOT"
-chmod -R g=u "$STACK_ROOT"
+as_root chmod -R g+rwx "$STACK_ROOT" && chgrp -R stack "$STACK_ROOT"
+as_root chmod g+s "$STACK_ROOT"
 
 # CAmkES is hard coded to look for clang in /opt/clang/
 as_root ln -s /usr/lib/llvm-3.8 /opt/clang
