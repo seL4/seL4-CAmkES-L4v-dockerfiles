@@ -75,8 +75,8 @@ as_root apt-get install -y --no-install-recommends \
 
 # We need to get clang 8 from Debian Bullseye
 as_root apt-get install -y --no-install-recommends -t bullseye \
-    clang=1:8.0-48.3 \
-    libclang-dev=1:8.0-48.3 \
+    clang \
+    libclang-dev \
     # end of list
 
 if [ "$DESKTOP_MACHINE" = "no" ] ; then
