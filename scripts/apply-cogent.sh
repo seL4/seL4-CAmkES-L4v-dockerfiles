@@ -32,3 +32,10 @@ as_root apt-get update -q
 as_root apt-get install -y --no-install-recommends \
         linux-headers-amd64 \
         # end of list
+
+# Get the dir of the kernel headers. Because we're in a container, we can't be sure
+# that the kernel running is the same as the headers, and so can't use uname
+kernel_headers_dir="$(find /usr/src -maxdepth 1 -name 'linux-headers-*amd64' -type d | head -n 1)"
+
+echo "export KERNELDIR=\"$kernel_headers_dir\"" >> "$HOME/.bashrc"
+
