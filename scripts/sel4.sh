@@ -67,16 +67,17 @@ as_root apt-get install -y --no-install-recommends \
     ninja-build \
     protobuf-compiler \
     python-protobuf \
-    qemu-system-arm \
     qemu-system-x86 \
     sloccount \
     u-boot-tools \
     # end of list
 
 # We need to get clang 8 from Debian Bullseye
+# We need to get qemu >4.0 from Bullseye
 as_root apt-get install -y --no-install-recommends -t bullseye \
     clang \
     libclang-dev \
+    qemu-system-arm \
     # end of list
 
 if [ "$DESKTOP_MACHINE" = "no" ] ; then
