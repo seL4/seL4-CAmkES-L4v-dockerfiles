@@ -79,7 +79,9 @@ for pip in "pip2" "pip3"; do
 done
 
 # 'reuse' tool only available for python3:
-as_root pip3 install --no-cache-dir reuse
+as_root pip3 install --no-cache-dir \
+    reuse \
+    # end of list
 
 # Add some symlinks so some programs can find things
 if [ "$DESKTOP_MACHINE" = "no" ] ; then
