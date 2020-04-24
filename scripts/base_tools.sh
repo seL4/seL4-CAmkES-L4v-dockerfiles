@@ -64,10 +64,10 @@ as_root apt-get install -y --no-install-recommends \
 # Install python dependencies for both python 2 & 3
 # Upgrade pip first, then install setuptools (required for other pip packages)
 # Install some basic python tools
-for pip in "pip2" "pip3"; do 
-    as_root ${pip} install --no-cache-dir --upgrade pip==18.1 
+for pip in "pip2" "pip3"; do
+    as_root ${pip} install --no-cache-dir --upgrade pip==18.1
     as_root ${pip} install --no-cache-dir \
-        setuptools 
+        setuptools
     as_root ${pip} install --no-cache-dir \
         aenum \
         gitlint \
@@ -77,6 +77,9 @@ for pip in "pip2" "pip3"; do
         sh \
         # end of list
 done
+
+# 'reuse' tool only available for python3:
+as_root pip3 install --no-cache-dir reuse
 
 # Add some symlinks so some programs can find things
 if [ "$DESKTOP_MACHINE" = "no" ] ; then
@@ -94,7 +97,7 @@ echo "export PATH=\$PATH:$REPO_DIR" >> "$HOME/.bashrc"
 export PATH=$PATH:$REPO_DIR  # make repo available ASAP
 
 # If this is being built inside Trustworthy Systems, get some scripts used to control simulations
-if [ "$INTERNAL" = "yes" ]; then 
+if [ "$INTERNAL" = "yes" ]; then
     (
         cd "$SCRIPTS_DIR"
         if [ "$INTERNAL" = "yes" ]; then
