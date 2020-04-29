@@ -20,19 +20,9 @@ if [[ ! -d $COGENT_DIR ]]; then
     exit 1
 fi
 
+# Not strictly necessary, but it makes the apt operations in
+# ../dockerfiles/apply-cogent_verification.dockerfile work.
 as_root apt-get update -q
-as_root apt-get install -y --no-install-recommends \
-    cabal-install/testing \
-    # end of list
-
-echo "export PATH=\"\$PATH:\$HOME/.cabal/bin\"" >> "$HOME/.bashrc"
-
-# Do cabal things
-cabal update
-cabal install \
-    happy \
-    alex \
-    # end of list
 
 for pip in "pip2" "pip3"; do 
     as_root ${pip} install --no-cache-dir \
@@ -41,6 +31,7 @@ for pip in "pip2" "pip3"; do
         # end of list
 done
 
+export PATH="$PATH:/opt/ghc/bin:/opt/cabal/bin"
 (
     cd "$COGENT_DIR"
     git submodule update --init --depth 1 --recursive -- isabelle
@@ -55,14 +46,11 @@ done
 
     (
         cd cogent
-        cabal sandbox init --sandbox="$HOME/.cogent-sandbox"
-        cabal sandbox add-source ../isa-parser --sandbox="$HOME/.cogent-sandbox"
-
         sed -i 's/^jobs:.*$/jobs: 2/' "$HOME/.cabal/config"
-        cp misc/cabal.config.d/cabal.config-8.6.5 cabal.config
+        #cp misc/cabal.config.d/cabal.config-8.6.5 cabal.config
 
-        cabal install --only-dependencies --force-reinstalls --enable-tests --dry -v --flags="haskell-backend docgent"
-        cabal install --only-dependencies --force-reinstalls --flags="haskell-backend docgent";  # --enable-tests;
+        cabal v1-install --only-dependencies --force-reinstalls --enable-tests --dry -v --flags="haskell-backend docgent"
+        cabal v1-install --only-dependencies --force-reinstalls --flags="haskell-backend docgent";  # --enable-tests;
     )
 ) || exit 1
 

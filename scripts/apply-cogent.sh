@@ -11,17 +11,35 @@ test -d "$DIR" || DIR=$PWD
 # Where will cogent libraries go
 : "${COGENT_DIR:=/usr/local/cogent}"
 
-# Not strictly necessary, but it makes the apt operations in
-# ../dockerfiles/apply-cogent.dockerfile work.
+as_root tee /etc/apt/sources.list.d/cabal.list > /dev/null << EOF
+deb http://downloads.haskell.org/debian buster main
+EOF
+as_root apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BA3CBA3FFE22B574
 as_root apt-get update -q
+as_root apt-get install -y --no-install-recommends \
+    cabal-install-3.2 \
+    ghc-8.6.5 \
+    # end of list
+
+echo "export PATH=\"\$PATH:/opt/ghc/bin:/opt/cabal/bin\"" >> "$HOME/.bashrc"
+export PATH="$PATH:/opt/ghc/bin:/opt/cabal/bin"
+
+# Do cabal things
+cabal v1-update
+cabal v1-install \
+    happy \
+    alex \
+    # end of list
 
 try_nonroot_first git clone --depth=1 https://github.com/NICTA/cogent.git "$COGENT_DIR" || chown_dir_to_user "$COGENT_DIR"
 (
     cd "$COGENT_DIR/cogent/"
-    stack build
-    stack install  # installs the binary to $HOME/.local/bin
-    as_root ln -s "$HOME/.local/bin/cogent" /usr/local/bin/cogent
+    cabal v1-sandbox init --sandbox="$HOME/.cogent-sandbox"
+    cabal v1-sandbox add-source ../isa-parser --sandbox="$HOME/.cogent-sandbox"
+    make 
+    as_root ln -s "/root/.cogent-sandbox/bin/cogent" /usr/local/bin/cogent
 
+    cogent -v
     # For now, just put an empty folder where autocorres may go in the future
     mkdir autocorres
 ) || exit 1
