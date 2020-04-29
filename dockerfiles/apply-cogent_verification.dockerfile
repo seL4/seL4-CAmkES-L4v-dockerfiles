@@ -21,5 +21,3 @@ RUN /bin/bash /tmp/${SCRIPT} \
     && apt-get clean autoclean \
     && apt-get autoremove --purge --yes \
     && rm -rf /var/lib/apt/lists/*
-
-ENV PATH "${PATH}:${HOME}/.cabal/bin"
