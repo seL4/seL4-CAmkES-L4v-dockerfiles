@@ -48,7 +48,7 @@ endif
 # are constructed in a very verbose way to be obvious about why we want to do
 # certain things under regular `docker` vs` podman`
 # Note that `docker --version` will not say "podman" if symlinked.
-CHECK_DOCKER_IS_PODMAN  := docker --help 2>1 | grep -q podman
+CHECK_DOCKER_IS_PODMAN  := docker --help 2>&1 | grep -q podman
 IF_DOCKER_IS_PODMAN     := $(CHECK_DOCKER_IS_PODMAN) && echo
 IF_DOCKER_IS_NOT_PODMAN := $(CHECK_DOCKER_IS_PODMAN) || echo
 # If we're not `podman` then we'll use the `-u` and `-g` options to set the
@@ -168,7 +168,6 @@ ifeq ($(shell id -u),0)
 	@exit 1
 endif
 
-	# Figure out if any trustworthy systems docker images are potentially too old
 	scripts/utils/check_for_old_docker_imgs.sh
 
 
