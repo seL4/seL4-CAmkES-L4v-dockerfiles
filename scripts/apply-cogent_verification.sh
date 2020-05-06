@@ -51,6 +51,8 @@ export PATH="$PATH:/opt/ghc/bin:/opt/cabal/bin"
 
         cabal v1-install --only-dependencies --force-reinstalls --enable-tests --dry -v --flags="haskell-backend docgent"
         cabal v1-install --only-dependencies --force-reinstalls --flags="haskell-backend docgent";  # --enable-tests;
+        cabal v1-configure --flags="haskell-backend docgent"
+        cabal v1-install --force-reinstalls --flags="haskell-backend docgent"
     )
 ) || exit 1
 

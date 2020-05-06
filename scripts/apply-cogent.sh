@@ -35,9 +35,10 @@ try_nonroot_first git clone --depth=1 https://github.com/NICTA/cogent.git "$COGE
 (
     cd "$COGENT_DIR/cogent/"
     cabal v1-sandbox init --sandbox="$HOME/.cogent-sandbox"
+    cp misc/cabal.config.d/cabal.config-8.6.5 cabal.config
     cabal v1-sandbox add-source ../isa-parser --sandbox="$HOME/.cogent-sandbox"
     make 
-    as_root ln -s "/root/.cogent-sandbox/bin/cogent" /usr/local/bin/cogent
+    as_root ln -s "$HOME/.cogent-sandbox/bin/cogent" /usr/local/bin/cogent
 
     cogent -v
     # For now, just put an empty folder where autocorres may go in the future
