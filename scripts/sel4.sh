@@ -126,6 +126,17 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
             ) || : # Don't worry if this fails
         done
     done
+
+    # Ensure that clang-8 shows up as clang
+    for compiler in clang \
+                    clang++ \
+                    # end of list
+        do
+            as_root update-alternatives --install /usr/bin/"$compiler" "$compiler" $(which "$compiler"-8) 60 && \
+            as_root update-alternatives --auto "$compiler"
+    done
+    # Do a quick check to make sure it works:
+    clang --version
 fi
 
 
