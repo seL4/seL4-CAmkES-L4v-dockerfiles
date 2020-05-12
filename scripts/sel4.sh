@@ -72,11 +72,14 @@ as_root apt-get install -y --no-install-recommends \
     u-boot-tools \
     # end of list
 
-# We need to get clang 8 from Debian Bullseye
-# We need to get qemu >4.0 from Bullseye
+# This section gets various dependencies from Debian Testing
+# (a.k.a., Bullseye). It would be preferable to keep this section
+# as small as possible, but it will likely grow as Stable ages.
+#  - We need to get clang >7
+#  - We need to get qemu >4.0
 as_root apt-get install -y --no-install-recommends -t bullseye \
-    clang \
-    libclang-dev \
+    clang-8 \
+    libclang-8-dev \
     qemu-system-arm \
     # end of list
 
