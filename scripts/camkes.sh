@@ -25,7 +25,6 @@ as_root dpkg --add-architecture i386
 as_root apt-get update -q
 as_root apt-get install -y --no-install-recommends \
     fakeroot \
-    lib32stdc++-6-dev \
     linux-libc-dev-i386-cross \
     linux-libc-dev:i386 \
     pkg-config \
