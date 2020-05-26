@@ -47,16 +47,6 @@ as_root apt-get install -y --no-install-recommends \
     gcc-6-arm-linux-gnueabihf \
     gcc-6-base \
     gcc-6-multilib \
-    g++-8 \
-    g++-8-aarch64-linux-gnu \
-    g++-8-arm-linux-gnueabi \
-    g++-8-arm-linux-gnueabihf \
-    gcc-8 \
-    gcc-8-aarch64-linux-gnu \
-    gcc-8-arm-linux-gnueabi \
-    gcc-8-arm-linux-gnueabihf \
-    gcc-8-base \
-    gcc-8-multilib \
     gcc-arm-none-eabi \
     libarchive-dev \
     libcc1-0 \
@@ -76,9 +66,20 @@ as_root apt-get install -y --no-install-recommends \
 # (a.k.a., Bullseye). It would be preferable to keep this section
 # as small as possible, but it will likely grow as Stable ages.
 #  - We need to get clang >7
+#   -- clang >7 needs gcc related dependencies too
 #  - We need to get qemu >4.0
 as_root apt-get install -y --no-install-recommends -t bullseye \
     clang-8 \
+    g++-8 \
+    g++-8-aarch64-linux-gnu \
+    g++-8-arm-linux-gnueabi \
+    g++-8-arm-linux-gnueabihf \
+    gcc-8 \
+    gcc-8-aarch64-linux-gnu \
+    gcc-8-arm-linux-gnueabi \
+    gcc-8-arm-linux-gnueabihf \
+    gcc-8-base \
+    gcc-8-multilib \
     libclang-8-dev \
     qemu-system-arm \
     # end of list
