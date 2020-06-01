@@ -20,6 +20,10 @@ test -d "$DIR" || DIR=$PWD
 # tmp space for building 
 : "${TEMP_DIR:=/tmp}"
 
+# At the end of each Docker image, we switch back to normal Debian
+# apt repos, so we need to switch back to the Snapshot repos now
+possibly_toggle_apt_snapshot
+
 # Get dependencies
 as_root dpkg --add-architecture i386
 as_root apt-get update -q
@@ -95,3 +99,5 @@ if [ "$MAKE_CACHES" = "yes" ] ; then
     ) || exit 1
     rm -rf camkes
 fi
+
+possibly_toggle_apt_snapshot

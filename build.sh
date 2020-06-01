@@ -8,7 +8,7 @@ set -ef
 : "${DOCKERHUB:=trustworthysystems/}"
 
 # Base images
-: "${DEBIAN_IMG:=debian:buster}"
+: "${DEBIAN_IMG:=debian:buster-20200514-slim}"
 : "${BASETOOLS_IMG:=base_tools}"
 
 # Core images

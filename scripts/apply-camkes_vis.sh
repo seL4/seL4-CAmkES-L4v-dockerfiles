@@ -8,6 +8,8 @@ test -d "$DIR" || DIR=$PWD
 # shellcheck source=utils/common.sh
 . "$DIR/utils/common.sh"
 
+possibly_toggle_apt_snapshot
+
 # Get deps required for VisualCAmkES
 as_root apt-get update -q
 as_root apt-get install -y --no-install-recommends \
@@ -25,3 +27,5 @@ for pip in "pip2" "pip3"; do
         pydotplus \
         # end of list
 done
+
+possibly_toggle_apt_snapshot

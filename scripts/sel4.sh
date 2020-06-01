@@ -183,3 +183,7 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
     echo "LANG=en_AU.UTF-8" | as_root tee -a /etc/default/locale > /dev/null
     echo "export LANG=en_AU.UTF-8" >> "$HOME/.bashrc"
 fi
+
+# If we have been using Debian Snapshot, then we need to switch
+# back to using the normal apt repos, for anyone using the image after this point.
+possibly_toggle_apt_snapshot

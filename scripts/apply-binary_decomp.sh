@@ -11,6 +11,8 @@ test -d "$DIR" || DIR=$PWD
 # Where will cogent libraries go
 : "${SMTSOLVERS_DIR:=/usr/local/smtsolvers}"
 
+possibly_toggle_apt_snapshot
+
 as_root apt-get update -q
 as_root apt-get install -y --no-install-recommends \
         autoconf \
@@ -43,3 +45,5 @@ try_nonroot_first mkdir "$SMTSOLVERS_DIR" || chown_dir_to_user "$SMTSOLVERS_DIR"
     echo "SONOLAR-word8: offline: /smtsolvers/sonolar-2014-12-04-x86_64-linux/bin/sonolar --input-format=smtlib2" >> solverlist
     echo "  config: mem_mode = 8" >> solverlist
 ) || exit 1
+
+possibly_toggle_apt_snapshot

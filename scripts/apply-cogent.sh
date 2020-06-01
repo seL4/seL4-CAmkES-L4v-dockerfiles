@@ -11,9 +11,12 @@ test -d "$DIR" || DIR=$PWD
 # Where will cogent libraries go
 : "${COGENT_DIR:=/usr/local/cogent}"
 
+possibly_toggle_apt_snapshot
+
 as_root tee /etc/apt/sources.list.d/cabal.list > /dev/null << EOF
 deb http://downloads.haskell.org/debian buster main
 EOF
+
 as_root apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BA3CBA3FFE22B574
 as_root apt-get update -q
 as_root apt-get install -y --no-install-recommends \
@@ -58,3 +61,4 @@ kernel_headers_dir="$(find /usr/src -maxdepth 1 -name 'linux-headers-*amd64' -ty
 
 echo "export KERNELDIR=\"$kernel_headers_dir\"" >> "$HOME/.bashrc"
 
+possibly_toggle_apt_snapshot

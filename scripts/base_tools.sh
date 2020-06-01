@@ -23,15 +23,34 @@ test -d "$DIR" || DIR=$PWD
 # Docker may set this variable - fill if not set
 : "${SCM:=https://github.com}"
 
+# Debian Snapshot date
+: "${SNAPSHOT_DATE:=20200510}"
+
 
 if [ "$DESKTOP_MACHINE" = "no" ] ; then
-    # Add additional mirrors for different Debian releases
-    as_root tee -a /etc/apt/sources.list.d/alternate_mirror.list > /dev/null << EOF
-    deb http://httpredir.debian.org/debian/ buster main
-    deb http://httpredir.debian.org/debian/ buster-updates main
-    deb http://httpredir.debian.org/debian/ stretch main
-    deb http://httpredir.debian.org/debian/ bullseye main
+    # Invert the comments in the sources.list file
+    # We want this, because the commented lines have the 'snapshot' sources
+    # and the uncommented ones are just the regular lists
+    if [ "$USE_DEBIAN_SNAPSHOT" = "yes" ] ; then
+
+        as_root tee /etc/apt/sources.list << EOF
+deb http://snapshot.debian.org/archive/debian/$SNAPSHOT_DATE buster main
+# deb http://deb.debian.org/debian buster main
+deb http://snapshot.debian.org/archive/debian-security/$SNAPSHOT_DATE buster/updates main
+# deb http://security.debian.org/debian-security buster/updates main
+deb http://snapshot.debian.org/archive/debian/$SNAPSHOT_DATE buster-updates main
+# deb http://deb.debian.org/debian buster-updates main
+
 EOF
+        # Now we need to get stretch (oldstable) and bullseye (testing) from snapshot too
+        for release in stretch bullseye; do
+            grep "buster main" /etc/apt/sources.list | sed "s/buster/$release/g"  | as_root tee -a "/etc/apt/sources.list"
+        done
+
+        # This flag is required so that using older snapshots works OK.
+        as_root sed -i  's/deb http:\/\/snapshot/deb \[check-valid-until=no\] http:\/\/snapshot/g' /etc/apt/sources.list
+
+    fi
 
     # Tell apt that we should prefer packages from Buster
     as_root tee -a /etc/apt/apt.conf.d/70debconf << EOF
@@ -41,7 +60,6 @@ EOF
     # These commands supposedly speed-up and better dockerize apt.
     echo "force-unsafe-io" | as_root tee /etc/dpkg/dpkg.cfg.d/02apt-speedup > /dev/null
     echo "Acquire::http {No-Cache=True;};" | as_root tee /etc/apt/apt.conf.d/no-cache > /dev/null
-
 fi
 
 as_root apt-get update -q

@@ -24,6 +24,8 @@ test -d "$DIR" || DIR=$PWD
 # tmp space for building L4v for caching
 : "${TEMP_L4V_LOCATION:=/tmp/verification}"
 
+possibly_toggle_apt_snapshot
+
 as_root apt-get update -q
 as_root apt-get install -y --no-install-recommends \
         librsvg2-bin \
@@ -86,3 +88,5 @@ if [ "$MAKE_CACHES" = "yes" ] ; then
         ls -lah  # show the evidence
     ) || exit 1
 fi
+
+possibly_toggle_apt_snapshot

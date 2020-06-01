@@ -9,6 +9,9 @@ set -exuo pipefail
 : "${DEBIAN_FRONTEND:=noninteractive}"
 export DEBIAN_FRONTEND
 
+: "${USE_DEBIAN_SNAPSHOT:=yes}"
+export USE_DEBIAN_SNAPSHOT 
+
 # Common vars
 #####################
 
@@ -73,4 +76,13 @@ chown_dir_to_user() {
     set +x
     as_root chown -R "$(id -u)":"$(id -g)" "$1"
     set -x
+}
+
+possibly_toggle_apt_snapshot() {
+    # Inverts the commented-ness of the apt sources.list file, meaning it 
+    # switches between using Debian Snapshot, or just regular apt sources
+    if [ "$USE_DEBIAN_SNAPSHOT" = "yes" ] ; then
+        as_root sed -n -i  's/# //p; t; s/deb /# deb /p' /etc/apt/sources.list
+        as_root apt-get update -q
+    fi
 }
