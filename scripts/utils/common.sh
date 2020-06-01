@@ -46,7 +46,7 @@ as_root() {
     if [ "$user" != 'root' ]; then
         shell_cmd="$ROOT_CMD"
     fi
-    printf -v cmd_str '%s ' "${cmd[@]}"
+    printf -v cmd_str "%q " "${cmd[@]}"
     set -x
     $shell_cmd "$cmd_str"
 }
