@@ -8,7 +8,7 @@ ARG GID
 ARG GROUP
 
 # Crammed a lot in here to make building the image faster
-RUN groupadd -g ${GID} ${GROUP} \
+RUN groupadd -fg ${GID} ${GROUP} \
     && useradd -u ${UID} -g ${GID} ${UNAME} \
     && adduser ${UNAME} sudo \
     && passwd -d ${UNAME} \
