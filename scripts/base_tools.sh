@@ -65,7 +65,6 @@ as_root apt-get install -y --no-install-recommends \
 # Upgrade pip first, then install setuptools (required for other pip packages)
 # Install some basic python tools
 for pip in "pip2" "pip3"; do
-    as_root ${pip} install --no-cache-dir --upgrade pip==18.1
     as_root ${pip} install --no-cache-dir \
         setuptools
     as_root ${pip} install --no-cache-dir \

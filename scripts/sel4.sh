@@ -144,6 +144,9 @@ fi
 # Get seL4 python2/3 deps
 # Pylint is for checking included python scripts
 for pip in "pip2" "pip3"; do
+    # Setuptools sometimes is a bit flaky, so double checking it is installed here
+    as_root ${pip} install --no-cache-dir \
+        setuptools
     as_root ${pip} install --no-cache-dir \
         pylint \
         sel4-deps \
