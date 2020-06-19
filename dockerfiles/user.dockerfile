@@ -33,6 +33,7 @@ RUN groupadd -fg ${GID} ${GROUP} \
     && echo 'echo "__) \/ _) |_ (- ||| _)                "' >> /home/${UNAME}/.bashrc \
     && echo 'echo "    /                                 "' >> /home/${UNAME}/.bashrc \
     && echo 'echo "Hello, welcome to the sel4/CAmkES/L4v docker build environment"' >> /home/${UNAME}/.bashrc \
+    && grep export /root/.bashrc >> /home/${UNAME}/.bashrc \
     && echo 'export PATH=/scripts/repo:$PATH' >> /home/${UNAME}/.bashrc \
     && echo 'cd /host' >> /home/${UNAME}/.bashrc \
     && mkdir -p /isabelle \
