@@ -89,10 +89,13 @@ echo "export PATH=\"\$PATH:\$HOME/.local/bin\"" >> "$HOME/.bashrc"
 as_root groupadd stack
 
 try_nonroot_first mkdir -p "$STACK_ROOT" || chown_dir_to_user "$STACK_ROOT"
+# Try to use ACLs to keep permissions, but may not work with underlying filesystem
 as_root setfacl -Rm "g:stack:rwx" "$STACK_ROOT"
 echo "allow-different-user: true" >> "$STACK_ROOT/config.yaml"
-as_root chmod -R g+rwx "$STACK_ROOT" && chgrp -R stack "$STACK_ROOT"
+as_root chgrp -R stack "$STACK_ROOT"
+as_root chmod -R g+rwx "$STACK_ROOT"
 as_root chmod g+s "$STACK_ROOT"
+echo "export STACK_ROOT=\"$STACK_ROOT\"" >> "$HOME/.bashrc"
 
 # CAmkES is hard coded to look for clang in /opt/clang/
 as_root ln -s /usr/lib/llvm-3.8 /opt/clang
@@ -111,6 +114,10 @@ if [ "$MAKE_CACHES" = "yes" ] ; then
         popd
     popd
     rm -rf camkes
+
+    # Update the permissions after cache is full
+    as_root chgrp -R stack "$STACK_ROOT"
+    as_root chmod -R g+rwx "$STACK_ROOT"
 fi
 
 possibly_toggle_apt_snapshot
