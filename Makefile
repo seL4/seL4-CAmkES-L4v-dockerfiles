@@ -130,6 +130,9 @@ user_camkes-riscv: build_user_camkes-riscv user_run
 .PHONY: user_l4v
 user_l4v: build_user_l4v user_run_l4v
 
+.PHONY: user_l4v-riscv
+user_l4v-riscv: build_user_l4v-riscv user_run_l4v
+
 .PHONY: user_run
 user_run:
 	docker run \
