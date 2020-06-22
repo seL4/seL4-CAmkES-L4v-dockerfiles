@@ -130,6 +130,9 @@ user_camkes-riscv: build_user_camkes-riscv user_run
 .PHONY: user_l4v
 user_l4v: build_user_l4v user_run_l4v
 
+.PHONY: user_l4v-riscv
+user_l4v-riscv: build_user_l4v-riscv user_run_l4v
+
 .PHONY: user_run
 user_run:
 	docker run \
@@ -151,7 +154,7 @@ user_run_l4v:
 		$(EXTRA_DOCKER_RUN_ARGS) \
 		-v $(HOST_DIR):/host:z \
 		-v $(DOCKER_VOLUME_HOME):/home/$(shell whoami) \
-		-v $(DOCKER_VOLUME_ISABELLE):/isabelle:exec \
+		-v $(DOCKER_VOLUME_ISABELLE):/isabelle \
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-e DISPLAY=$(DISPLAY) \
