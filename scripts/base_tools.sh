@@ -28,29 +28,28 @@ test -d "$DIR" || DIR=$PWD
 
 
 if [ "$DESKTOP_MACHINE" = "no" ] ; then
-    # Invert the comments in the sources.list file
-    # We want this, because the commented lines have the 'snapshot' sources
-    # and the uncommented ones are just the regular lists
-    if [ "$USE_DEBIAN_SNAPSHOT" = "yes" ] ; then
 
-        as_root tee /etc/apt/sources.list << EOF
-deb http://snapshot.debian.org/archive/debian/$SNAPSHOT_DATE buster main
-# deb http://deb.debian.org/debian buster main
-deb http://snapshot.debian.org/archive/debian-security/$SNAPSHOT_DATE buster/updates main
-# deb http://security.debian.org/debian-security buster/updates main
-deb http://snapshot.debian.org/archive/debian/$SNAPSHOT_DATE buster-updates main
-# deb http://deb.debian.org/debian buster-updates main
+    # We need to start with a fresh sources.list, to put in both the regular
+    # sources, and the snapshot ones
+    as_root tee /etc/apt/sources.list << EOF
+# deb http://snapshot.debian.org/archive/debian/$SNAPSHOT_DATE buster main
+deb http://deb.debian.org/debian buster main
+# deb http://snapshot.debian.org/archive/debian-security/$SNAPSHOT_DATE buster/updates main
+deb http://security.debian.org/debian-security buster/updates main
+# deb http://snapshot.debian.org/archive/debian/$SNAPSHOT_DATE buster-updates main
+deb http://deb.debian.org/debian buster-updates main
 
 EOF
-        # Now we need to get stretch (oldstable) and bullseye (testing) from snapshot too
-        for release in stretch bullseye; do
-            grep "buster main" /etc/apt/sources.list | sed "s/buster/$release/g"  | as_root tee -a "/etc/apt/sources.list"
-        done
+    # Now we need to get stretch (oldstable) and bullseye (testing) from snapshot too
+    for release in stretch bullseye; do
+        grep "buster main" /etc/apt/sources.list | sed "s/buster/$release/g"  | as_root tee -a "/etc/apt/sources.list"
+    done
 
-        # This flag is required so that using older snapshots works OK.
-        as_root sed -i  's/deb http:\/\/snapshot/deb \[check-valid-until=no\] http:\/\/snapshot/g' /etc/apt/sources.list
+    # This flag is required so that using older snapshots works OK.
+    as_root sed -i  's/deb http:\/\/snapshot/deb \[check-valid-until=no\] http:\/\/snapshot/g' /etc/apt/sources.list
 
-    fi
+    # If we are using snapshot, then turn it on now 
+    possibly_toggle_apt_snapshot
 
     # Tell apt that we should prefer packages from Buster
     as_root tee -a /etc/apt/apt.conf.d/70debconf << EOF
