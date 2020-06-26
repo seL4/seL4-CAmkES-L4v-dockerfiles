@@ -13,6 +13,7 @@ ENV NEW_ISABELLE_SETTINGS "/tmp/isabelle_settings"
 # They can be modified at docker build time via '--build-arg VAR="something"'
 ARG SCM=https://bitbucket.ts.data61.csiro.au/scm
 ARG DESKTOP_MACHINE=no
+ARG USE_DEBIAN_SNAPSHOT=yes
 ARG INTERNAL=yes
 ARG MAKE_CACHES=yes
 

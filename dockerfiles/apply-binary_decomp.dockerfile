@@ -9,6 +9,7 @@ LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 ARG SCM=https://bitbucket.ts.data61.csiro.au/scm
 ARG DESKTOP_MACHINE=no
 ARG INTERNAL=yes
+ARG USE_DEBIAN_SNAPSHOT=yes
 ARG MAKE_CACHES=yes
 ARG SMTSOLVERS_DIR="/smtsolvers"
 
