@@ -26,7 +26,6 @@ test -d "$DIR" || DIR=$PWD
 # Debian Snapshot date
 : "${SNAPSHOT_DATE:=20200510}"
 
-
 if [ "$DESKTOP_MACHINE" = "no" ] ; then
 
     # We need to start with a fresh sources.list, to put in both the regular
@@ -116,14 +115,10 @@ export PATH=$PATH:$REPO_DIR  # make repo available ASAP
 
 # If this is being built inside Trustworthy Systems, get some scripts used to control simulations
 if [ "$INTERNAL" = "yes" ]; then
-    (
-        cd "$SCRIPTS_DIR"
-        if [ "$INTERNAL" = "yes" ]; then
-            # This repo is not released externally
-            git clone --depth=1 http://bitbucket.ts.data61.csiro.au/scm/sel4proj/console_reboot.git
-            chmod +x console_reboot/simulate/*
-        fi
+    pushd "$SCRIPTS_DIR"
+        git clone --depth=1 http://bitbucket.ts.data61.csiro.au/scm/sel4proj/console_reboot.git
+        chmod +x console_reboot/simulate/*
         # Get some useful SEL4 tools
         git clone --depth=1 "${SCM}/sel4/sel4_libs.git"
-    ) || exit 1
+    popd
 fi
