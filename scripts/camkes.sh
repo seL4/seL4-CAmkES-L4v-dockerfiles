@@ -86,17 +86,15 @@ if [ "$MAKE_CACHES" = "yes" ] ; then
     # Get a project that relys on stack, and use it to init the capDL-tool cache \
     # then delete the repo, because we don't need it.
     try_nonroot_first mkdir -p "$TEMP_DIR/camkes" || chown_dir_to_user "$TEMP_DIR/camkes" 
-    (
-        cd "$TEMP_DIR/camkes"
+    pushd "$TEMP_DIR/camkes"
         repo init -u "${SCM}/seL4/camkes-manifest.git" --depth=1
         repo sync -j 4
         mkdir build
-        (
-            cd build
+        pushd build
             ../init-build.sh
             ninja
-        ) || exit 1
-    ) || exit 1
+        popd
+    popd
     rm -rf camkes
 fi
 

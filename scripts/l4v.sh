@@ -61,19 +61,16 @@ if [ "$MAKE_CACHES" = "yes" ] ; then
     # Get a copy of the L4v repo, and build all the isabelle and haskell 
     # components, so we have them cached.
     mkdir -p "$TEMP_L4V_LOCATION"
-    (
-        cd "$TEMP_L4V_LOCATION"
+    pushd "$TEMP_L4V_LOCATION"
         repo init -u "${SCM}/seL4/verification-manifest.git" --depth=1
         repo sync -c
-        (
-            cd l4v 
+        pushd l4v 
             ./isabelle/bin/isabelle components -a
-            (
-                cd spec/haskell
+            pushd spec/haskell
                 make sandbox
-            ) || exit 1
-        ) || exit 1
-    ) || exit 1
+            popd
+        popd
+    popd
 
     # Now cleanup the stuff we don't want cached
     rm -rf "$TEMP_L4V_LOCATION"
@@ -82,11 +79,10 @@ if [ "$MAKE_CACHES" = "yes" ] ; then
     # Isabelle downloads tar.gz files, and then uncompresses them for its contrib.
     # We don't need both the uncompressed AND decompressed versions, but Isabelle
     # checks for the tarballs. To fool it, we now truncate the tars and save disk space.
-    (
-        cd "$HOME/.isabelle/contrib"
+    pushd "$HOME/.isabelle/contrib"
         truncate -s0 ./*.tar.gz
         ls -lah  # show the evidence
-    ) || exit 1
+    popd
 fi
 
 possibly_toggle_apt_snapshot

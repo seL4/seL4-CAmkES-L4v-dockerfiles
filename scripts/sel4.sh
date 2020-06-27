@@ -159,20 +159,18 @@ if [ "$MAKE_CACHES" = "yes" ] ; then
     # This should improve build times by caching libraries that rarely change.
     mkdir -p ~/.sel4_cache 
     try_nonroot_first mkdir -p "$TEMP_DIR/sel4test" || chown_dir_to_user "$TEMP_DIR/sel4test"
-    (
-        cd "$TEMP_DIR/sel4test"
+    pushd "$TEMP_DIR/sel4test"
         repo init -u "${SCM}/seL4/sel4test-manifest.git" --depth=1
         repo sync -j 4
         mkdir build
-        (
-            cd build
+        pushd build
             for plat in "sabre" "ia32" "x86_64" "tx1" "tk1 -DARM_HYP=ON"; do 
                 ../init-build.sh -DPLATFORM=$plat  # no "" around plat, so HYP still works
-                ninja || exit 1
+                ninja
                 rm -rf ./*
             done
-        ) || exit 1
-    ) || exit 1
+        popd
+    popd
     rm -rf sel4test
 fi
 

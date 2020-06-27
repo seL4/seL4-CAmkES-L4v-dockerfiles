@@ -32,8 +32,7 @@ for pip in "pip2" "pip3"; do
 done
 
 export PATH="$PATH:/opt/ghc/bin:/opt/cabal/bin"
-(
-    cd "$COGENT_DIR"
+pushd "$COGENT_DIR"
     git submodule update --init --depth 1 --recursive -- isabelle
     ln -s "$PWD/isabelle/bin/isabelle" /usr/local/bin/isabelle
 
@@ -44,8 +43,7 @@ export PATH="$PATH:/opt/ghc/bin:/opt/cabal/bin"
     tar -xf "${AC_VER}.tar.gz" && rm "${AC_VER}.tar.gz"
     mv "${AC_VER}" "${AC_DIR}"
 
-    (
-        cd cogent
+    pushd cogent
         sed -i 's/^jobs:.*$/jobs: 2/' "$HOME/.cabal/config"
         #cp misc/cabal.config.d/cabal.config-8.6.5 cabal.config
 
@@ -53,15 +51,14 @@ export PATH="$PATH:/opt/ghc/bin:/opt/cabal/bin"
         cabal v1-install --only-dependencies --force-reinstalls --flags="haskell-backend docgent";  # --enable-tests;
         cabal v1-configure --flags="haskell-backend docgent"
         cabal v1-install --force-reinstalls --flags="haskell-backend docgent"
-    )
-) || exit 1
+    popd
+popd
 
 # Isabelle downloads tar.gz files, and then uncompresses them for its contrib.
 # We don't need both the uncompressed AND decompressed versions, but Isabelle
 # checks for the tarballs. To fool it, we now truncate the tars and save disk space.
-(
-    cd "$HOME/.isabelle/contrib"
+pushd "$HOME/.isabelle/contrib"
     truncate -s0 ./*.tar.gz
     ls -lah  # show the evidence
-) || exit 1
+popd
 as_root rm -rf /tmp/isabelle-  # This is a random tmp folder isabelle makes

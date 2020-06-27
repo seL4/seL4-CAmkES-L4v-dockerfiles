@@ -35,8 +35,7 @@ cabal v1-install \
     # end of list
 
 try_nonroot_first git clone --depth=1 https://github.com/NICTA/cogent.git "$COGENT_DIR" || chown_dir_to_user "$COGENT_DIR"
-(
-    cd "$COGENT_DIR/cogent/"
+pushd "$COGENT_DIR/cogent/"
     cabal v1-sandbox init --sandbox="$HOME/.cogent-sandbox"
     cp misc/cabal.config.d/cabal.config-8.6.5 cabal.config
     cabal v1-sandbox add-source ../isa-parser --sandbox="$HOME/.cogent-sandbox"
@@ -46,8 +45,7 @@ try_nonroot_first git clone --depth=1 https://github.com/NICTA/cogent.git "$COGE
     cogent -v
     # For now, just put an empty folder where autocorres may go in the future
     mkdir autocorres
-) || exit 1
-
+popd
 
 # Get the linux kernel headers, to build filesystems with
 as_root apt-get update -q

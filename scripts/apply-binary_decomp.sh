@@ -21,8 +21,7 @@ as_root apt-get install -y --no-install-recommends \
         # end of list
     
 try_nonroot_first mkdir "$SMTSOLVERS_DIR" || chown_dir_to_user "$SMTSOLVERS_DIR"
-(
-    cd "$SMTSOLVERS_DIR"
+pushd "$SMTSOLVERS_DIR"
     CVC_TAR="cvc4-1.5-3.tar.gz"
     SONOLAR_TAR="sonolar-2014-12-04-x86_64-linux.tar.gz"
 
@@ -44,6 +43,6 @@ try_nonroot_first mkdir "$SMTSOLVERS_DIR" || chown_dir_to_user "$SMTSOLVERS_DIR"
     echo "CVC4: offline: /smtsolvers/cvc4-1.5-3/x86_64-linux/cvc4 --lang smt" >> solverlist
     echo "SONOLAR-word8: offline: /smtsolvers/sonolar-2014-12-04-x86_64-linux/bin/sonolar --input-format=smtlib2" >> solverlist
     echo "  config: mem_mode = 8" >> solverlist
-) || exit 1
+popd
 
 possibly_toggle_apt_snapshot
