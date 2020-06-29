@@ -59,7 +59,8 @@ build_internal_image()
              # presumably as flags
 
              
-    build_args_to_pass_to_docker=$(echo $build_args | grep "=" | awk '{print "--build-arg", $1}')
+    build_args_to_pass_to_docker=$(echo "$build_args" | grep "=" | awk '{print "--build-arg", $1}')
+    # shellcheck disable=SC2086
     $DOCKER_BUILD $DOCKER_FLAGS \
         --build-arg BASE_IMG="$base_img" \
         --build-arg INTERNAL="$INTERNAL" \
@@ -78,7 +79,7 @@ build_image()
     img_name="$3"
     shift 3
 
-    build_internal_image "$DOCKERHUB$base_img" "$dfile_name" "$DOCKERHUB$img_name" $@
+    build_internal_image "$DOCKERHUB$base_img" "$dfile_name" "$DOCKERHUB$img_name" "$@"
 }
 
 apply_software_to_image()
@@ -253,7 +254,7 @@ do
         # Try to resolve if we have a prebuilt image for the software being asked for.
         # If not, <shrug />, docker won't pick up the variable anyway, so no harm done.
         prebuilt_img="$(echo "PREBUILT_${s}_IMG" | tr "[:lower:]" "[:upper:]")"
-        prebuilt_img="$(eval echo \$$prebuilt_img)"
+        prebuilt_img="$(eval echo \$"$prebuilt_img")"
         apply_software_to_image "$prebuilt_img" "apply-${s}.dockerfile" "$base_img$base_img_postfix" "$base_img-$s"
         base_img="$base_img-$s"
         base_img_postfix="" # only apply the postfix in the first loop
