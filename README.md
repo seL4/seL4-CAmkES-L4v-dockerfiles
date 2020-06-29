@@ -1,14 +1,14 @@
 # Dockerfiles for seL4, CAmkES, and L4v dependencies
 
-## Requirements:
+## Requirements
 
- * docker (See here for instructions: https://get.docker.com or https://docs.docker.com/engine/installation)
- * make
+* docker (See [here](https://get.docker.com) or [here](https://docs.docker.com/engine/installation) for instructions)
+* make
 
 It is recommended you add yourself to the docker group, so you can run docker commands without using sudo.
 
 
-## Quick start:
+## Quick start
 To get a running build environment for sel4 and camkes, run:
 
     git clone https://github.com/SEL4PROJ/seL4-CAmkES-L4v-dockerfiles.git
@@ -26,7 +26,7 @@ This repository contains dockerfiles which map out the dependencies for seL4, CA
 These dockerfiles are used as the basis for regression testing in the Trustworthy Systems group, and hence should represent a well tested and up to date environment
 
 
-## To run:
+## To run
 Get the repository of Dockerfiles by cloning them from GitHub:
 
     git clone https://github.com/SEL4PROJ/seL4-CAmkES-L4v-dockerfiles.git
@@ -115,33 +115,31 @@ Compile and simulate seL4 test for x86-64:
 
 
 ## Adding dependencies
-The images and dockerfiles for seL4/CAmkES/L4v only specify enough dependencies to pass the tests in the \*tests.dockerfile. The `extras.dockerfile` acts as a shim between the DockerHub images and the `user.dockerfile`. 
+The images and dockerfiles for seL4/CAmkES/L4v only specify enough dependencies to pass the tests in the \*tests.dockerfile. The `extras.dockerfile` acts as a shim between the DockerHub images and the `user.dockerfile`.
 
 Adding dependencies into the `extras.dockerfile` will build them the next time you run `make user`, and then be cached from then on.
 
 
-## To build the local dockerfiles:
+## To build the local dockerfiles
 
 To build the Dockerfiles locally, you will need to use the included `build.sh` script. It has a help menu:
 
-```
-./build.sh -h
-    build.sh [-r] -b [sel4|camkes|l4v] -s [binary_decomp|cakeml|camkes_vis|cogent|riscv|rust|sysinit|] -s ... -e MAKE_CACHES=no -e ...
-
-     -r     Rebuild docker images (don't use the docker cache)
-     -v     Verbose mode
-     -s     Strict mode
-     -e     Build arguments (NAME=VALUE) to docker build. Use a -e for each build arg.
-     -p     Pull base image first. Rather than build the base image, 
-            get it from the web first
+    ./build.sh -h
+        build.sh [-r] -b [sel4|camkes|l4v] -s [binary_decomp|cakeml|camkes_vis|cogent|riscv|rust|sysinit|] -s ... -e MAKE_CACHES=no -e ...
     
-    Sneaky hints:
-     - To build 'prebuilt' images, you can run:
-           build.sh -b [riscv|cakeml] 
-       but it will take a while!
-     - You can actually run this with '-b sel4-rust', or any other existing image,
-       but it will ruin the sorting of the name.
-```
+         -r     Rebuild docker images (don't use the docker cache)
+         -v     Verbose mode
+         -s     Strict mode
+         -e     Build arguments (NAME=VALUE) to docker build. Use a -e for each build arg.
+         -p     Pull base image first. Rather than build the base image,
+                get it from the web first
+    
+        Sneaky hints:
+         - To build 'prebuilt' images, you can run:
+               build.sh -b [riscv|cakeml]
+           but it will take a while!
+         - You can actually run this with '-b sel4-rust', or any other existing image,
+           but it will ruin the sorting of the name.
 
 ### Example builds
 
