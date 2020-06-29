@@ -112,18 +112,18 @@ build_sel4()
     # Don't need $IMG_POSTFIX here, because:
     # - debian is just debian
     # - basetools doesn't get pushed out, and is built here anyway
-    build_internal_image "$DEBIAN_IMG" base_tools.dockerfile "$BASETOOLS_IMG"
-    build_internal_image "$BASETOOLS_IMG" sel4.dockerfile "$DOCKERHUB$SEL4_IMG"
+    build_internal_image "$DEBIAN_IMG" base_tools.Dockerfile "$BASETOOLS_IMG"
+    build_internal_image "$BASETOOLS_IMG" sel4.Dockerfile "$DOCKERHUB$SEL4_IMG"
 }
 
 build_camkes()
 {
-    build_image "$SEL4_IMG$IMG_POSTFIX" camkes.dockerfile "$CAMKES_IMG"
+    build_image "$SEL4_IMG$IMG_POSTFIX" camkes.Dockerfile "$CAMKES_IMG"
 }
 
 build_l4v()
 {
-    build_image "$CAMKES_IMG$IMG_POSTFIX" l4v.dockerfile "$L4V_IMG"
+    build_image "$CAMKES_IMG$IMG_POSTFIX" l4v.Dockerfile "$L4V_IMG"
 }
 
 ############################################
@@ -145,19 +145,19 @@ EOF
 build_riscv()
 {
     prebuild_warning >&2
-    build_image "$SEL4_IMG$IMG_POSTFIX" riscv.dockerfile "$PREBUILT_RISCV_IMG"
+    build_image "$SEL4_IMG$IMG_POSTFIX" riscv.Dockerfile "$PREBUILT_RISCV_IMG"
 }
 
 build_cakeml()
 {
     prebuild_warning >&2
-    build_image "$CAMKES_IMG$IMG_POSTFIX" cakeml.dockerfile "$PREBUILT_CAKEML_IMG"
+    build_image "$CAMKES_IMG$IMG_POSTFIX" cakeml.Dockerfile "$PREBUILT_CAKEML_IMG"
 }
 
 build_sysinit()
 {
     prebuild_warning >&2
-    build_image "$CAMKES_IMG$IMG_POSTFIX" sysinit.dockerfile "$PREBUILT_SYSINIT_IMG"
+    build_image "$CAMKES_IMG$IMG_POSTFIX" sysinit.Dockerfile "$PREBUILT_SYSINIT_IMG"
 }
 
 
@@ -168,8 +168,8 @@ show_help()
 {
     # TODO:
     # - learn best way to represent that -s can be supplied multiple times
-    available_software=$(cd "$DOCKERFILE_DIR"; find . -name 'apply-*.dockerfile' \
-                            | sed 's/.dockerfile//;s@./apply-@@' \
+    available_software=$(cd "$DOCKERFILE_DIR"; find . -name 'apply-*.Dockerfile' \
+                            | sed 's/.Dockerfile//;s@./apply-@@' \
                             | sort \
                             | tr "\n" "|")
     cat <<EOF
@@ -250,12 +250,12 @@ base_img_postfix="$IMG_POSTFIX"
 for s in $softwares
 do
     echo "$s to install!"
-    if test -f "$DOCKERFILE_DIR/apply-${s}.dockerfile"; then
+    if test -f "$DOCKERFILE_DIR/apply-${s}.Dockerfile"; then
         # Try to resolve if we have a prebuilt image for the software being asked for.
         # If not, <shrug />, docker won't pick up the variable anyway, so no harm done.
         prebuilt_img="$(echo "PREBUILT_${s}_IMG" | tr "[:lower:]" "[:upper:]")"
         prebuilt_img="$(eval echo \$"$prebuilt_img")"
-        apply_software_to_image "$prebuilt_img" "apply-${s}.dockerfile" "$base_img$base_img_postfix" "$base_img-$s"
+        apply_software_to_image "$prebuilt_img" "apply-${s}.Dockerfile" "$base_img$base_img_postfix" "$base_img-$s"
         base_img="$base_img-$s"
         base_img_postfix="" # only apply the postfix in the first loop
     fi

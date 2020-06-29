@@ -7,7 +7,6 @@ MAX_AGE_IN_DAYS=30
 
 linux_date_test() {
     date --date="2020-04-25T18:44:40.822475865Z" &> /dev/null
-    return $?
 }
 
 date_test() {
@@ -25,7 +24,7 @@ fi
 # Loop through the images available to determine if they're too old
 for img in $(docker images --filter=reference='trustworthysystems/*:latest' -q); do
     today="$(date +%s)"
-    img_created_date="$(date --date="$(docker inspect --format='{{json .Created}}' "$img" | tr -d '"')" +%s)"
+    img_created_date=$(date --date="$(docker inspect --format='{{json .Created}}' "$img" | tr -d '"')" +%s)
     time_delta_in_days="$(( ( today - img_created_date ) / (60*60*24) ))"
 
     if [ $time_delta_in_days -gt $MAX_AGE_IN_DAYS ]; then
