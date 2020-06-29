@@ -38,11 +38,14 @@ pushd "$SMTSOLVERS_DIR"
     fi
     tar -xvzf "$CVC_TAR" && rm "$CVC_TAR"
     tar -xvzf "$SONOLAR_TAR" && rm "$SONOLAR_TAR"
-    echo "CVC4: online: /smtsolvers/cvc4-1.5-3/x86_64-linux/cvc4 --incremental --lang smt --tlimit=5000" > solverlist
-    echo "SONOLAR: offline: /smtsolvers/sonolar-2014-12-04-x86_64-linux/bin/sonolar --input-format=smtlib2" >> solverlist
-    echo "CVC4: offline: /smtsolvers/cvc4-1.5-3/x86_64-linux/cvc4 --lang smt" >> solverlist
-    echo "SONOLAR-word8: offline: /smtsolvers/sonolar-2014-12-04-x86_64-linux/bin/sonolar --input-format=smtlib2" >> solverlist
-    echo "  config: mem_mode = 8" >> solverlist
+
+    tee solverlist << EOF
+CVC4: online: /smtsolvers/cvc4-1.5-3/x86_64-linux/cvc4 --incremental --lang smt --tlimit=5000
+SONOLAR: offline: /smtsolvers/sonolar-2014-12-04-x86_64-linux/bin/sonolar --input-format=smtlib2
+CVC4: offline: /smtsolvers/cvc4-1.5-3/x86_64-linux/cvc4 --lang smt
+SONOLAR-word8: offline: /smtsolvers/sonolar-2014-12-04-x86_64-linux/bin/sonolar --input-format=smtlib2
+  config: mem_mode = 8
+EOF
 popd
 
 possibly_toggle_apt_snapshot
