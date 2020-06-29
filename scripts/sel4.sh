@@ -98,10 +98,10 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
                     # end of list
         do
         for file in $(dpkg-query -L ${compiler} | grep /usr/bin/); do
-            name=$(basename ${file})
+            name=$(basename "$file")
             echo "$name - $file"
-            as_root update-alternatives --install "${file}" "${name}" "${file}-${compiler_version}" 50 || :  # don't stress if it doesn't work
-            as_root update-alternatives --auto "${name}" || :
+            as_root update-alternatives --install "$file" "$name" "$file-$compiler_version" 50 || :  # don't stress if it doesn't work
+            as_root update-alternatives --auto "$name" || :
         done
     done
 
@@ -118,8 +118,9 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
     do
         echo ${compiler}
         for file in $(dpkg-query -L ${compiler} | grep /usr/bin/); do
-            name=$(basename ${file} | sed "s/-${compiler_version}\$//g")
-            link=$(echo ${file} | sed "s/-${compiler_version}\$//g")
+            name=$(basename "$file" | sed "s/-${compiler_version}\$//g")
+            # shellcheck disable=SC2001
+            link=$(echo "$file" | sed "s/-${compiler_version}\$//g")
             echo "$name - $file"
             (
                 as_root update-alternatives --install "${link}" "${name}" "${file}" 60 && \
@@ -133,7 +134,7 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
                     clang++ \
                     # end of list
         do
-            as_root update-alternatives --install /usr/bin/"$compiler" "$compiler" $(which "$compiler"-8) 60 && \
+            as_root update-alternatives --install /usr/bin/"$compiler" "$compiler" "$(which "$compiler"-8)" 60 && \
             as_root update-alternatives --auto "$compiler"
     done
     # Do a quick check to make sure it works:
@@ -165,7 +166,8 @@ if [ "$MAKE_CACHES" = "yes" ] ; then
         mkdir build
         pushd build
             for plat in "sabre" "ia32" "x86_64" "tx1" "tk1 -DARM_HYP=ON"; do 
-                ../init-build.sh -DPLATFORM=$plat  # no "" around plat, so HYP still works
+                # shellcheck disable=SC2086  # no "" around plat, so HYP still works 
+                ../init-build.sh -DPLATFORM=$plat
                 ninja
                 rm -rf ./*
             done
