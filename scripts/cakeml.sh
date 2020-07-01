@@ -21,9 +21,9 @@ test -d "$DIR" || DIR=$PWD
 : "${CAKEML_DIR:=/usr/local/bin/cakeml}"
 : "${CAKEML32_BIN_DIR:=/usr/local/bin/cake-x64-32}"
 : "${CAKEML64_BIN_DIR:=/usr/local/bin/cake-x64-64}"
-: "${CAKEML_BUILD_NUMBER:=989}"
-: "${HOL_COMMIT:=8384b1c70482d5fbd9ad4d83775cae2a05294515}"
-: "${CAKEML_COMMIT:=980410c6c89921c2e8950a5127bd9f32791f50bf}"
+: "${CAKEML_BUILD_NUMBER:=1282}"
+: "${HOL_COMMIT:=178b21f73b1ce392ba4db463708c3f25600112f5}"
+: "${CAKEML_COMMIT:=6f71ec748c056d9a784b0d01d2b96d77b6e006ca}"
 : "${CAKEML_REMOTE:=https://github.com/CakeML/cakeml.git}"
 
 : "${TMP_DIR:=/tmp}"
