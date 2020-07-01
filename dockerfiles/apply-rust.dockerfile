@@ -6,7 +6,7 @@ LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 
 # ARGS are env vars that are *only available* during the docker build
 # They can be modified at docker build time via '--build-arg VAR="something"'
-ARG SCM=https://bitbucket.ts.data61.csiro.au/scm
+ARG SCM
 ARG DESKTOP_MACHINE=no
 ARG INTERNAL=yes
 ARG MAKE_CACHES=yes
