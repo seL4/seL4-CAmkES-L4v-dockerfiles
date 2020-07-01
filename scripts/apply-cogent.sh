@@ -36,11 +36,9 @@ cabal v1-install \
 
 try_nonroot_first git clone --depth=1 https://github.com/NICTA/cogent.git "$COGENT_DIR" || chown_dir_to_user "$COGENT_DIR"
 pushd "$COGENT_DIR/cogent/"
-    cabal v1-sandbox init --sandbox="$HOME/.cogent-sandbox"
-    cp misc/cabal.config.d/cabal.config-8.6.5 cabal.config
-    cabal v1-sandbox add-source ../isa-parser --sandbox="$HOME/.cogent-sandbox"
-    make 
-    as_root ln -s "$HOME/.cogent-sandbox/bin/cogent" /usr/local/bin/cogent
+    cabal new-configure --with-compiler=ghc-8.6.5 --flags="-builtin-arrays -refinement-types -docgent -haskell-backend"
+    cabal new-install --installdir=$HOME/.cabal/bin/ --overwrite-policy=always
+    as_root ln -s "$HOME/.cabal/bin/cogent" /usr/local/bin/cogent
 
     cogent -v
     # For now, just put an empty folder where autocorres may go in the future
