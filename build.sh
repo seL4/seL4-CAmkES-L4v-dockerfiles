@@ -30,12 +30,15 @@ set -ef
 # Extra vars
 DOCKER_BUILD="docker build"
 DOCKER_FLAGS="--force-rm=true"
+
+# Special variables to be passed through Docker to the build scripts
 : "${INTERNAL:=no}"
+: "${SCM:=''}"
 
 
 ###########################
 # For 'prebuilt' images, the idea is that for things that take a long
-# time to build, and don't change very much, we should build them 
+# time to build, and don't change very much, we should build them
 # once, and then pull them in as needed.
 # TODO: make this work better..
 : "${USE_PREBUILT_RISCV:=yes}"
@@ -59,6 +62,8 @@ build_internal_image()
     build_args_to_pass_to_docker=$(echo $build_args | grep "=" | awk '{print "--build-arg", $1}')
     $DOCKER_BUILD $DOCKER_FLAGS \
         --build-arg BASE_IMG="$base_img" \
+        --build-arg INTERNAL="$INTERNAL" \
+        --build-arg SCM="$SCM" \
         $build_args_to_pass_to_docker \
         -f "$DOCKERFILE_DIR/$dfile_name" \
         -t "$img_name" \
@@ -89,6 +94,8 @@ apply_software_to_image()
     $DOCKER_BUILD $DOCKER_FLAGS \
 		--build-arg BASE_BUILDER_IMG="$DOCKERHUB$prebuilt_img" \
 		--build-arg BASE_IMG="$DOCKERHUB$orig_img" \
+        --build-arg INTERNAL="$INTERNAL" \
+        --build-arg SCM="$SCM" \
 		-f "$DOCKERFILE_DIR/$builder_dfile" \
 		-t "$DOCKERHUB$new_img" \
         "$@" \
@@ -104,7 +111,7 @@ build_sel4()
     # Don't need $IMG_POSTFIX here, because:
     # - debian is just debian
     # - basetools doesn't get pushed out, and is built here anyway
-    build_internal_image "$DEBIAN_IMG" base_tools.dockerfile "$BASETOOLS_IMG" --build-arg INTERNAL="$INTERNAL"
+    build_internal_image "$DEBIAN_IMG" base_tools.dockerfile "$BASETOOLS_IMG"
     build_internal_image "$BASETOOLS_IMG" sel4.dockerfile "$DOCKERHUB$SEL4_IMG"
 }
 
