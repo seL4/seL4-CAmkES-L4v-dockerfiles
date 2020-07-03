@@ -9,7 +9,7 @@ LABEL PREBUILT="yes"
 # They can be modified at docker build time via '--build-arg VAR="something"'
 ARG SCM
 ARG DESKTOP_MACHINE=no
-ARG INTERNAL=yes
+ARG INTERNAL=no
 ARG MAKE_CACHES=yes
 
 ARG HOL_DIR="/HOL"

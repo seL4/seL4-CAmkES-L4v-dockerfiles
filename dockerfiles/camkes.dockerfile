@@ -7,7 +7,7 @@ LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 # They can be modified at docker build time via '--build-arg VAR="something"'
 ARG SCM
 ARG USE_DEBIAN_SNAPSHOT=yes
-ARG INTERNAL=yes
+ARG INTERNAL=no
 ARG DESKTOP_MACHINE=no
 ARG MAKE_CACHES=yes
 ARG STACK_ROOT=/etc/stack

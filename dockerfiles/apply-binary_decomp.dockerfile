@@ -8,7 +8,7 @@ LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 # They can be modified at docker build time via '--build-arg VAR="something"'
 ARG SCM
 ARG DESKTOP_MACHINE=no
-ARG INTERNAL=yes
+ARG INTERNAL=no
 ARG USE_DEBIAN_SNAPSHOT=yes
 ARG MAKE_CACHES=yes
 ARG SMTSOLVERS_DIR="/smtsolvers"
