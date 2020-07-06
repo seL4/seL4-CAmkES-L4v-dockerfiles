@@ -55,6 +55,11 @@ EOF
 APT::Default-Release "buster";
 EOF
 
+    # Tell apt to retry a few times before failing
+    as_root tee -a /etc/apt/apt.conf.d/80retries << EOF
+APT::Acquire::Retries "3";
+EOF
+
     # These commands supposedly speed-up and better dockerize apt.
     echo "force-unsafe-io" | as_root tee /etc/dpkg/dpkg.cfg.d/02apt-speedup > /dev/null
     echo "Acquire::http {No-Cache=True;};" | as_root tee /etc/apt/apt.conf.d/no-cache > /dev/null
