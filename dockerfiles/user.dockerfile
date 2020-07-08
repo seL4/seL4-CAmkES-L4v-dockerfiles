@@ -9,6 +9,9 @@ ARG GROUP
 
 # Crammed a lot in here to make building the image faster
 RUN groupadd -fg ${GID} ${GROUP} \
+    # We add the group to the docker image above, but if it already exists
+    # we need to change the gID to match the host, which is done here:
+    && groupmod -g ${GID} ${GROUP} \
     && useradd -u ${UID} -g ${GID} ${UNAME} \
     && adduser ${UNAME} sudo \
     && passwd -d ${UNAME} \
