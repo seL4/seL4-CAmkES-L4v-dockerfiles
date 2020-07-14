@@ -37,7 +37,7 @@ cabal v1-install \
 try_nonroot_first git clone --depth=1 https://github.com/NICTA/cogent.git "$COGENT_DIR" || chown_dir_to_user "$COGENT_DIR"
 pushd "$COGENT_DIR/cogent/"
     cabal new-configure --with-compiler=ghc-8.6.5 --flags="-builtin-arrays -refinement-types -docgent -haskell-backend"
-    cabal new-install --installdir=$HOME/.cabal/bin/ --overwrite-policy=always
+    cabal new-install --installdir="$HOME/.cabal/bin/" --overwrite-policy=always
     as_root ln -s "$HOME/.cabal/bin/cogent" /usr/local/bin/cogent
 
     cogent -v
