@@ -51,4 +51,8 @@ jobs:
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LINTER_RULES_PATH: .linters 
-          SHELLCHECK_OPTS: --external-sources
+          VALIDATE_BASH: true
+          VALIDATE_DOCKER_HADOLINT: true
+          VALIDATE_EDITORCONFIG: false
+          VALIDATE_MD: true
+          VALIDATE_YAML: true
