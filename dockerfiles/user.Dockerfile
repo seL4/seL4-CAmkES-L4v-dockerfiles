@@ -13,7 +13,6 @@ RUN groupadd -fg ${GID} ${GROUP} \
     # we need to change the gID to match the host, which is done here:
     && groupmod -g ${GID} ${GROUP} \
     && useradd -u ${UID} -g ${GID} ${UNAME} \
-    && adduser ${UNAME} sudo \
     && passwd -d ${UNAME} \
     && echo 'Defaults        lecture_file = /etc/sudoers.lecture' >> /etc/sudoers \
     && echo 'Defaults        lecture = always' >> /etc/sudoers \

@@ -141,6 +141,7 @@ user_run:
 		--rm \
 		$(EXTRA_DOCKER_RUN_ARGS) \
 		--group-add stack \
+		--group-add sudo \
 		-v $(HOST_DIR):/host:z \
 		-v $(DOCKER_VOLUME_HOME):/home/$(shell whoami) \
 		-v /etc/localtime:/etc/localtime:ro \
@@ -157,6 +158,7 @@ user_run_l4v:
 		-v $(DOCKER_VOLUME_HOME):/home/$(shell whoami) \
 		-v $(DOCKER_VOLUME_ISABELLE):/isabelle \
 		--group-add stack \
+		--group-add sudo \
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-e DISPLAY=$(DISPLAY) \
