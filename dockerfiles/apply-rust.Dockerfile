@@ -10,6 +10,7 @@ ARG SCM
 ARG DESKTOP_MACHINE=no
 ARG INTERNAL=no
 ARG MAKE_CACHES=yes
+ARG CARGO_HOME="/etc/cargo"
 
 ARG SCRIPT=apply-rust.sh
 
@@ -20,9 +21,5 @@ RUN /bin/bash /tmp/${SCRIPT} \
     && apt-get autoremove --purge --yes \
     && rm -rf /var/lib/apt/lists/*
 
-# Docker doesn't know the HOME variable at this level, so we have to set it by
-# hand here. I don't like it, but it works for now. We currently build as `root`
-# so this should work fine.
-ARG HOME="/root"
-# Doubley make sure that the PATH is set right
-ENV PATH "${PATH}:${HOME}/.cargo/bin"
+ENV PATH "${PATH}:${CARGO_HOME}/bin"
+ENV CARGO_HOME "$CARGO_HOME"
