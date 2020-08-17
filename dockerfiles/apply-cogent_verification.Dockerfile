@@ -1,5 +1,5 @@
 ARG BASE_IMG=trustworthysystems/camkes-cogent
-
+# hadolint ignore=DL3006
 FROM $BASE_IMG 
 
 LABEL ORGANISATION="Trustworthy Systems"

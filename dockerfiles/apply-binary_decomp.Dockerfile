@@ -1,4 +1,5 @@
 ARG BASE_IMG=trustworthysystems/sel4
+# hadolint ignore=DL3006
 FROM $BASE_IMG
 
 LABEL ORGANISATION="Trustworthy Systems"
@@ -17,7 +18,7 @@ ARG SCRIPT=apply-binary_decomp.sh
 
 COPY scripts /tmp/
 
-RUN /bin/bash /tmp/${SCRIPT} \
+RUN /bin/bash "/tmp/${SCRIPT}" \
     && apt-get clean autoclean \
     && apt-get autoremove --purge --yes \
     && rm -rf /var/lib/apt/lists/*
