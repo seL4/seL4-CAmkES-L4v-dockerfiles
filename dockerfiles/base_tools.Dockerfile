@@ -1,4 +1,5 @@
 ARG BASE_IMG=debian:buster
+# hadolint ignore=DL3006
 FROM $BASE_IMG
 LABEL ORGANISATION="Trustworthy Systems"
 LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
@@ -21,7 +22,7 @@ COPY scripts /tmp/
 
 # ip4v forces curl to use ipv4. Weirdness happens with docker and ipv6.
 RUN echo ipv4 >> ~/.curlrc \
-    && /bin/bash /tmp/${SCRIPT} \
+    && /bin/bash "/tmp/${SCRIPT}" \
     && apt-get clean autoclean \
     && apt-get autoremove --purge --yes \
     && rm -rf /var/lib/apt/lists/*

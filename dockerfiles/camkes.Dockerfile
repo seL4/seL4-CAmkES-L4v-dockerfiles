@@ -1,4 +1,5 @@
 ARG BASE_IMG=trustworthysystems/sel4
+# hadolint ignore=DL3006
 FROM $BASE_IMG
 LABEL ORGANISATION="Trustworthy Systems"
 LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"

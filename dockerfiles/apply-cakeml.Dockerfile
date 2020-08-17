@@ -1,9 +1,11 @@
 ARG BASE_BUILDER_IMG=trustworthysystems/prebuild-cakeml
 ARG BASE_IMG=trustworthysystems/sel4
 
+# hadolint ignore=DL3006
 FROM $BASE_BUILDER_IMG as builder
 # Load the prebuilt compilers as a throwaway container (named 'builder')
 
+# hadolint ignore=DL3006
 FROM $BASE_IMG 
 
 LABEL ORGANISATION="Trustworthy Systems"

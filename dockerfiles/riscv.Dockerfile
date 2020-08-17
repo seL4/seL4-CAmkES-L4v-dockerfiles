@@ -1,4 +1,5 @@
 ARG BASE_IMG=trustworthysystems/sel4
+# hadolint ignore=DL3006
 FROM $BASE_IMG
 
 LABEL ORGANISATION="Trustworthy Systems"
@@ -7,6 +8,7 @@ LABEL PREBUILT="yes"
 
 # Get source for RISCV compilers, and build them
 
+# hadolint ignore=DL3008
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
         # For RISC-V tools:
@@ -15,7 +17,7 @@ RUN apt-get update -q \
         libglib2.0-dev zlib1g-dev libpixman-1-dev  \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
-    && rm -rf /var/lib/{apt,dpkg,cache,log}/ 
+    && rm -rf /var/lib/apt/lists/*
 
 ENV RISCV /opt/riscv
 ENV PATH "$PATH:$RISCV"
@@ -26,6 +28,7 @@ WORKDIR /riscv-gnu-toolchain
 
 RUN git submodule update --init --recursive
 
+# hadolint ignore=DL3003
 RUN cd riscv-qemu \
     && git checkout riscv-qemu-3.1
 
