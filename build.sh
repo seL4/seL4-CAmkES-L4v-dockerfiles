@@ -33,7 +33,7 @@ DOCKER_FLAGS="--force-rm=true"
 
 # Special variables to be passed through Docker to the build scripts
 : "${INTERNAL:=no}"
-: "${SCM:=''}"
+: "${SCM}"
 
 
 ###########################
