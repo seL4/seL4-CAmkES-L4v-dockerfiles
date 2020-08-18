@@ -19,6 +19,7 @@ test -d "$DIR" || DIR=$PWD
 
 # Haskell stack install directory 
 : "${STACK_ROOT:=/etc/stack}"
+: "${STACK_GID:=1234}"
 
 # tmp space for building 
 : "${TEMP_DIR:=/tmp}"
@@ -86,7 +87,8 @@ done
 wget -O - https://get.haskellstack.org/ | sh
 echo "export PATH=\"\$PATH:\$HOME/.local/bin\"" >> "$HOME/.bashrc"
 
-as_root groupadd stack
+# Pick a random group ID, one that won't clash with common user GIDs
+as_root groupadd -g "$STACK_GID" stack
 
 try_nonroot_first mkdir -p "$STACK_ROOT" || chown_dir_to_user "$STACK_ROOT"
 # Try to use ACLs to keep permissions, but may not work with underlying filesystem
