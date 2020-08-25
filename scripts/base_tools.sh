@@ -95,7 +95,7 @@ current_apt_ver=$(apt-cache policy apt | grep "Installed" | xargs | cut -d' ' -f
 if printf '2.1.9 needed\n%s have\n' "$current_apt_ver" | sort -rV | head -n 1 | grep -q needed; then
     for pkg in "libapt-pkg6.0_2.1.10_amd64.deb" "apt_2.1.10_amd64.deb" ; do
         wget "http://snapshot.debian.org/archive/debian/20200811T150316Z/pool/main/a/apt/$pkg"
-        as_root apt install "./$pkg" -t bullseye
+        as_root apt install "./$pkg" -t bullseye -y
         rm "./$pkg"  # clean-up package
     done
 fi
