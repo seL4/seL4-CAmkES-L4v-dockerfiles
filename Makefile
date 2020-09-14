@@ -51,6 +51,8 @@ ifndef EXEC
 	DOCKER_RUN_FLAGS += -it
 endif
 
+ETC_LOCALTIME := $(realpath /etc/localtime)
+
 # Extra arguments to pass to `docker run` if it is or is not `podman` - these
 # are constructed in a very verbose way to be obvious about why we want to do
 # certain things under regular `docker` vs` podman`
@@ -151,7 +153,7 @@ user_run:
 		--group-add sudo \
 		-v $(HOST_DIR):/host:z \
 		-v $(DOCKER_VOLUME_HOME):/home/$(shell whoami) \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v $(ETC_LOCALTIME):/etc/localtime:ro \
 		$(USER_IMG) $(EXEC)
 
 .PHONY: user_run_l4v
@@ -166,7 +168,7 @@ user_run_l4v:
 		-v $(DOCKER_VOLUME_ISABELLE):/isabelle \
 		--group-add stack \
 		--group-add sudo \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v $(ETC_LOCALTIME):/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-e DISPLAY=$(DISPLAY) \
 		$(USER_IMG) $(EXEC)
