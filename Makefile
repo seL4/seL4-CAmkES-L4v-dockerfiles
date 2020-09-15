@@ -4,6 +4,8 @@
 # SPDX-License-Identifier: BSD-2-Clause
 #
 
+# Docker-compatible image tool to use (could also be 'podman')
+DOCKER ?= docker
 DOCKERHUB ?= trustworthysystems/
 
 # Base images
@@ -41,7 +43,7 @@ DOCKER_VOLUME_HOME ?= $(shell whoami)-home
 DOCKER_VOLUME_ISABELLE ?= $(shell whoami)-isabelle
 
 # Extra vars
-DOCKER_BUILD ?= docker build
+DOCKER_BUILD ?= $(DOCKER) build
 DOCKER_FLAGS ?= --force-rm=true
 INTERNAL ?= no
 ifndef EXEC
@@ -53,7 +55,7 @@ endif
 # are constructed in a very verbose way to be obvious about why we want to do
 # certain things under regular `docker` vs` podman`
 # Note that `docker --version` will not say "podman" if symlinked.
-CHECK_DOCKER_IS_PODMAN  := docker --help 2>&1 | grep -q podman
+CHECK_DOCKER_IS_PODMAN  := $(DOCKER) --help 2>&1 | grep -q podman
 IF_DOCKER_IS_PODMAN     := $(CHECK_DOCKER_IS_PODMAN) && echo
 IF_DOCKER_IS_NOT_PODMAN := $(CHECK_DOCKER_IS_PODMAN) || echo
 # If we're not `podman` then we'll use the `-u` and `-g` options to set the
@@ -87,27 +89,27 @@ CAKEML_BASE_DATE ?= 2019_01_13
 #################################################
 .PHONY: pull_sel4_image
 pull_sel4_image:
-	docker pull $(DOCKERHUB)$(SEL4_IMG)
+	$(DOCKER) pull $(DOCKERHUB)$(SEL4_IMG)
 
 .PHONY: pull_sel4-riscv_image
 pull_sel4-riscv_image:
-	docker pull $(DOCKERHUB)$(SEL4_RISCV_IMG)
+	$(DOCKER) pull $(DOCKERHUB)$(SEL4_RISCV_IMG)
 
 .PHONY: pull_camkes_image
 pull_camkes_image:
-	docker pull $(DOCKERHUB)$(CAMKES_IMG)
+	$(DOCKER) pull $(DOCKERHUB)$(CAMKES_IMG)
 
 .PHONY: pull_camkes-riscv_image
 pull_camkes_image-riscv:
-	docker pull $(DOCKERHUB)$(CAMKES_RISCV_IMG)
+	$(DOCKER) pull $(DOCKERHUB)$(CAMKES_RISCV_IMG)
 
 .PHONY: pull_l4v_image
 pull_l4v_image:
-	docker pull $(DOCKERHUB)$(L4V_IMG)
+	$(DOCKER) pull $(DOCKERHUB)$(L4V_IMG)
 
 .PHONY: pull_l4v-riscv_image
 pull_l4v_image-riscv:
-	docker pull $(DOCKERHUB)$(L4V_RISCV_IMG)
+	$(DOCKER) pull $(DOCKERHUB)$(L4V_RISCV_IMG)
 
 .PHONY: pull_images_from_dockerhub
 pull_images_from_dockerhub: pull_sel4_image pull_camkes_image pull_l4v_image
@@ -140,7 +142,7 @@ user_l4v-riscv: build_user_l4v-riscv user_run_l4v
 
 .PHONY: user_run
 user_run:
-	docker run \
+	$(DOCKER) run \
 		$(DOCKER_RUN_FLAGS) \
 		--hostname in-container \
 		--rm \
@@ -154,7 +156,7 @@ user_run:
 
 .PHONY: user_run_l4v
 user_run_l4v:
-	docker run \
+	$(DOCKER) run \
 		$(DOCKER_RUN_FLAGS) \
 		--hostname in-container \
 		--rm \
@@ -213,25 +215,25 @@ build_user_l4v-riscv: build_user
 
 .PHONY: clean_isabelle
 clean_isabelle:
-	docker volume rm $(DOCKER_VOLUME_ISABELLE)
+	$(DOCKER) volume rm $(DOCKER_VOLUME_ISABELLE)
 
 .PHONY: clean_home_dir
 clean_home_dir:
-	docker volume rm $(DOCKER_VOLUME_HOME)
+	$(DOCKER) volume rm $(DOCKER_VOLUME_HOME)
 
 .PHONY: clean_data
 clean_data: clean_isabelle clean_home_dir
 
 .PHONY: clean_images
 clean_images:
-	-docker rmi $(USER_IMG)
-	-docker rmi extras
-	-docker rmi $(DOCKERHUB)$(L4V_IMG)
-	-docker rmi $(DOCKERHUB)$(CAMKES_IMG)
-	-docker rmi $(DOCKERHUB)$(SEL4_IMG)
-	-docker rmi $(DOCKERHUB)$(SEL4_RISCV_IMG)
-	-docker rmi $(DOCKERHUB)$(CAMKES_RISCV_IMG)
-	-docker rmi $(DOCKERHUB)$(L4V_RISCV_IMG)
+	-$(DOCKER) rmi $(USER_IMG)
+	-$(DOCKER) rmi extras
+	-$(DOCKER) rmi $(DOCKERHUB)$(L4V_IMG)
+	-$(DOCKER) rmi $(DOCKERHUB)$(CAMKES_IMG)
+	-$(DOCKER) rmi $(DOCKERHUB)$(SEL4_IMG)
+	-$(DOCKER) rmi $(DOCKERHUB)$(SEL4_RISCV_IMG)
+	-$(DOCKER) rmi $(DOCKERHUB)$(CAMKES_RISCV_IMG)
+	-$(DOCKER) rmi $(DOCKERHUB)$(L4V_RISCV_IMG)
 
 .PHONY: clean
 clean: clean_data clean_images
