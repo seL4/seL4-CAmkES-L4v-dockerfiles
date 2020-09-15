@@ -83,6 +83,7 @@ possibly_toggle_apt_snapshot() {
     # switches between using Debian Snapshot, or just regular apt sources
     if [ "$USE_DEBIAN_SNAPSHOT" = "yes" ] ; then
         as_root sed -n -i  's/# //p; t; s/deb /# deb /p' /etc/apt/sources.list
+        as_root sed -n -i  's/# //p; t; s/Acq/# Acq/p' /etc/apt/apt.conf.d/80snapshot
         as_root apt-get update -q
     fi
 }

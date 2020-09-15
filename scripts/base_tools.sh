@@ -47,22 +47,23 @@ EOF
     # This flag is required so that using older snapshots works OK.
     as_root sed -i  's/deb http:\/\/snapshot/deb \[check-valid-until=no\] http:\/\/snapshot/g' /etc/apt/sources.list
 
-    # If we are using snapshot, then turn it on now 
-    possibly_toggle_apt_snapshot
-
     # Tell apt that we should prefer packages from Buster
     as_root tee -a /etc/apt/apt.conf.d/70debconf << EOF
 APT::Default-Release "buster";
 EOF
 
-    # Tell apt to retry a few times before failing
-    as_root tee -a /etc/apt/apt.conf.d/80retries << EOF
-APT::Acquire::Retries "3";
+    # Snapshot has some rate limiting, so avoid its ire:
+    as_root tee -a /etc/apt/apt.conf.d/80snapshot << EOF
+# Acquire::Retries "3";
+# Acquire::http::Dl-Limit "300";
 EOF
 
     # These commands supposedly speed-up and better dockerize apt.
     echo "force-unsafe-io" | as_root tee /etc/dpkg/dpkg.cfg.d/02apt-speedup > /dev/null
     echo "Acquire::http {No-Cache=True;};" | as_root tee /etc/apt/apt.conf.d/no-cache > /dev/null
+
+    # If we are using snapshot, then turn it on now 
+    possibly_toggle_apt_snapshot
 fi
 
 as_root apt-get update -q
@@ -94,7 +95,7 @@ current_apt_ver=$(apt-cache policy apt | grep "Installed" | xargs | cut -d' ' -f
 # We use 2.1.9, to make this a greater-than operation.
 if printf '2.1.9 needed\n%s have\n' "$current_apt_ver" | sort -rV | head -n 1 | grep -q needed; then
     for pkg in "libapt-pkg6.0_2.1.10_amd64.deb" "apt_2.1.10_amd64.deb" ; do
-        wget "http://snapshot.debian.org/archive/debian/20200811T150316Z/pool/main/a/apt/$pkg"
+        wget --limit-rate=300k "http://snapshot.debian.org/archive/debian/20200811T150316Z/pool/main/a/apt/$pkg"
         as_root apt install "./$pkg" -t bullseye -y
         rm "./$pkg"  # clean-up package
     done
