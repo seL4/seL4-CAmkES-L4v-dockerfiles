@@ -125,12 +125,8 @@ for pip in "pip2" "pip3"; do
     as_root ${pip} install --no-cache-dir \
         setuptools
     as_root ${pip} install --no-cache-dir \
-        aenum \
         gitlint \
         nose \
-        pexpect \
-        plyplus \
-        sh \
         # end of list
 done
 
