@@ -111,9 +111,6 @@ as_root apt-get install -y --no-install-recommends \
         git \
         jq \
         make \
-        mercurial \
-        python-dev \
-        python-pip \
         python3-dev \
         python3-pip \
         # end of list
@@ -121,19 +118,14 @@ as_root apt-get install -y --no-install-recommends \
 # Install python dependencies for both python 2 & 3
 # Upgrade pip first, then install setuptools (required for other pip packages)
 # Install some basic python tools
-for pip in "pip2" "pip3"; do
-    as_root ${pip} install --no-cache-dir \
-        setuptools
-    as_root ${pip} install --no-cache-dir \
-        gitlint \
-        nose \
-        # end of list
-done
-
-# 'reuse' tool only available for python3:
 as_root pip3 install --no-cache-dir \
+    setuptools
+as_root pip3 install --no-cache-dir \
+    gitlint \
+    nose \
     reuse \
     # end of list
+
 
 # Add some symlinks so some programs can find things
 if [ "$DESKTOP_MACHINE" = "no" ] ; then

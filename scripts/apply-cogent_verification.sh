@@ -24,12 +24,10 @@ fi
 # ../dockerfiles/apply-cogent_verification.dockerfile work.
 as_root apt-get update -q
 
-for pip in "pip2" "pip3"; do 
-    as_root ${pip} install --no-cache-dir \
-        ruamel.yaml \
-        termcolor 
-        # end of list
-done
+as_root pip3 install --no-cache-dir \
+    ruamel.yaml \
+    termcolor 
+    # end of list
 
 export PATH="$PATH:/opt/ghc/bin:/opt/cabal/bin"
 pushd "$COGENT_DIR"

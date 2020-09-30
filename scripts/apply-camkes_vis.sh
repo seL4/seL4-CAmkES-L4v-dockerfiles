@@ -20,12 +20,10 @@ as_root apt-get install -y --no-install-recommends \
         xvfb \
         # end of list
 
-for pip in "pip2" "pip3"; do
-    as_root ${pip} install --no-cache-dir \
-        ansi2html \
-        graphviz \
-        pydotplus \
-        # end of list
-done
+as_root pip3 install --no-cache-dir \
+    ansi2html \
+    graphviz \
+    pydotplus \
+    # end of list
 
 possibly_toggle_apt_snapshot

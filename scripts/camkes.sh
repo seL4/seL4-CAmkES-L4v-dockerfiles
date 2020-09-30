@@ -76,12 +76,9 @@ as_root apt-get install -y --no-install-recommends \
 
 
 # Get python deps for CAmkES
-for pip in "pip2" "pip3"; do
-    as_root ${pip} install --no-cache-dir \
-        camkes-deps \
-        jinja2 \
-        # end of list 
-done
+as_root pip3 install --no-cache-dir \
+    camkes-deps \
+    # end of list 
 
 # Get stack
 wget -O - https://get.haskellstack.org/ | sh
