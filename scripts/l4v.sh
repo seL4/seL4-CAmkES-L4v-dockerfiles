@@ -33,6 +33,7 @@ as_root apt-get install -y --no-install-recommends \
         libxslt-dev \
         libxml2-dev \
         openssh-client \
+        mercurial \
         mlton \
         texlive-bibtex-extra \
         texlive-fonts-recommended \
