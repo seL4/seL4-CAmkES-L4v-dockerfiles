@@ -26,7 +26,7 @@ pushd "$SMTSOLVERS_DIR"
     SONOLAR_TAR="sonolar-2014-12-04-x86_64-linux.tar.gz"
 
     # Force wget to use ipv4 as docker doesn't like ipv6
-    wget -4 "http://downloads.ssrg.nicta.com.au/downloads/isabelle/components/$CVC_TAR"
+    wget -4 "http://isabelle.ts.data61.csiro.au/downloads/isabelle/components/$CVC_TAR"
     wget -4 "http://www.informatik.uni-bremen.de/agbs/florian/sonolar/$SONOLAR_TAR"
     echo "bf3bb4de0d3b39503de436f4385c7a8b8040626addebff5c230b4f4f929ae358 $SONOLAR_TAR" > checksums
     echo "a3343c4255ac2d1f64f83d4feba2ed076da23e429f145da0066a9cd66e932162 $CVC_TAR" >> checksums
