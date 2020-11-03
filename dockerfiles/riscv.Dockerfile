@@ -29,8 +29,8 @@ WORKDIR /riscv-gnu-toolchain
 RUN git submodule update --init --recursive
 
 # hadolint ignore=DL3003
-RUN cd riscv-qemu \
-    && git checkout riscv-qemu-3.1
+RUN cd qemu \
+    && git checkout master
 
 # Setup qemu targets
 RUN sed -i 's/--target-list=riscv64-linux-user,riscv32-linux-user/--target-list=riscv64-softmmu,riscv32-softmmu/g' ./Makefile.in
