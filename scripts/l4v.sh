@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Copyright 2020, Data61/CSIRO
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
 
 set -exuo pipefail
 
@@ -59,13 +64,13 @@ ISABELLE_SETTINGS_LOCATION="$HOME/.isabelle/etc/settings"
 cp "$NEW_ISABELLE_SETTINGS" "$ISABELLE_SETTINGS_LOCATION"
 
 if [ "$MAKE_CACHES" = "yes" ] ; then
-    # Get a copy of the L4v repo, and build all the isabelle and haskell 
+    # Get a copy of the L4v repo, and build all the isabelle and haskell
     # components, so we have them cached.
     mkdir -p "$TEMP_L4V_LOCATION"
     pushd "$TEMP_L4V_LOCATION"
         repo init -u "${SCM}/seL4/verification-manifest.git" --depth=1
         repo sync -c
-        pushd l4v 
+        pushd l4v
             ./isabelle/bin/isabelle components -a
             pushd spec/haskell
                 make sandbox

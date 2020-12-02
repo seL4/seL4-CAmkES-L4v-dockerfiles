@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Copyright 2020, Data61/CSIRO
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
 
 set -exuo pipefail
 

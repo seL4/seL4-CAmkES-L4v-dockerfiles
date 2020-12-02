@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Copyright 2020, Data61/CSIRO
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
 
 set -exuo pipefail
 
@@ -10,7 +15,7 @@ set -exuo pipefail
 export DEBIAN_FRONTEND
 
 : "${USE_DEBIAN_SNAPSHOT:=yes}"
-export USE_DEBIAN_SNAPSHOT 
+export USE_DEBIAN_SNAPSHOT
 
 # Common vars
 #####################
@@ -56,7 +61,7 @@ as_root() {
 
 try_nonroot_first() {
     # Attempts to run a command as is, but if it fails, it tries again using
-    # 'as_root`. If it does have to do something as_root, it returns 1, so 
+    # 'as_root`. If it does have to do something as_root, it returns 1, so
     # any other things that need doing (such as chowning) can be done.
     # returning 1 for a "successful" command is a bit weird tho...
     set +x
@@ -79,7 +84,7 @@ chown_dir_to_user() {
 }
 
 possibly_toggle_apt_snapshot() {
-    # Inverts the commented-ness of the apt sources.list file, meaning it 
+    # Inverts the commented-ness of the apt sources.list file, meaning it
     # switches between using Debian Snapshot, or just regular apt sources
     if [ "$USE_DEBIAN_SNAPSHOT" = "yes" ] ; then
         as_root sed -n -i  's/# //p; t; s/deb /# deb /p' /etc/apt/sources.list

@@ -1,3 +1,9 @@
+<!--
+     Copyright 2020, Data61, CSIRO
+
+     SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # Dockerfiles for seL4, CAmkES, and L4v dependencies
 
 ## Requirements
@@ -83,7 +89,7 @@ Start up the container:
 
     make user HOST_DIR=~/sel4test
     # in-container terminal
-    jblogs@in-container:/host$ 
+    jblogs@in-container:/host$
 
 Get seL4 test:
 
@@ -126,14 +132,14 @@ To build the Dockerfiles locally, you will need to use the included `build.sh` s
 
     ./build.sh -h
         build.sh [-r] -b [sel4|camkes|l4v] -s [binary_decomp|cakeml|camkes_vis|cogent|riscv|rust|sysinit|] -s ... -e MAKE_CACHES=no -e ...
-    
+
          -r     Rebuild docker images (don't use the docker cache)
          -v     Verbose mode
          -s     Strict mode
          -e     Build arguments (NAME=VALUE) to docker build. Use a -e for each build arg.
          -p     Pull base image first. Rather than build the base image,
                 get it from the web first
-    
+
         Sneaky hints:
          - To build 'prebuilt' images, you can run:
                build.sh -b [riscv|cakeml]

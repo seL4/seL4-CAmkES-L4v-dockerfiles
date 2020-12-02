@@ -1,3 +1,9 @@
+#
+# Copyright 2020, Data61/CSIRO
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
+
 ARG BASE_BUILDER_IMG=trustworthysystems/prebuild-sysinit
 ARG BASE_IMG=trustworthysystems/sel4
 # hadolint ignore=DL3006

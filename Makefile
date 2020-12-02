@@ -1,3 +1,8 @@
+#
+# Copyright 2020, Data61/CSIRO
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
 
 DOCKERHUB ?= trustworthysystems/
 
@@ -20,7 +25,7 @@ PREBUILT_RISCV_IMG ?= prebuilt_riscv_compilers
 PREBUILT_CAKEML_IMG ?= prebuilt_cakeml
 BINARY_DECOMP_IMG ?= binary_decomp
 
-# Test images 
+# Test images
 SEL4_TST_IMG ?= sel4_test
 CAMKES_TST_IMG ?= camkes_test
 L4V_TST_IMG ?= l4v_test
@@ -68,7 +73,7 @@ EXTRA_DOCKER_RUN_ARGS   := $(EXTRA_DOCKER_IS_NOT_PODMAN_RUN_ARGS) \
 
 ###########################
 # For 'prebuilt' images, the idea is that for things that take a long
-# time to build, and don't change very much, we should build them 
+# time to build, and don't change very much, we should build them
 # once, and then pull them in as needed.
 USE_PREBUILT_RISCV ?= yes
 RISCV_BASE_DATE ?= 2018_06_04

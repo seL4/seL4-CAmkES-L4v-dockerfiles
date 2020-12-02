@@ -1,3 +1,9 @@
+#
+# Copyright 2020, Data61/CSIRO
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
+
 ARG BASE_BUILDER_IMG=trustworthysystems/prebuild-cakeml
 ARG BASE_IMG=trustworthysystems/sel4
 
@@ -6,7 +12,7 @@ FROM $BASE_BUILDER_IMG as builder
 # Load the prebuilt compilers as a throwaway container (named 'builder')
 
 # hadolint ignore=DL3006
-FROM $BASE_IMG 
+FROM $BASE_IMG
 
 LABEL ORGANISATION="Trustworthy Systems"
 LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"

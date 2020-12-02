@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Copyright 2020, Data61/CSIRO
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
 
 set -exuo pipefail
 
@@ -62,7 +67,7 @@ EOF
     echo "force-unsafe-io" | as_root tee /etc/dpkg/dpkg.cfg.d/02apt-speedup > /dev/null
     echo "Acquire::http {No-Cache=True;};" | as_root tee /etc/apt/apt.conf.d/no-cache > /dev/null
 
-    # If we are using snapshot, then turn it on now 
+    # If we are using snapshot, then turn it on now
     possibly_toggle_apt_snapshot
 fi
 
@@ -76,21 +81,21 @@ as_root apt-get install -y --no-install-recommends \
 #
 # We need to upgrade apt first, as the later versions have fixes for interacting
 # with Debian Snapshot. See here for more info:
-#   https://lists.debian.org/debian-snapshot/2020/08/msg00006.html 
+#   https://lists.debian.org/debian-snapshot/2020/08/msg00006.html
 # Apt needs to be 2.1.10 or later
 
-# Get the latest version of Apt from bullseye. This installs a bunch of the 
+# Get the latest version of Apt from bullseye. This installs a bunch of the
 # updated dependencies for apt. Note that this apt is coming from snapshot
 # itself, so may be behind the real bullseye.
 as_root apt-get install -y --no-install-recommends -t bullseye \
         apt \
         # end of list
 
-# Check what version of apt we have. 
+# Check what version of apt we have.
 current_apt_ver=$(apt-cache policy apt | grep "Installed" | xargs | cut -d' ' -f2)  # xargs strips out whitespace
 
-# Put the required version and the current version through semantic versioning sort, 
-# and see if the top entry is still pointing at the 'needed' tag. 
+# Put the required version and the current version through semantic versioning sort,
+# and see if the top entry is still pointing at the 'needed' tag.
 # If so, go get a newer apt from Debian.
 # We use 2.1.9, to make this a greater-than operation.
 if printf '2.1.9 needed\n%s have\n' "$current_apt_ver" | sort -rV | head -n 1 | grep -q needed; then

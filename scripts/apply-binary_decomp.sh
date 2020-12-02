@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Copyright 2020, Data61/CSIRO
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
 
 set -exuo pipefail
 
@@ -19,7 +24,7 @@ as_root apt-get install -y --no-install-recommends \
         gperf \
         libgmp-dev \
         # end of list
-    
+
 try_nonroot_first mkdir "$SMTSOLVERS_DIR" || chown_dir_to_user "$SMTSOLVERS_DIR"
 pushd "$SMTSOLVERS_DIR"
     CVC_TAR="cvc4-1.5-3.tar.gz"

@@ -1,4 +1,9 @@
 #!/bin/sh
+#
+# Copyright 2020, Data61/CSIRO
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
 
 set -ef
 
@@ -58,7 +63,7 @@ build_internal_image()
     shift 3  # any params left over are just injected into the docker command
              # presumably as flags
 
-             
+
     build_args_to_pass_to_docker=$(echo "$build_args" | grep "=" | awk '{print "--build-arg", $1}')
     # shellcheck disable=SC2086
     $DOCKER_BUILD $DOCKER_FLAGS \
@@ -179,12 +184,12 @@ show_help()
      -v     Verbose mode
      -s     Software packages to install on top of the base image. Use -s for each package.
      -e     Build arguments (NAME=VALUE) to docker build. Use a -e for each build arg.
-     -p     Pull base image first. Rather than build the base image, 
+     -p     Pull base image first. Rather than build the base image,
             get it from the web first
-    
+
     Sneaky hints:
      - To build 'prebuilt' images, you can run:
-           build.sh -b [riscv|cakeml] 
+           build.sh -b [riscv|cakeml]
        but it will take a while!
      - You can actually run this with '-b sel4-rust', or any other existing image,
        but it will ruin the sorting of the name.

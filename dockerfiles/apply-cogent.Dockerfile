@@ -1,6 +1,12 @@
+#
+# Copyright 2020, Data61/CSIRO
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
+
 ARG BASE_IMG=trustworthysystems/camkes
 # hadolint ignore=DL3006
-FROM $BASE_IMG 
+FROM $BASE_IMG
 
 LABEL ORGANISATION="Trustworthy Systems"
 LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"

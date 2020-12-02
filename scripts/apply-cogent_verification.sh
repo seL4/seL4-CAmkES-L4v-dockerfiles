@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Copyright 2020, Data61/CSIRO
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
 
 set -exuo pipefail
 
@@ -26,7 +31,7 @@ as_root apt-get update -q
 
 as_root pip3 install --no-cache-dir \
     ruamel.yaml \
-    termcolor 
+    termcolor
     # end of list
 
 export PATH="$PATH:/opt/ghc/bin:/opt/cabal/bin"

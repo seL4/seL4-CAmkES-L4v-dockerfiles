@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Copyright 2020, Data61/CSIRO
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
 
 set -exuo pipefail
 
@@ -8,7 +13,7 @@ test -d "$DIR" || DIR=$PWD
 # shellcheck source=utils/common.sh
 . "$DIR/utils/common.sh"
 
-# tmp space for building 
+# tmp space for building
 : "${TEMP_DIR:=/tmp}"
 : "${CARGO_HOME:=/etc/cargo}"
 

@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Copyright 2020, Data61/CSIRO
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
 
 set -exuo pipefail
 
@@ -17,7 +22,7 @@ test -d "$DIR" || DIR=$PWD
 # Docker may set this variable - fill if not set
 : "${SCM:=https://github.com}"
 
-# tmp space for building 
+# tmp space for building
 : "${TEMP_DIR:=/tmp}"
 
 : "${GCC_V8_AS_DEFAULT:=yes}"
@@ -91,7 +96,7 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
         compiler_version=6
     fi
     # Set default compiler to be gcc-8 using update-alternatives
-    # This is necessary particularly for the cross-compilers, whom sometimes don't put 
+    # This is necessary particularly for the cross-compilers, whom sometimes don't put
     # a genericly named version of themselves in the PATH.
     for compiler in gcc \
                     g++ \
@@ -156,15 +161,15 @@ as_root pip3 install --no-cache-dir \
 if [ "$MAKE_CACHES" = "yes" ] ; then
     # Build seL4test for a few platforms to populate binary artifact caches.
     # This should improve build times by caching libraries that rarely change.
-    mkdir -p ~/.sel4_cache 
+    mkdir -p ~/.sel4_cache
     try_nonroot_first mkdir -p "$TEMP_DIR/sel4test" || chown_dir_to_user "$TEMP_DIR/sel4test"
     pushd "$TEMP_DIR/sel4test"
         repo init -u "${SCM}/seL4/sel4test-manifest.git" --depth=1
         repo sync -j 4
         mkdir build
         pushd build
-            for plat in "sabre" "ia32" "x86_64" "tx1" "tk1 -DARM_HYP=ON"; do 
-                # shellcheck disable=SC2086  # no "" around plat, so HYP still works 
+            for plat in "sabre" "ia32" "x86_64" "tx1" "tk1 -DARM_HYP=ON"; do
+                # shellcheck disable=SC2086  # no "" around plat, so HYP still works
                 ../init-build.sh -DPLATFORM=$plat
                 ninja
                 rm -rf ./*

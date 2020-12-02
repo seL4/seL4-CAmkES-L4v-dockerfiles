@@ -1,3 +1,9 @@
+#
+# Copyright 2020, Data61/CSIRO
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
+
 ARG EXTRAS_IMG=extras
 # hadolint ignore=DL3006
 FROM $EXTRAS_IMG
@@ -11,7 +17,7 @@ ARG GROUP
 # Crammed a lot in here to make building the image faster
 # Notes:
 #  - We add the ARG group to the docker image, but if it already exists
-#    we need to change the gID to match the host, which is done via the 
+#    we need to change the gID to match the host, which is done via the
 #    groupmod command
 # hadolint ignore=SC2016
 RUN groupadd -fg "${GID}" "${GROUP}" \
@@ -46,7 +52,7 @@ RUN groupadd -fg "${GID}" "${GROUP}" \
     && chown -R "${UNAME}":"${GROUP}" /isabelle \
     && ln -s /isabelle "/home/${UNAME}/.isabelle" \
     && chown -R "${UNAME}":"${GROUP}" "/home/${UNAME}" \
-    && chmod -R ug+rw "/home/${UNAME}" 
+    && chmod -R ug+rw "/home/${UNAME}"
 
 VOLUME /home/${UNAME}
 VOLUME /isabelle

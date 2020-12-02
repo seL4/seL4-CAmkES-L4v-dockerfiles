@@ -1,3 +1,8 @@
+#
+# Copyright 2020, Data61/CSIRO
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
 # Look for 'source'd files relative to the checked script,
 # and also look for absolute paths in /mnt/chroot
 source-path=SCRIPTDIR

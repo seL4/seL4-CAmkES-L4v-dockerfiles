@@ -1,3 +1,9 @@
+#
+# Copyright 2020, Data61/CSIRO
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
+
 ARG BASE_IMG=debian:buster
 # hadolint ignore=DL3006
 FROM $BASE_IMG

@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Copyright 2020, Data61/CSIRO
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
 
 # Check if any Trustworthy Systems docker images, tagged as 'latest', are getting a bit old
 # If so, print a short message
