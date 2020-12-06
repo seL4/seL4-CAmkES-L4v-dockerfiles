@@ -83,6 +83,7 @@ as_root apt-get install -y --no-install-recommends \
 # Get python deps for CAmkES
 as_root pip3 install --no-cache-dir \
     camkes-deps \
+    nose \
     # end of list
 
 # Get stack
