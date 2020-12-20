@@ -23,9 +23,8 @@ set -exuo pipefail
 groupadd -fg "${GID}" "${GROUP}" || true
 groupmod -g "${GID}" "${GROUP}" || true
 
-group_info=$(getent group "$GROUP")
-group_info=(${group_info//:/ })
-
+# Split the group info into an array
+IFS=":" read -r -a group_info <<< "$(getent group "$GROUP")"
 fgroup="${group_info[0]}"
 fgid="${group_info[2]}"
 
@@ -85,6 +84,7 @@ EOF
 mkdir "/home/${UNAME}"
 
 # Put in some branding
+# shellcheck disable=SC2129
 cat << EOF >> "/home/${UNAME}/.bashrc"
 echo '___                                   '
 echo ' |   _      _ |_      _   _ |_ |_     '

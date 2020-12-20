@@ -79,7 +79,8 @@ if [ "$MAKE_CACHES" = "yes" ] ; then
     popd
 
     # We need to fetch some additional components, so that both Isabelle2019 and 2020 have cached dependencies.
-    ISABELLE_COMPONENT_REPOSITORY=$(set +u; source $ISABELLE_SETTINGS_LOCATION; echo "$ISABELLE_COMPONENT_REPOSITORY")
+    # shellcheck disable=SC1090
+    ISABELLE_COMPONENT_REPOSITORY=$(set +u; source "$ISABELLE_SETTINGS_LOCATION"; echo "$ISABELLE_COMPONENT_REPOSITORY")
     pushd ~/.isabelle/contrib
         for package in "csdp-6.x" \
                        "e-2.0-2" \
