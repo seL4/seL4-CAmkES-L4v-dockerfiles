@@ -131,15 +131,19 @@ user_sel4: build_user_sel4 user_run
 user_sel4-riscv: build_user_sel4-riscv user_run
 
 .PHONY: user_camkes
+user_camkes: EXTRA_DOCKER_RUN_ARGS +=  --group-add stack
 user_camkes: build_user_camkes user_run
 
 .PHONY: user_camkes-riscv
+user_camkes-riscv: EXTRA_DOCKER_RUN_ARGS +=  --group-add stack
 user_camkes-riscv: build_user_camkes-riscv user_run
 
 .PHONY: user_l4v
+user_l4v: EXTRA_DOCKER_RUN_ARGS +=  --group-add stack
 user_l4v: build_user_l4v user_run_l4v
 
 .PHONY: user_l4v-riscv
+user_l4v-riscv: EXTRA_DOCKER_RUN_ARGS +=  --group-add stack
 user_l4v-riscv: build_user_l4v-riscv user_run_l4v
 
 .PHONY: user_run
@@ -149,7 +153,6 @@ user_run:
 		--hostname in-container \
 		--rm \
 		$(EXTRA_DOCKER_RUN_ARGS) \
-		--group-add stack \
 		--group-add sudo \
 		-v $(HOST_DIR):/host:z \
 		-v $(DOCKER_VOLUME_HOME):/home/$(shell whoami) \
@@ -166,7 +169,6 @@ user_run_l4v:
 		-v $(HOST_DIR):/host:z \
 		-v $(DOCKER_VOLUME_HOME):/home/$(shell whoami) \
 		-v $(DOCKER_VOLUME_ISABELLE):/isabelle \
-		--group-add stack \
 		--group-add sudo \
 		-v $(ETC_LOCALTIME):/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
