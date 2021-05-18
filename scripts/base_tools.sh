@@ -118,6 +118,7 @@ as_root apt-get install -y --no-install-recommends \
         make \
         python3-dev \
         python3-pip \
+        ssh \
         # end of list
 
 # Install python dependencies for both python 2 & 3
