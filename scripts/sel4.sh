@@ -42,6 +42,7 @@ as_root apt-get install -y --no-install-recommends \
     cpio \
     curl \
     device-tree-compiler \
+    doxygen \
     g++-6 \
     g++-6-aarch64-linux-gnu \
     g++-6-arm-linux-gnueabi \
