@@ -114,11 +114,14 @@ as_root apt-get install -y --no-install-recommends \
         devscripts \
         expect \
         git \
+        iproute2 \
+        iputils-ping \
         jq \
         make \
         python3-dev \
         python3-pip \
         ssh \
+        traceroute \
         # end of list
 
 # Install python dependencies for both python 2 & 3
