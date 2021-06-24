@@ -13,9 +13,9 @@
 
 It is recommended you add yourself to the docker group, so you can run docker commands without using sudo.
 
-
 ## Quick start
-To get a running build environment for sel4 and camkes, run:
+
+To get a running build environment for seL4 and CAmkES, run:
 
     git clone https://github.com/SEL4PROJ/seL4-CAmkES-L4v-dockerfiles.git
     cd seL4-CAmkES-L4v-dockerfiles
@@ -25,14 +25,14 @@ Or to map a particular directory to the /host dir in the container:
 
     make user HOST_DIR=/scratch/sel4_stuff  # as an example
 
-
 ## What is this?
+
 This repository contains dockerfiles which map out the dependencies for seL4, CAmkES, and L4v. It also contains some infrastructure to allow people to use the containers in a useful way.
 
 These dockerfiles are used as the basis for regression testing in the Trustworthy Systems group, and hence should represent a well tested and up to date environment
 
-
 ## To run
+
 Get the repository of Dockerfiles by cloning them from GitHub:
 
     git clone https://github.com/SEL4PROJ/seL4-CAmkES-L4v-dockerfiles.git
@@ -81,6 +81,7 @@ to start the container interactively in your current directory, or:
 to execute commands in the container in your current directory.
 
 ### Example of compiling seL4 test
+
 Start by creating a new workspace on your machine:
 
     mkdir ~/sel4test
@@ -119,19 +120,18 @@ Compile and simulate seL4 test for x86-64:
 
     All is well in the universe
 
-
 ## Adding dependencies
+
 The images and dockerfiles for seL4/CAmkES/L4v only specify enough dependencies to pass the tests in the \*tests.dockerfile. The `extras.dockerfile` acts as a shim between the DockerHub images and the `user.dockerfile`.
 
 Adding dependencies into the `extras.dockerfile` will build them the next time you run `make user`, and then be cached from then on.
-
 
 ## To build the local dockerfiles
 
 To build the Dockerfiles locally, you will need to use the included `build.sh` script. It has a help menu:
 
     ./build.sh -h
-        build.sh [-r] -b [sel4|camkes|l4v] -s [binary_decomp|cakeml|camkes_vis|cogent|riscv|rust|sysinit|] -s ... -e MAKE_CACHES=no -e ...
+        build.sh [-r] -b [sel4|camkes|l4v] -s [binary_decomp|cakeml|camkes_vis|cogent|rust|sysinit|tex] -s ... -e MAKE_CACHES=no -e ...
 
          -r     Rebuild docker images (don't use the docker cache)
          -v     Verbose mode
@@ -141,8 +141,10 @@ To build the Dockerfiles locally, you will need to use the included `build.sh` s
                 get it from the web first
 
         Sneaky hints:
-         - To build 'prebuilt' images, you can run:
-               build.sh -b [riscv|cakeml]
+         - To build 'prebuilt' images, you can run e.g.:
+
+               build.sh -b cakeml
+
            but it will take a while!
          - You can actually run this with '-b sel4-rust', or any other existing image,
            but it will ruin the sorting of the name.
@@ -151,41 +153,39 @@ To build the Dockerfiles locally, you will need to use the included `build.sh` s
 
 To build the seL4 image, run:
 
-`./build.sh -b sel4`
+    ./build.sh -b sel4
 
 Note that the `-b` flag stands for the `base image`. There are 3 base images: `sel4`, `camkes`, and `l4v`. Each base image includes the previous one, i.e.: the `camkes` image has everything the `sel4` image has, plus the camkes dependencies.
 
 To add additional software to the image, you can use the `-s` flag, to add `software`. For example:
 
-`./build.sh -b sel4 -s riscv  # This adds the RISCV compilers`
+    ./build.sh -b sel4 -s tex  # This adds LaTeX for documentation building
 
-`./build.sh -b sel4 -s riscv -s rust  # This adds the RISCV compilers and a rust compiler`
+    ./build.sh -b sel4 -s tex -s rust  # This adds LaTeX and a rust compiler
 
 You can also pass configuration variables through to docker (in docker terms, these are `BUILD_ARGS`) by using the `-e` flag. For example, you can tell the seL4 image to use GCC version 6 (instead of 8 ) by running:
 
-`./build.sh -b sel4 -e GCC_V8_AS_DEFAULT=no`
+    ./build.sh -b sel4 -e GCC_V8_AS_DEFAULT=no
 
 Or to turn off priming the build caches:
 
-`./build.sh -b sel4 -e MAKE_CACHES=no`
+    ./build.sh -b sel4 -e MAKE_CACHES=no
 
 Or combined:
 
-`./build.sh -b sel4 -e GCC_V8_AS_DEFAULT=no -e MAKE_CACHES=no`
+    ./build.sh -b sel4 -e GCC_V8_AS_DEFAULT=no -e MAKE_CACHES=no
 
 To speed things up, you can ask to pull the base image from DockerHub first with the `-p` flag:
 
-`./build.sh -p -b sel4 -s riscv  # This adds the RISCV compilers`
-
-
+    ./build.sh -p -b sel4 -s tex  # This adds LaTeX
 
 ## Security
+
 Running Docker on your machine has its own security risks which you should be aware of. Be sure to read the Docker documentation.
 
 Of particular note in this case, your UID and GID are being baked into an image. Any other user on the host who is part of the docker group could spawn a separate container of this image, and hence have read and write access to your files. Of course, if they are part of the docker group, they could do this anyway, but it just makes it a bit easier.
 
 Use at your own risk.
-
 
 ## Released images on DockerHub
 
