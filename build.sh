@@ -28,7 +28,6 @@ set -ef
 : "${DOCKERFILE_DIR:=dockerfiles}"
 
 # For images that are prebuilt
-: "${PREBUILT_RISCV_IMG:=prebuilt_riscv_compilers}"
 : "${PREBUILT_CAKEML_IMG:=prebuilt_cakeml}"
 : "${PREBUILT_SYSINIT_IMG:=prebuilt_sysinit}"
 
@@ -46,9 +45,7 @@ DOCKER_FLAGS="--force-rm=true"
 # time to build, and don't change very much, we should build them
 # once, and then pull them in as needed.
 # TODO: make this work better..
-: "${USE_PREBUILT_RISCV:=yes}"
-: "${RISCV_BASE_DATE:=2018_06_04}"
-: "${USE_CAKEML_RISCV:=yes}"
+: "${USE_CAKEML:=yes}"
 : "${CAKEML_BASE_DATE:=2019_01_13}"
 
 
@@ -147,12 +144,6 @@ EOF
     sleep 10
 }
 
-build_riscv()
-{
-    prebuild_warning >&2
-    build_image "$SEL4_IMG$IMG_POSTFIX" riscv.Dockerfile "$PREBUILT_RISCV_IMG"
-}
-
 build_cakeml()
 {
     prebuild_warning >&2
@@ -189,7 +180,7 @@ show_help()
 
     Sneaky hints:
      - To build 'prebuilt' images, you can run:
-           build.sh -b [riscv|cakeml]
+           build.sh -b cakeml
        but it will take a while!
      - You can actually run this with '-b sel4-rust', or any other existing image,
        but it will ruin the sorting of the name.

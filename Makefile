@@ -20,10 +20,8 @@ L4V_IMG ?= l4v
 # Extra feature images
 RUST_IMG ?= sel4-rust
 CAMKES_VIS_IMG ?= camkes-vis
-SEL4_RISCV_IMG ?= sel4-riscv
-CAMKES_RISCV_IMG ?= camkes-riscv
-L4V_RISCV_IMG ?= l4v-riscv
-PREBUILT_RISCV_IMG ?= prebuilt_riscv_compilers
+SEL4_TEX_IMG ?= sel4-tex
+CAMKES_TEX_IMG ?= camkes-tex
 PREBUILT_CAKEML_IMG ?= prebuilt_cakeml
 BINARY_DECOMP_IMG ?= binary_decomp
 
@@ -79,9 +77,7 @@ EXTRA_DOCKER_RUN_ARGS   := $(EXTRA_DOCKER_IS_NOT_PODMAN_RUN_ARGS) \
 # For 'prebuilt' images, the idea is that for things that take a long
 # time to build, and don't change very much, we should build them
 # once, and then pull them in as needed.
-USE_PREBUILT_RISCV ?= yes
-RISCV_BASE_DATE ?= 2018_06_04
-USE_CAKEML_RISCV ?= yes
+USE_CAKEML ?= yes
 CAKEML_BASE_DATE ?= 2019_01_13
 
 
@@ -93,25 +89,21 @@ CAKEML_BASE_DATE ?= 2019_01_13
 pull_sel4_image:
 	$(DOCKER) pull $(DOCKERHUB)$(SEL4_IMG)
 
-.PHONY: pull_sel4-riscv_image
-pull_sel4-riscv_image:
-	$(DOCKER) pull $(DOCKERHUB)$(SEL4_RISCV_IMG)
+.PHONY: pull_sel4-tex_image
+pull_sel4-tex_image:
+	$(DOCKER) pull $(DOCKERHUB)$(SEL4_TEX_IMG)
 
 .PHONY: pull_camkes_image
 pull_camkes_image:
 	$(DOCKER) pull $(DOCKERHUB)$(CAMKES_IMG)
 
-.PHONY: pull_camkes-riscv_image
-pull_camkes_image-riscv:
-	$(DOCKER) pull $(DOCKERHUB)$(CAMKES_RISCV_IMG)
+.PHONY: pull_camkes-tex_image
+pull_camkes_image-tex:
+	$(DOCKER) pull $(DOCKERHUB)$(CAMKES_TEX_IMG)
 
 .PHONY: pull_l4v_image
 pull_l4v_image:
 	$(DOCKER) pull $(DOCKERHUB)$(L4V_IMG)
-
-.PHONY: pull_l4v-riscv_image
-pull_l4v_image-riscv:
-	$(DOCKER) pull $(DOCKERHUB)$(L4V_RISCV_IMG)
 
 .PHONY: pull_images_from_dockerhub
 pull_images_from_dockerhub: pull_sel4_image pull_camkes_image pull_l4v_image
@@ -127,24 +119,20 @@ user: user_camkes  # use CAmkES as the default
 .PHONY: user_sel4
 user_sel4: build_user_sel4 user_run
 
-.PHONY: user_sel4-riscv
-user_sel4-riscv: build_user_sel4-riscv user_run
+.PHONY: user_sel4-tex
+user_sel4-tex: build_user_sel4-tex user_run
 
 .PHONY: user_camkes
 user_camkes: EXTRA_DOCKER_RUN_ARGS +=  --group-add stack
 user_camkes: build_user_camkes user_run
 
-.PHONY: user_camkes-riscv
-user_camkes-riscv: EXTRA_DOCKER_RUN_ARGS +=  --group-add stack
-user_camkes-riscv: build_user_camkes-riscv user_run
+.PHONY: user_camkes-tex
+user_camkes-tex: EXTRA_DOCKER_RUN_ARGS +=  --group-add stack
+user_camkes-tex: build_user_camkes-tex user_run
 
 .PHONY: user_l4v
 user_l4v: EXTRA_DOCKER_RUN_ARGS +=  --group-add stack
 user_l4v: build_user_l4v user_run_l4v
-
-.PHONY: user_l4v-riscv
-user_l4v-riscv: EXTRA_DOCKER_RUN_ARGS +=  --group-add stack
-user_l4v-riscv: build_user_l4v-riscv user_run_l4v
 
 .PHONY: user_run
 user_run:
@@ -206,16 +194,14 @@ build_user: run_checks
 		-t $(USER_IMG) .
 build_user_sel4: USER_BASE_IMG = $(SEL4_IMG)
 build_user_sel4: build_user
-build_user_sel4-riscv: USER_BASE_IMG = $(SEL4_RISCV_IMG)
-build_user_sel4-riscv: build_user
+build_user_sel4-tex: USER_BASE_IMG = $(SEL4_TEX_IMG)
+build_user_sel4-tex: build_user
 build_user_camkes: USER_BASE_IMG = $(CAMKES_IMG)
 build_user_camkes: build_user
-build_user_camkes-riscv: USER_BASE_IMG = $(CAMKES_RISCV_IMG)
-build_user_camkes-riscv: build_user
+build_user_camkes-tex: USER_BASE_IMG = $(CAMKES_TEX_IMG)
+build_user_camkes-tex: build_user
 build_user_l4v: USER_BASE_IMG = $(L4V_IMG)
 build_user_l4v: build_user
-build_user_l4v-riscv: USER_BASE_IMG = $(L4V_RISCV_IMG)
-build_user_l4v-riscv: build_user
 
 .PHONY: clean_isabelle
 clean_isabelle:
@@ -235,9 +221,8 @@ clean_images:
 	-$(DOCKER) rmi $(DOCKERHUB)$(L4V_IMG)
 	-$(DOCKER) rmi $(DOCKERHUB)$(CAMKES_IMG)
 	-$(DOCKER) rmi $(DOCKERHUB)$(SEL4_IMG)
-	-$(DOCKER) rmi $(DOCKERHUB)$(SEL4_RISCV_IMG)
-	-$(DOCKER) rmi $(DOCKERHUB)$(CAMKES_RISCV_IMG)
-	-$(DOCKER) rmi $(DOCKERHUB)$(L4V_RISCV_IMG)
+	-$(DOCKER) rmi $(DOCKERHUB)$(SEL4_TEX_IMG)
+	-$(DOCKER) rmi $(DOCKERHUB)$(CAMKES_TEX_IMG)
 
 .PHONY: clean
 clean: clean_data clean_images

@@ -4,20 +4,10 @@
 # SPDX-License-Identifier: BSD-2-Clause
 #
 
-ARG BASE_BUILDER_IMG=trustworthysystems/prebuilt_riscv_compilers
-ARG BASE_IMG=trustworthysystems/sel4
+# The RISC-V toolchain is now part of the seL4 base image.
+# We still provide the -riscv combination for backwards compatibility with existing CI.
 
-# hadolint ignore=DL3006
-FROM $BASE_BUILDER_IMG as builder
-# Load the prebuilt compilers as a throwaway container (named 'builder')
-
-# hadolint ignore=DL3006
-FROM $BASE_IMG
+FROM trustworthysystems/sel4
 
 LABEL ORGANISATION="Trustworthy Systems"
-LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
-
-COPY --from=builder /opt/riscv /opt/riscv
-
-ENV RISCV /opt/riscv
-ENV PATH "$PATH:$RISCV/bin"
+LABEL MAINTAINER="Gerwin Klein <gerwin.klein@proofcraft.systems>"

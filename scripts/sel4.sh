@@ -86,6 +86,7 @@ as_root apt-get install -y --no-install-recommends -t bullseye \
     gcc-8-arm-linux-gnueabihf \
     gcc-8-base \
     gcc-8-multilib \
+    gcc-riscv64-unknown-elf \
     libclang-8-dev \
     qemu-system-arm \
     # end of list
