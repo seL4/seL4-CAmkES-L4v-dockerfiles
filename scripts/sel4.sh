@@ -63,6 +63,7 @@ as_root apt-get install -y --no-install-recommends \
     ninja-build \
     protobuf-compiler \
     python-protobuf \
+    python3-protobuf \
     qemu-system-x86 \
     sloccount \
     u-boot-tools \
