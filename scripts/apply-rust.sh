@@ -27,15 +27,12 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > "$TEMP_DIR/rustup.sh
 
 try_nonroot_first mkdir -p "$CARGO_HOME" || chown_dir_to_user "$CARGO_HOME"
 
-sh "$TEMP_DIR/rustup.sh" -y --default-toolchain nightly
+sh "$TEMP_DIR/rustup.sh" -y
 rm "$TEMP_DIR/rustup.sh"
 
 # Update the current shell
 # shellcheck disable=SC1090
 source "$CARGO_HOME"/env
-
-# Install rumprun target
-rustup target add x86_64-rumprun-netbsd
 
 # Make sure that all the files are accessible to other users:
 try_nonroot_first chmod -R o+rx "$CARGO_HOME"
