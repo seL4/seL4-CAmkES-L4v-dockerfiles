@@ -37,7 +37,6 @@ DOCKER_BUILD="docker build"
 DOCKER_FLAGS="--force-rm=true"
 
 # Special variables to be passed through Docker to the build scripts
-: "${INTERNAL:=no}"
 : "${SCM}"
 
 
@@ -68,7 +67,6 @@ build_internal_image()
     # shellcheck disable=SC2086
     $DOCKER_BUILD $DOCKER_FLAGS \
         --build-arg BASE_IMG="$base_img" \
-        --build-arg INTERNAL="$INTERNAL" \
         --build-arg SCM="$SCM" \
         $build_args_to_pass_to_docker \
         -f "$DOCKERFILE_DIR/$dfile_name" \
@@ -100,7 +98,6 @@ apply_software_to_image()
     $DOCKER_BUILD $DOCKER_FLAGS \
 		--build-arg BASE_BUILDER_IMG="$DOCKERHUB$prebuilt_img" \
 		--build-arg BASE_IMG="$DOCKERHUB$orig_img" \
-        --build-arg INTERNAL="$INTERNAL" \
         --build-arg SCM="$SCM" \
 		-f "$DOCKERFILE_DIR/$builder_dfile" \
 		-t "$DOCKERHUB$new_img" \
