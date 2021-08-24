@@ -15,7 +15,6 @@ LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 ARG SCM
 ARG DESKTOP_MACHINE=no
 ARG USE_DEBIAN_SNAPSHOT=yes
-ARG INTERNAL=no
 ARG MAKE_CACHES=yes
 
 # Use GCC v8 as default? If no, GCC v6 is used

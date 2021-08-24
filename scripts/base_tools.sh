@@ -16,9 +16,6 @@ test -d "$DIR" || DIR=$PWD
 # General usage scripts location
 : "${SCRIPTS_DIR:=$HOME/bin}"
 
-# Are we building inside Trustworthy Systems?
-: "${INTERNAL:=no}"
-
 # Repo location
 : "${REPO_DIR:=$HOME/bin}"
 
@@ -150,13 +147,3 @@ wget -O - https://storage.googleapis.com/git-repo-downloads/repo > "$REPO_DIR/re
 chmod a+x "$REPO_DIR/repo"
 echo "export PATH=\$PATH:$REPO_DIR" >> "$HOME/.bashrc"
 export PATH=$PATH:$REPO_DIR  # make repo available ASAP
-
-# If this is being built inside Trustworthy Systems, get some scripts used to control simulations
-if [ "$INTERNAL" = "yes" ]; then
-    pushd "$SCRIPTS_DIR"
-        git clone --depth=1 http://bitbucket.ts.data61.csiro.au/scm/sel4proj/console_reboot.git
-        chmod +x console_reboot/simulate/*
-        # Get some useful SEL4 tools
-        git clone --depth=1 "${SCM}/sel4/sel4_libs.git"
-    popd
-fi

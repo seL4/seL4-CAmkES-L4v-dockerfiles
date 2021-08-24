@@ -16,7 +16,6 @@ LABEL MAINTAINER="Gerwin Klein <gerwin.klein@proofcraft.systems>"
 ARG SCM
 ARG DESKTOP_MACHINE=no
 ARG USE_DEBIAN_SNAPSHOT=yes
-ARG INTERNAL=no
 ARG MAKE_CACHES=yes
 
 ARG SCRIPT=apply-tex.sh

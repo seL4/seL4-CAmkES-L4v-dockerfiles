@@ -45,7 +45,6 @@ DOCKER_VOLUME_ISABELLE ?= $(shell whoami)-isabelle
 # Extra vars
 DOCKER_BUILD ?= $(DOCKER) build
 DOCKER_FLAGS ?= --force-rm=true
-INTERNAL ?= no
 ifndef EXEC
 	EXEC := bash
 	DOCKER_RUN_FLAGS += -it
