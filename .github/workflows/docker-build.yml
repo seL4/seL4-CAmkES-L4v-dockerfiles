@@ -1,0 +1,28 @@
+# Copyright 2021, Proofcraft Pt Ltd
+#
+# SPDX-License-Identifier: BSD-2-Clause
+
+# Build standard set of docker containers
+
+name: Build
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Docker
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set SNAPSHOT_DATE
+      run:
+        export SNAPSHOT_DATE=$(basename $(curl -Ls -o /dev/null -w %{url_effective} http://snapshot.debian.org/archive/debian/$(date -u +%Y%m%dT%H%I00Z)/) )
+        echo "SNAPSHOT_DATE=${SNAPSHOT_DATE}" >> $GITHUB_ENV
+    - run: ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b sel4
+    # the following will also build the plain camkes image:
+    - run: ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b camkes -s cakeml -s cogent -s rust
+    - run: ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b l4v
