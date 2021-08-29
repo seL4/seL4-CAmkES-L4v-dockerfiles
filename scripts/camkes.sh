@@ -43,10 +43,7 @@ as_root apt-get install -y --no-install-recommends \
     linux-libc-dev:i386 \
     pkg-config \
     spin \
-    # end of list
-
-as_root apt-get install -y --no-install-recommends -t bullseye \
-    lib32stdc++-8-dev \
+    lib32stdc++-10-dev \
     # end of list
 
 # Required for testing

@@ -25,15 +25,13 @@ test -d "$DIR" || DIR=$PWD
 # tmp space for building
 : "${TEMP_DIR:=/tmp}"
 
-: "${GCC_V8_AS_DEFAULT:=yes}"
-
 # Add additional architectures for cross-compiled libraries.
 # Install the tools required to compile seL4.
 as_root apt-get update -q
 as_root dpkg --add-architecture armhf
 as_root dpkg --add-architecture armel
 as_root apt-get install -y --no-install-recommends \
-    astyle=3.1-2 \
+    astyle=3.1-2+b1 \
     build-essential \
     ccache \
     cmake \
@@ -43,17 +41,6 @@ as_root apt-get install -y --no-install-recommends \
     curl \
     device-tree-compiler \
     doxygen \
-    g++-6 \
-    g++-6-aarch64-linux-gnu \
-    g++-6-arm-linux-gnueabi \
-    g++-6-arm-linux-gnueabihf \
-    gcc-6 \
-    gcc-6-aarch64-linux-gnu \
-    gcc-6-arm-linux-gnueabi \
-    gcc-6-arm-linux-gnueabihf \
-    gcc-6-base \
-    gcc-6-multilib \
-    gcc-arm-none-eabi \
     libarchive-dev \
     libcc1-0 \
     libncurses-dev \
@@ -62,43 +49,32 @@ as_root apt-get install -y --no-install-recommends \
     locales \
     ninja-build \
     protobuf-compiler \
-    python-protobuf \
     python3-protobuf \
     qemu-system-x86 \
     sloccount \
     u-boot-tools \
-    # end of list
-
-# This section gets various dependencies from Debian Testing
-# (a.k.a., Bullseye). It would be preferable to keep this section
-# as small as possible, but it will likely grow as Stable ages.
-#  - We need to get clang >7
-#   -- clang >7 needs gcc related dependencies too
-#  - We need to get qemu >4.0
-as_root apt-get install -y --no-install-recommends -t bullseye \
-    clang-8 \
-    g++-8 \
-    g++-8-aarch64-linux-gnu \
-    g++-8-arm-linux-gnueabi \
-    g++-8-arm-linux-gnueabihf \
-    gcc-8 \
-    gcc-8-aarch64-linux-gnu \
-    gcc-8-arm-linux-gnueabi \
-    gcc-8-arm-linux-gnueabihf \
-    gcc-8-base \
-    gcc-8-multilib \
-    libclang-8-dev \
+    clang-11 \
+    g++-10 \
+    g++-10-aarch64-linux-gnu \
+    g++-10-arm-linux-gnueabi \
+    g++-10-arm-linux-gnueabihf \
+    gcc-10 \
+    gcc-10-aarch64-linux-gnu \
+    gcc-10-arm-linux-gnueabi \
+    gcc-10-arm-linux-gnueabihf \
+    gcc-10-base \
+    gcc-10-multilib \
+    gcc-riscv64-unknown-elf \
+    libclang-11-dev \
     qemu-system-arm \
+    qemu-system-misc
     # end of list
 
 if [ "$DESKTOP_MACHINE" = "no" ] ; then
-    if [ "$GCC_V8_AS_DEFAULT" = "yes" ] ; then
-        compiler_version=8
-    else
-        compiler_version=6
-    fi
-    # Set default compiler to be gcc-8 using update-alternatives
-    # This is necessary particularly for the cross-compilers, whom sometimes don't put
+    compiler_version=10
+
+    # Set default compiler to be gcc-$compiler_version using update-alternatives
+    # This is necessary particularly for the cross-compilers, which don't put
     # a genericly named version of themselves in the PATH.
     for compiler in gcc \
                     g++ \
@@ -136,18 +112,17 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
         done
     done
 
-    # Ensure that clang-8 shows up as clang
+    # Ensure that clang-11 shows up as clang
     for compiler in clang \
                     clang++ \
                     # end of list
         do
-            as_root update-alternatives --install /usr/bin/"$compiler" "$compiler" "$(which "$compiler"-8)" 60 && \
+            as_root update-alternatives --install /usr/bin/"$compiler" "$compiler" "$(which "$compiler"-11)" 60 && \
             as_root update-alternatives --auto "$compiler"
     done
     # Do a quick check to make sure it works:
     clang --version
 fi
-
 
 # Get seL4 python3 deps
 # Pylint is for checking included python scripts
