@@ -13,7 +13,7 @@ set -ef
 : "${DOCKERHUB:=trustworthysystems/}"
 
 # Base images
-: "${DEBIAN_IMG:=debian:buster-20200514-slim}"
+: "${DEBIAN_IMG:=debian:bullseye-20210816-slim}"
 : "${BASETOOLS_IMG:=base_tools}"
 
 # Core images
@@ -28,7 +28,6 @@ set -ef
 : "${DOCKERFILE_DIR:=dockerfiles}"
 
 # For images that are prebuilt
-: "${PREBUILT_RISCV_IMG:=prebuilt_riscv_compilers}"
 : "${PREBUILT_CAKEML_IMG:=prebuilt_cakeml}"
 : "${PREBUILT_SYSINIT_IMG:=prebuilt_sysinit}"
 
@@ -45,9 +44,6 @@ DOCKER_FLAGS="--force-rm=true"
 # time to build, and don't change very much, we should build them
 # once, and then pull them in as needed.
 # TODO: make this work better..
-: "${USE_PREBUILT_RISCV:=yes}"
-: "${RISCV_BASE_DATE:=2018_06_04}"
-: "${USE_CAKEML_RISCV:=yes}"
 : "${CAKEML_BASE_DATE:=2019_01_13}"
 
 
@@ -142,12 +138,6 @@ It will be much faster! Waiting for 10 seconds incase you
 change your mind
 EOF
     sleep 10
-}
-
-build_riscv()
-{
-    prebuild_warning >&2
-    build_image "$SEL4_IMG$IMG_POSTFIX" riscv.Dockerfile "$PREBUILT_RISCV_IMG"
 }
 
 build_cakeml()

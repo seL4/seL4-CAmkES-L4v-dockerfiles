@@ -161,17 +161,9 @@ To add additional software to the image, you can use the `-s` flag, to add `soft
 
 `./build.sh -b sel4 -s riscv -s rust  # This adds the RISCV compilers and a rust compiler`
 
-You can also pass configuration variables through to docker (in docker terms, these are `BUILD_ARGS`) by using the `-e` flag. For example, you can tell the seL4 image to use GCC version 6 (instead of 8 ) by running:
-
-`./build.sh -b sel4 -e GCC_V8_AS_DEFAULT=no`
-
-Or to turn off priming the build caches:
+You can also pass configuration variables through to docker (in docker terms, these are `BUILD_ARGS`) by using the `-e` flag. For example, you can turn off priming the build caches:
 
 `./build.sh -b sel4 -e MAKE_CACHES=no`
-
-Or combined:
-
-`./build.sh -b sel4 -e GCC_V8_AS_DEFAULT=no -e MAKE_CACHES=no`
 
 To speed things up, you can ask to pull the base image from DockerHub first with the `-p` flag:
 

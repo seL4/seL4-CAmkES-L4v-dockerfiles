@@ -39,10 +39,8 @@ as_root apt-get install -y --no-install-recommends \
         libxml2-dev \
         openssh-client \
         mercurial \
-        mlton \
         texlive-bibtex-extra \
         texlive-fonts-recommended \
-        texlive-generic-extra \
         texlive-latex-extra \
         texlive-metapost \
         # end of list
@@ -50,10 +48,16 @@ as_root apt-get install -y --no-install-recommends \
 # dependencies for testing
 as_root apt-get install -y --no-install-recommends \
         less \
-        python-psutil \
-        python-lxml \
+        python3-psutil \
+        python3-lxml \
         # end of list
 
+# looks like there is no Debian package for mlton any more
+MLTON=mlton-20210117-1.amd64-linux-glibc2.31
+wget https://github.com/MLton/mlton/releases/download/on-20210117-release/$MLTON.tgz
+tar  -xzC /opt -f $MLTON.tgz
+ln -s /opt/$MLTON opt/mlton
+rm $MLTON.tgz
 
 # Get l4v and setup isabelle
 try_nonroot_first mkdir "$ISABELLE_DIR" || chown_dir_to_user "$ISABELLE_DIR"

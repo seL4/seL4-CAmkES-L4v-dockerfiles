@@ -29,3 +29,5 @@ RUN /bin/bash /tmp/l4v.sh \
     && apt-get clean autoclean \
     && apt-get autoremove --purge --yes \
     && rm -rf /var/lib/apt/lists/*
+
+ENV PATH "${PATH}:/opt/mlton/bin"
