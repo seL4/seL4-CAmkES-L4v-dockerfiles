@@ -43,6 +43,7 @@ as_root apt-get install -y --no-install-recommends \
         texlive-fonts-recommended \
         texlive-latex-extra \
         texlive-metapost \
+        texlive-plain-generic \
         # end of list
 
 # dependencies for testing
