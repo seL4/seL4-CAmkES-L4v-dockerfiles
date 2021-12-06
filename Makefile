@@ -26,6 +26,7 @@ L4V_RISCV_IMG ?= l4v-riscv
 PREBUILT_RISCV_IMG ?= prebuilt_riscv_compilers
 PREBUILT_CAKEML_IMG ?= prebuilt_cakeml
 BINARY_DECOMP_IMG ?= binary_decomp
+SEL4CP_IMG ?= sel4cp
 
 # Test images
 SEL4_TST_IMG ?= sel4_test
@@ -145,6 +146,10 @@ user_l4v: build_user_l4v user_run_l4v
 user_l4v-riscv: EXTRA_DOCKER_RUN_ARGS +=  --group-add stack
 user_l4v-riscv: build_user_l4v-riscv user_run_l4v
 
+.PHONY: user_cp
+user_cp: build_user_cp user_run
+
+
 .PHONY: user_run
 user_run:
 	$(DOCKER) run \
@@ -203,6 +208,30 @@ build_user: run_checks
 		--build-arg=GROUP=$(shell id -gn) \
 		-f dockerfiles/user.Dockerfile \
 		-t $(USER_IMG) .
+
+
+.PHONY: build_user_cp
+build_user_cp: run_checks
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		--build-arg=USER_BASE_IMG=$(DOCKERHUB)$(USER_BASE_IMG) \
+		-f dockerfiles/sel4cp.Dockerfile \
+		-t $(SEL4CP_IMG) \
+		.
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		--build-arg=USER_BASE_IMG=$(SEL4CP_IMG) \
+		-f dockerfiles/extras.Dockerfile \
+		-t $(EXTRAS_IMG) \
+		.
+	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+		--build-arg=EXTRAS_IMG=$(EXTRAS_IMG) \
+		--build-arg=UNAME=$(shell whoami) \
+		--build-arg=UID=$(shell id -u) \
+		--build-arg=GID=$(shell id -g) \
+		--build-arg=GROUP=$(shell id -gn) \
+		-f dockerfiles/user.Dockerfile \
+		-t $(USER_IMG) \
+		.
+
 build_user_sel4: USER_BASE_IMG = $(SEL4_IMG)
 build_user_sel4: build_user
 build_user_sel4-riscv: USER_BASE_IMG = $(SEL4_RISCV_IMG)
