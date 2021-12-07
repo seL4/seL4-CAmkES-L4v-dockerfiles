@@ -79,4 +79,3 @@ RUN echo "export PATH=${MUSL_DIR}/${MUSL_ARCH}/bin:\$PATH\n" >> /root/.bashrc
 #
 
 COPY scripts/utils/cp_prep.sh /tmp/
-
