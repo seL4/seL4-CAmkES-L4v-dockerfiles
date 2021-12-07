@@ -30,4 +30,3 @@ cd ${SDK_DIR}; python3.9 -m venv pyenv; \
         ./pyenv/bin/pip install --upgrade pip setuptools wheel; \
         ./pyenv/bin/pip install sel4-deps; \
         ./pyenv/bin/pip install -r ${CP_DIR}/requirements.txt
-
