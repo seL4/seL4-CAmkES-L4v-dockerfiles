@@ -26,7 +26,7 @@ test -d "$DIR" || DIR=$PWD
 : "${SCM:=https://github.com}"
 
 # Debian Snapshot date
-: "${SNAPSHOT_DATE:=20210816T000000Z}"
+: "${SNAPSHOT_DATE:=20211208T025308Z}"
 
 if [ "$DESKTOP_MACHINE" = "no" ] ; then
 
