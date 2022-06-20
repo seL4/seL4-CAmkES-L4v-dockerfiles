@@ -99,9 +99,6 @@ as_root chmod -R g+rwx "$STACK_ROOT"
 as_root chmod g+s "$STACK_ROOT"
 echo "export STACK_ROOT=\"$STACK_ROOT\"" >> "$HOME/.bashrc"
 
-# CAmkES is hard coded to look for clang in /opt/clang/
-as_root ln -s /usr/lib/llvm-3.8 /opt/clang
-
 if [ "$MAKE_CACHES" = "yes" ] ; then
     # Get a project that relys on stack, and use it to init the capDL-tool cache \
     # then delete the repo, because we don't need it.
