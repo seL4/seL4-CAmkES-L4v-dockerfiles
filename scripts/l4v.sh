@@ -83,29 +83,6 @@ if [ "$MAKE_CACHES" = "yes" ] ; then
         popd
     popd
 
-    # We need to fetch some additional components, so that both Isabelle2019 and 2020 have cached dependencies.
-    # shellcheck disable=SC1090
-    ISABELLE_COMPONENT_REPOSITORY=$(set +u; source "$ISABELLE_SETTINGS_LOCATION"; echo "$ISABELLE_COMPONENT_REPOSITORY")
-    pushd ~/.isabelle/contrib
-        for package in "csdp-6.x" \
-                       "e-2.0-2" \
-                       "isabelle_fonts-20190409" \
-                       "jdk-11.0.3+7" \
-                       "jedit_build-20190508" \
-                       "opam-2.0.3-1" \
-                       "polyml-5.8" \
-                       "postgresql-42.2.5" \
-                       "scala-2.12.7" \
-                       "sqlite-jdbc-3.27.2.1" \
-                       "stack-1.9.3" \
-                       ; do
-            wget "$ISABELLE_COMPONENT_REPOSITORY/$package.tar.gz"
-            tar xvf "$package.tar.gz"
-            # the tar files will be truncated below, so we don't need to delete them.
-        done
-    popd
-
-
     # Now cleanup the stuff we don't want cached
     rm -rf "$TEMP_L4V_LOCATION"
     as_root rm -rf /tmp/isabelle-  # This is a random tmp folder isabelle makes
