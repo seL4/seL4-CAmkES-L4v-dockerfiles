@@ -1,0 +1,53 @@
+# Copyright 2022, Proofcraft Pt Ltd
+#
+# SPDX-License-Identifier: BSD-2-Clause
+
+# Build and deploy standard set of docker containers
+
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  # There is unfortunately no point in parallelising the build of the different
+  # images, because they depend on each other. So sequential is the best we can do.
+  build:
+    name: Docker
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set SNAPSHOT_DATE
+      run:
+        export SNAPSHOT_DATE=$(basename $(curl -Ls -o /dev/null -w %{url_effective} http://snapshot.debian.org/archive/debian/$(date -u +%Y%m%dT%H%I00Z)/) )
+        echo "SNAPSHOT_DATE=${SNAPSHOT_DATE}" >> $GITHUB_ENV
+        echo "DATE=$(date '+%Y_%m_%d')" >> $GITHUB_ENV
+    - name: "Build trustworthysystems/sel4"
+      run: |
+        ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b sel4
+        docker tag trustworthysystems/sel4:latest trustworthysystems/sel4:${DATE}
+    # the following will also build the plain camkes image:
+    - name: "Build trustworthysystems/camkes-cakeml-cogent-rust"
+      run: |
+       ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b camkes -s cakeml -s cogent -s rust
+       docker tag trustworthysystems/camkes:latest trustworthysystems/camkes:${DATE}
+       docker tag trustworthysystems/camkes-cakeml-cogent-rust:latest \
+                  trustworthysystems/camkes-cakeml-cogent-rust:${DATE}
+    - name: "Build trustworthysystems/l4v"
+    - run: |
+        ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b l4v
+        docker tag trustworthysystems/l4v:latest trustworthysystems/l4v:${DATE}
+
+    - name: Authenticate
+        docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_TOKEN}}
+
+    - name: "Push trustworthysystems/sel4"
+      run: docker push trustworthysystems/sel4:${DATE}
+    - name: "Push trustworthysystems/camkes"
+      run: docker push trustworthysystems/camkes:${DATE}
+    - name: "Push trustworthysystems/camkes-cakeml-cogent-rust"
+      run: docker push trustworthysystems/camkes-cakeml-cogent-rust:${DATE}
+    - name: "Push trustworthysystems/l4v"
+      run: docker push trustworthysystems/l4v:${DATE}
