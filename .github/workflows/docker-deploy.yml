@@ -10,6 +10,10 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
+  schedule:
+    # every Thu at 17:03, i.e. once a week at not-quite a full hour
+    - cron: "3 17 * * 4"
 
 jobs:
   # There is unfortunately no point in parallelising the build of the different
