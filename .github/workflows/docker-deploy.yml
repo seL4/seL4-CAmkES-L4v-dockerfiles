@@ -40,7 +40,7 @@ jobs:
        docker tag trustworthysystems/camkes-cakeml-cogent-rust:latest \
                   trustworthysystems/camkes-cakeml-cogent-rust:${DATE}
     - name: "Build trustworthysystems/l4v"
-    - run: |
+      run: |
         ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b l4v
         docker tag trustworthysystems/l4v:latest trustworthysystems/l4v:${DATE}
 
