@@ -25,7 +25,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Set SNAPSHOT_DATE
       run: |
-        export SNAPSHOT_DATE=$(basename $(curl -Ls -o /dev/null -w %{url_effective} http://snapshot.debian.org/archive/debian/$(date -u +%Y%m%dT%H%I00Z)/) )
+        export SNAPSHOT_DATE=$(basename $(curl -Ls -o /dev/null -w %{url_effective} http://snapshot.debian.org/archive/debian/$(date -u +%Y%m%dT%H%M00Z)/) )
         echo "SNAPSHOT_DATE=${SNAPSHOT_DATE}" >> $GITHUB_ENV
         echo "DATE=$(date '+%Y_%m_%d')" >> $GITHUB_ENV
     - name: "Build trustworthysystems/sel4"
