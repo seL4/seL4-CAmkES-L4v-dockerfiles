@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set SNAPSHOT_DATE
-      run:
+      run: |
         export SNAPSHOT_DATE=$(basename $(curl -Ls -o /dev/null -w %{url_effective} http://snapshot.debian.org/archive/debian/$(date -u +%Y%m%dT%H%I00Z)/) )
         echo "SNAPSHOT_DATE=${SNAPSHOT_DATE}" >> $GITHUB_ENV
     - run: ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b sel4
