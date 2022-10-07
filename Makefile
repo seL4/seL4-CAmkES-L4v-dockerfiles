@@ -38,12 +38,16 @@ HOST_DIR ?= $(shell pwd)
 DOCKER_VOLUME_HOME ?= $(shell whoami)-home
 DOCKER_VOLUME_ISABELLE ?= $(shell whoami)-isabelle
 
+# Explicitly set the default platform for the image to x86_64 Linux.
+# This is required for non-x86 hosts.
+DOCKER_IMG_PLATFORM ?= linux/amd64
+
 # Extra vars
 DOCKER_BUILD ?= $(DOCKER) build
-DOCKER_FLAGS ?= --force-rm=true
+DOCKER_FLAGS ?= --force-rm=true --platform $(DOCKER_IMG_PLATFORM)
 ifndef EXEC
 	EXEC := bash
-	DOCKER_RUN_FLAGS += -it
+	DOCKER_RUN_FLAGS += -it --platform $(DOCKER_IMG_PLATFORM)
 endif
 
 ETC_LOCALTIME := $(realpath /etc/localtime)
