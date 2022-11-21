@@ -10,15 +10,22 @@ on: [pull_request]
 
 jobs:
   build:
-    name: Docker
+    name: Docker images
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set SNAPSHOT_DATE
-      run: |
-        export SNAPSHOT_DATE=$(basename $(curl -ILs -o /dev/null -w %{url_effective} http://snapshot.debian.org/archive/debian/$(date -u +%Y%m%dT%H%M00Z)/) )
-        echo "SNAPSHOT_DATE=${SNAPSHOT_DATE}" >> $GITHUB_ENV
-    - run: ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b sel4
+    - uses: actions/checkout@v3
+    - run: ./build.sh -v -b sel4
     # the following will also build the plain camkes image:
-    - run: ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b camkes -s cakeml -s cogent -s rust
-    - run: ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b l4v
+    - run: ./build.sh -v -b camkes -s cakeml -s cogent -s rust
+
+  # This needs to rebuild the seL4 and camkes images (apart from cakeml/cogent/rust),
+  # but putting l4v in the same job as the large camkes-cakeml-cogent-rust image
+  # overflows the disk space of the GitHub runner.
+  build-l4v:
+    name: Docker images (l4v)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - run: ./build.sh -v -b sel4
+    - run: ./build.sh -v -b camkes
+    - run: ./build.sh -v -b l4v
