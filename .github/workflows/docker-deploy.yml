@@ -16,18 +16,32 @@ on:
     - cron: "3 17 * * 4"
 
 jobs:
+  date:
+    runs-on: ubuntu-latest
+    outputs:
+      date: ${{ steps.date.outputs.date }}
+      snapshot_date: ${{ steps.date.outputs.snapshot_date }}
+    steps:
+      - name: Get date
+        id: date
+        run: |
+          export SNAPSHOT_DATE=$(basename $(curl -ILs -o /dev/null -w %{url_effective} http://snapshot.debian.org/archive/debian/$(date -u +%Y%m%dT%H%M00Z)/) )
+          echo "snapshot_date=${SNAPSHOT_DATE}" >> $GITHUB_OUTPUT
+          echo "date=$(date '+%Y_%m_%d')" >> $GITHUB_OUTPUT
+
   # There is unfortunately no point in parallelising the build of the different
   # images, because they depend on each other. So sequential is the best we can do.
+  # We still split of the l4v build, because the GitHub runner otherwise runs out of
+  # disk space.
   build:
     name: Docker
     runs-on: ubuntu-latest
+    needs: date
+    env:
+      DATE: ${{ needs.date.outputs.date }}
+      SNAPSHOT_DATE: ${{ needs.date.outputs.snapshot_date }}
     steps:
-    - uses: actions/checkout@v2
-    - name: Set SNAPSHOT_DATE
-      run: |
-        export SNAPSHOT_DATE=$(basename $(curl -ILs -o /dev/null -w %{url_effective} http://snapshot.debian.org/archive/debian/$(date -u +%Y%m%dT%H%M00Z)/) )
-        echo "SNAPSHOT_DATE=${SNAPSHOT_DATE}" >> $GITHUB_ENV
-        echo "DATE=$(date '+%Y_%m_%d')" >> $GITHUB_ENV
+    - uses: actions/checkout@v3
     - name: "Build trustworthysystems/sel4"
       run: |
         ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b sel4
@@ -39,10 +53,6 @@ jobs:
        docker tag trustworthysystems/camkes:latest trustworthysystems/camkes:${DATE}
        docker tag trustworthysystems/camkes-cakeml-cogent-rust:latest \
                   trustworthysystems/camkes-cakeml-cogent-rust:${DATE}
-    - name: "Build trustworthysystems/l4v"
-      run: |
-        ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b l4v
-        docker tag trustworthysystems/l4v:latest trustworthysystems/l4v:${DATE}
 
     - name: Authenticate
       if: ${{ github.repository_owner == 'seL4' }}
@@ -67,6 +77,27 @@ jobs:
         docker tag trustworthysystems/camkes-cakeml-cogent-rust:${DATE} \
                    trustworthysystems/camkes-cakeml-cogent-rust:latest
         docker push trustworthysystems/camkes-cakeml-cogent-rust:latest
+
+  build-l4v:
+    name: Docker (l4v)
+    runs-on: ubuntu-latest
+    needs: [date, build]
+    env:
+      DATE: ${{ needs.date.outputs.date }}
+      SNAPSHOT_DATE: ${{ needs.date.outputs.snapshot_date }}
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: "Build trustworthysystems/l4v"
+      run: |
+        docker pull trustworthysystems/camkes:${DATE}
+        ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b l4v
+        docker tag trustworthysystems/l4v:latest trustworthysystems/l4v:${DATE}
+
+    - name: Authenticate
+      if: ${{ github.repository_owner == 'seL4' }}
+      run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_TOKEN}}
+
     - name: "Push trustworthysystems/l4v"
       if: ${{ github.repository_owner == 'seL4' }}
       run: |
