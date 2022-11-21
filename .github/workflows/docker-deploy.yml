@@ -45,25 +45,30 @@ jobs:
         docker tag trustworthysystems/l4v:latest trustworthysystems/l4v:${DATE}
 
     - name: Authenticate
+      if: ${{ github.repository_owner == 'seL4' }}
       run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_TOKEN}}
 
     - name: "Push trustworthysystems/sel4"
+      if: ${{ github.repository_owner == 'seL4' }}
       run: |
         docker push trustworthysystems/sel4:${DATE}
         docker tag trustworthysystems/sel4:${DATE} trustworthysystems/sel4:latest
         docker push trustworthysystems/sel4:latest
     - name: "Push trustworthysystems/camkes"
+      if: ${{ github.repository_owner == 'seL4' }}
       run: |
         docker push trustworthysystems/camkes:${DATE}
         docker tag trustworthysystems/camkes:${DATE} trustworthysystems/camkes:latest
         docker push trustworthysystems/camkes:latest
     - name: "Push trustworthysystems/camkes-cakeml-cogent-rust"
+      if: ${{ github.repository_owner == 'seL4' }}
       run: |
         docker push trustworthysystems/camkes-cakeml-cogent-rust:${DATE}
         docker tag trustworthysystems/camkes-cakeml-cogent-rust:${DATE} \
                    trustworthysystems/camkes-cakeml-cogent-rust:latest
         docker push trustworthysystems/camkes-cakeml-cogent-rust:latest
     - name: "Push trustworthysystems/l4v"
+      if: ${{ github.repository_owner == 'seL4' }}
       run: |
         docker push trustworthysystems/l4v:${DATE}
         docker tag trustworthysystems/l4v:${DATE} trustworthysystems/l4v:latest
