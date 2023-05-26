@@ -48,12 +48,12 @@ jobs:
         ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b sel4
         docker tag trustworthysystems/sel4:latest trustworthysystems/sel4:${TAG}
     # the following will also build the plain camkes image:
-    - name: "Build trustworthysystems/camkes-cakeml-cogent-rust"
+    - name: "Build trustworthysystems/camkes-cakeml-rust"
       run: |
-       ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b camkes -s cakeml -s cogent -s rust
+       ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b camkes -s cakeml -s rust
        docker tag trustworthysystems/camkes:latest trustworthysystems/camkes:${TAG}
-       docker tag trustworthysystems/camkes-cakeml-cogent-rust:latest \
-                  trustworthysystems/camkes-cakeml-cogent-rust:${TAG}
+       docker tag trustworthysystems/camkes-cakeml-rust:latest \
+                  trustworthysystems/camkes-cakeml-rust:${TAG}
 
     - name: Authenticate
       if: ${{ github.repository_owner == 'seL4' }}
@@ -71,13 +71,13 @@ jobs:
         docker push trustworthysystems/camkes:${TAG}
         docker tag trustworthysystems/camkes:${TAG} trustworthysystems/camkes:latest
         docker push trustworthysystems/camkes:latest
-    - name: "Push trustworthysystems/camkes-cakeml-cogent-rust"
+    - name: "Push trustworthysystems/camkes-cakeml-rust"
       if: ${{ github.repository_owner == 'seL4' }}
       run: |
-        docker push trustworthysystems/camkes-cakeml-cogent-rust:${TAG}
-        docker tag trustworthysystems/camkes-cakeml-cogent-rust:${TAG} \
-                   trustworthysystems/camkes-cakeml-cogent-rust:latest
-        docker push trustworthysystems/camkes-cakeml-cogent-rust:latest
+        docker push trustworthysystems/camkes-cakeml-rust:${TAG}
+        docker tag trustworthysystems/camkes-cakeml-rust:${TAG} \
+                   trustworthysystems/camkes-cakeml-rust:latest
+        docker push trustworthysystems/camkes-cakeml-rust:latest
 
   build-l4v:
     name: Docker (l4v)

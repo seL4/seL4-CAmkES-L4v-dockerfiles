@@ -16,10 +16,10 @@ jobs:
     - uses: actions/checkout@v3
     - run: ./build.sh -v -b sel4
     # the following will also build the plain camkes image:
-    - run: ./build.sh -v -b camkes -s cakeml -s cogent -s rust
+    - run: ./build.sh -v -b camkes -s cakeml -s rust
 
-  # This needs to rebuild the seL4 and camkes images (apart from cakeml/cogent/rust),
-  # but putting l4v in the same job as the large camkes-cakeml-cogent-rust image
+  # This needs to rebuild the seL4 and camkes images (apart from cakeml/rust),
+  # but putting l4v in the same job as the large camkes-cakeml-rust image
   # overflows the disk space of the GitHub runner.
   build-l4v:
     name: Docker images (l4v)
