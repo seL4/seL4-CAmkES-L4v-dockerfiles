@@ -131,7 +131,7 @@ Adding dependencies into the `extras.dockerfile` will build them the next time y
 To build the Dockerfiles locally, you will need to use the included `build.sh` script. It has a help menu:
 
     ./build.sh -h
-        build.sh [-r] -b [sel4|camkes|l4v] -s [binary_decomp|cakeml|camkes_vis|cogent|riscv|rust|sysinit|] -s ... -e MAKE_CACHES=no -e ...
+        build.sh [-r] -b [sel4|camkes|l4v] -s [binary_decomp|cakeml|camkes_vis|riscv|rust|sysinit|] -s ... -e MAKE_CACHES=no -e ...
 
          -r     Rebuild docker images (don't use the docker cache)
          -v     Verbose mode

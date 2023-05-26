@@ -13,7 +13,6 @@ test -d "$DIR" || DIR=$PWD
 # shellcheck source=utils/common.sh
 . "$DIR/utils/common.sh"
 
-# Where will cogent libraries go
 : "${SMTSOLVERS_DIR:=/usr/local/smtsolvers}"
 
 possibly_toggle_apt_snapshot
