@@ -7,6 +7,7 @@
 ARG BASE_IMG=trustworthysystems/sel4
 # hadolint ignore=DL3006
 FROM $BASE_IMG
+ARG TARGETPLATFORM
 
 LABEL ORGANISATION="Trustworthy Systems"
 LABEL MAINTAINER="Gerwin Klein <gerwin.klein@proofcraft.systems>"

@@ -29,7 +29,7 @@ fgroup="${group_info[0]}"
 fgid="${group_info[2]}"
 
 GROUP_OK=false
-if [ "$fgroup" == "$GROUP" ] && [ "$fgid" == "$GID" ] ; then
+if [ "$fgroup" = "$GROUP" ] && [ "$fgid" = "$GID" ] ; then
     # This means the group creation has gone OK, so make a user
     # with the corresponding group
     GROUP_OK=true
@@ -108,10 +108,13 @@ grep "export" /root/.bashrc >> "/home/${UNAME}/.bashrc"
 # Note that this block does not do parameter expansion, so will be
 # copied verbatim into the user's .bashrc.
 # We use this to ensure they have the repo program in their path,
+# that they pick up any potentially present Haskell installation,
 # and to ensure they start in the /host dir (aka, their own file
 # path)
 cat << 'EOF' >> "/home/${UNAME}/.bashrc"
 export PATH=/scripts/repo:$PATH
+export GHCUP_INSTALL_BASE_PREFIX=/opt/ghcup
+[ -r /opt/ghcup/.ghcup/env ] && source /opt/ghcup/.ghcup/env
 cd /host
 EOF
 
@@ -127,6 +130,9 @@ mkdir -p /isabelle
 chown -R "$chown_setting" /isabelle
 # Isabelle expects a home dir folder.
 ln -s /isabelle "/home/${UNAME}/.isabelle"
+
+# Make Haskell installation writable if it exists
+[ -d /opt/ghcup ] && chown -R "${UNAME}" /opt/ghcup
 
 # Make sure the user owns their home dir
 chown -R "$chown_setting" "/home/${UNAME}"

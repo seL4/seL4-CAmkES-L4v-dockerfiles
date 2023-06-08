@@ -7,6 +7,10 @@
 
 set -exuo pipefail
 
+# make sure PATH etc is set up
+# shellcheck disable=SC1091
+source "$HOME/.bashrc"
+
 # Source common functions
 DIR="${BASH_SOURCE%/*}"
 test -d "$DIR" || DIR=$PWD

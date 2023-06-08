@@ -7,6 +7,7 @@
 ARG BASE_IMG=trustworthysystems/camkes
 # hadolint ignore=DL3006
 FROM $BASE_IMG
+ARG TARGETPLATFORM
 LABEL ORGANISATION="Trustworthy Systems"
 LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 
@@ -29,5 +30,3 @@ RUN /bin/bash /tmp/l4v.sh \
     && apt-get clean autoclean \
     && apt-get autoremove --purge --yes \
     && rm -rf /var/lib/apt/lists/*
-
-ENV PATH "${PATH}:/opt/mlton/bin"

@@ -35,6 +35,7 @@ possibly_toggle_apt_snapshot
 
 # Get dependencies
 as_root dpkg --add-architecture i386
+as_root dpkg --add-architecture arm64
 as_root apt-get update -q
 as_root apt-get install -y --no-install-recommends \
     acl \
@@ -43,7 +44,6 @@ as_root apt-get install -y --no-install-recommends \
     linux-libc-dev:i386 \
     pkg-config \
     spin \
-    lib32stdc++-10-dev \
     # end of list
 
 # Required for testing
@@ -84,8 +84,18 @@ as_root pip3 install --no-cache-dir \
     # end of list
 
 # Get stack
-wget -O - https://get.haskellstack.org/ | sh
-echo "export PATH=\"\$PATH:\$HOME/.local/bin\"" >> "$HOME/.bashrc"
+export GHCUP_INSTALL_BASE_PREFIX=/opt/ghcup
+curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | BOOTSTRAP_HASKELL_NONINTERACTIVE=1 \
+                                                                   BOOTSTRAP_HASKELL_GHC_VERSION=9.2.8 \
+                                                                   BOOTSTRAP_HASKELL_CABAL_VERSION=3.10 \
+                                                                   BOOTSTRAP_HASKELL_INSTALL_STACK=1 sh
+
+# shellcheck disable=SC1091
+source "$GHCUP_INSTALL_BASE_PREFIX/.ghcup/env"
+echo "export GHCUP_INSTALL_BASE_PREFIX=/opt/ghcup" >> "$HOME/.bashrc"
+echo "source $GHCUP_INSTALL_BASE_PREFIX/.ghcup/env" >> "$HOME/.bashrc"
+
+as_root rm -f "$GHCUP_INSTALL_BASE_PREFIX"/.ghcup/cache/*
 
 # Pick a random group ID, one that won't clash with common user GIDs
 as_root groupadd -g "$STACK_GID" stack

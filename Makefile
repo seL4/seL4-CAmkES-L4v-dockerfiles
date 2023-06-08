@@ -48,6 +48,19 @@ endif
 
 ETC_LOCALTIME := $(realpath /etc/localtime)
 
+HOST_ARCH ?= $(shell arch)
+ifeq ($(HOST_ARCH),x86_64)
+    DOCKER_PLATFORM := "linux/amd64"
+# Intel Macs report i386 instead of x86_64
+else ifeq ($(HOST_ARCH),i386)
+    DOCKER_PLATFORM := "linux/amd64"
+else ifeq ($(HOST_ARCH),arm64)
+    DOCKER_PLATFORM := "linux/arm64"
+else
+    @echo "Unsupported host architecture: $HOST_ARCH"
+    @exit 1
+endif
+
 # Extra arguments to pass to `docker run` if it is or is not `podman` - these
 # are constructed in a very verbose way to be obvious about why we want to do
 # certain things under regular `docker` vs` podman`
@@ -136,7 +149,6 @@ user_run:
 		--group-add sudo \
 		-v $(HOST_DIR):/host:z \
 		-v $(DOCKER_VOLUME_HOME):/home/$(shell whoami) \
-		-v $(ETC_LOCALTIME):/etc/localtime:ro \
 		$(USER_IMG) $(EXEC)
 
 .PHONY: user_run_l4v
@@ -171,12 +183,12 @@ endif
 
 .PHONY: build_user
 build_user: run_checks
-	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+	$(DOCKER_BUILD) --platform $(DOCKER_PLATFORM) $(DOCKER_FLAGS) \
 		--build-arg=USER_BASE_IMG=$(DOCKERHUB)$(USER_BASE_IMG) \
 		-f dockerfiles/extras.Dockerfile \
 		-t $(EXTRAS_IMG) \
 		.
-	$(DOCKER_BUILD) $(DOCKER_FLAGS) \
+	$(DOCKER_BUILD) --platform $(DOCKER_PLATFORM) $(DOCKER_FLAGS) \
 		--build-arg=EXTRAS_IMG=$(EXTRAS_IMG) \
 		--build-arg=UNAME=$(shell whoami) \
 		--build-arg=UID=$(shell id -u) \
