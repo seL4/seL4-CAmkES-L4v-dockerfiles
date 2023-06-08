@@ -12,6 +12,7 @@ FROM $BASE_BUILDER_IMG as builder
 
 # hadolint ignore=DL3006
 FROM $BASE_IMG
+ARG TARGETPLATFORM
 
 LABEL ORGANISATION="Trustworthy Systems"
 LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"

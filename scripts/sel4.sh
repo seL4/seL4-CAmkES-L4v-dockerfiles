@@ -25,11 +25,29 @@ test -d "$DIR" || DIR=$PWD
 # tmp space for building
 : "${TEMP_DIR:=/tmp}"
 
+X64_CROSS="g++-10-aarch64-linux-gnu gcc-10-aarch64-linux-gnu gcc-10-multilib"
+ARM64_CROSS="gcc-10-x86-64-linux-gnu:arm64 g++-10-x86-64-linux-gnu:arm64 \
+             gcc-10-i686-linux-gnu:arm64 g++-10-i686-linux-gnu:arm64"
+
+# TARGETPLATFORM is set by docker during the build process
+if [ "$TARGETPLATFORM" = "linux/amd64" ]; then
+    CROSS="$X64_CROSS"
+elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then
+    CROSS="$ARM64_CROSS"
+else
+    echo "Unknown target platform $TARGETPLATFORM"
+    exit 1
+fi
+
 # Add additional architectures for cross-compiled libraries.
 # Install the tools required to compile seL4.
 as_root apt-get update -q
+as_root dpkg --add-architecture amd64
+as_root dpkg --add-architecture i386
 as_root dpkg --add-architecture armhf
 as_root dpkg --add-architecture armel
+as_root dpkg --add-architecture arm64
+# shellcheck disable=SC2086
 as_root apt-get install -y --no-install-recommends \
     astyle=3.1-2+b1 \
     build-essential \
@@ -55,19 +73,17 @@ as_root apt-get install -y --no-install-recommends \
     u-boot-tools \
     clang-11 \
     g++-10 \
-    g++-10-aarch64-linux-gnu \
     g++-10-arm-linux-gnueabi \
     g++-10-arm-linux-gnueabihf \
     gcc-10 \
-    gcc-10-aarch64-linux-gnu \
     gcc-10-arm-linux-gnueabi \
     gcc-10-arm-linux-gnueabihf \
     gcc-10-base \
-    gcc-10-multilib \
     gcc-riscv64-unknown-elf \
     libclang-11-dev \
     qemu-system-arm \
-    qemu-system-misc
+    qemu-system-misc \
+    $CROSS
     # end of list
 
 if [ "$DESKTOP_MACHINE" = "no" ] ; then
@@ -87,7 +103,22 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
             as_root update-alternatives --auto "$name" || :
         done
     done
+    if [ "$TARGETPLATFORM" = "linux/amd64" ]; then
+        MORE_COMP=""
+    elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then
+        MORE_COMP="gcc-${compiler_version}-x86-64-linux-gnu \
+                   cpp-${compiler_version}-x86-64-linux-gnu \
+                   g++-${compiler_version}-x86-64-linux-gnu \
+                   gcc-${compiler_version}-i686-linux-gnu \
+                   cpp-${compiler_version}-i686-linux-gnu \
+                   g++-${compiler_version}-i686-linux-gnu \
+                  "
+    else
+        echo "Unknown target platform $TARGETPLATFORM"
+        exit 1
+    fi
 
+    # shellcheck disable=SC2086
     for compiler in gcc-${compiler_version}-arm-linux-gnueabi \
                     cpp-${compiler_version}-arm-linux-gnueabi \
                     g++-${compiler_version}-arm-linux-gnueabi \
@@ -97,10 +128,11 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
                     gcc-${compiler_version}-arm-linux-gnueabihf \
                     cpp-${compiler_version}-arm-linux-gnueabihf \
                     g++-${compiler_version}-arm-linux-gnueabihf \
+                    $MORE_COMP
                     # end of list
     do
-        echo ${compiler}
-        for file in $(dpkg-query -L ${compiler} | grep /usr/bin/); do
+        echo "${compiler}"
+        for file in $(dpkg-query -L "${compiler}" | grep /usr/bin/); do
             name=$(basename "$file" | sed "s/-${compiler_version}\$//g")
             # shellcheck disable=SC2001
             link=$(echo "$file" | sed "s/-${compiler_version}\$//g")

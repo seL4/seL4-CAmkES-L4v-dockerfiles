@@ -7,6 +7,7 @@
 ARG USER_BASE_IMG=trustworthysystems/sel4
 # hadolint ignore=DL3006
 FROM $USER_BASE_IMG
+ARG TARGETPLATFORM
 
 # This dockerfile is a shim between the images from Dockerhub and the
 # user.dockerfile.

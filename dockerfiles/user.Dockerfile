@@ -7,6 +7,7 @@
 ARG EXTRAS_IMG=extras
 # hadolint ignore=DL3006
 FROM $EXTRAS_IMG
+ARG TARGETPLATFORM
 
 # Get user UID and username
 ARG UID
