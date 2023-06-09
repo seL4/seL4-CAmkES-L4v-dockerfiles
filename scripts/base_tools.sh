@@ -77,14 +77,14 @@ as_root apt-get install -y --no-install-recommends \
         iputils-ping \
         jq \
         make \
-        python \
+        python-is-python3 \
         python3-dev \
         python3-pip \
         ssh \
         traceroute \
         # end of list
 
-# Install python dependencies for both python 2 & 3
+# Install python dependencies
 # Upgrade pip first, then install setuptools (required for other pip packages)
 # Install some basic python tools
 as_root pip3 install --no-cache-dir \
