@@ -42,7 +42,7 @@ jobs:
       TAG: ${{ needs.tag.outputs.tag }}
       SNAPSHOT_DATE: ${{ needs.tag.outputs.snapshot_date }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: "Build trustworthysystems/sel4"
       run: |
         ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b sel4
@@ -87,7 +87,7 @@ jobs:
       TAG: ${{ needs.tag.outputs.tag }}
       SNAPSHOT_DATE: ${{ needs.tag.outputs.snapshot_date }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: "Build trustworthysystems/l4v"
       run: |
