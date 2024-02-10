@@ -8,10 +8,12 @@
 init_components "$USER_HOME/.isabelle/contrib" "$ISABELLE_HOME/Admin/components/main"
 init_components "$USER_HOME/.isabelle/contrib" "$ISABELLE_HOME/Admin/components/bundled"
 
-# 64 bit setup for large C proofs:
-ML_OPTIONS="-H 4096 --maxheap 16384"
-ML_PLATFORM=${OVERRIDE_ML_PLATFORM:-"$ISABELLE_PLATFORM64"}
-ML_HOME="$(dirname ${ML_HOME})/$ML_PLATFORM"
+# Start with a larger heap size
+ML_OPTIONS="-H 2048"
+
+# We no longer need 64 bit platform settings for running the L4v proofs, so we
+# leave ML_HOME etc untouched.
+
 ISABELLE_BUILD_OPTIONS=${OVERRIDE_ISABELLE_BUILD_OPTIONS:-"threads=4"}
 
 # Default to ARM l4v builds
