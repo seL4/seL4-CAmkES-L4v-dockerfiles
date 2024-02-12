@@ -17,28 +17,10 @@ ISABELLE_BUILD_OPTIONS=${OVERRIDE_ISABELLE_BUILD_OPTIONS:-"threads=4"}
 # Default to ARM l4v builds
 L4V_ARCH=${L4V_ARCH:-"ARM"}
 
-# Heap input locations. We have a unique set of heap files for each copy of
-# Isabelle the user has checked out, so that users can have multiple sessions
-# running at the same time without too many problems.
-# Also check if we're running under Bamboo. If so, add the plan key, so the heaps
-# don't conflict. (the ${...+x} is just a way to check if it's set)
-if [ ! -z ${bamboo_planKey+x} ]; then
-	PATH_PREFIX="${bamboo_planKey}-"
-fi
-USER_HEAPS=${OVERRIDE_USER_HEAPS:-"/isabelle/${PATH_PREFIX:-}${L4V_ARCH}"}
+USER_HEAPS=${OVERRIDE_USER_HEAPS:-"/isabelle/${L4V_ARCH}"}
 ISABELLE_OUTPUT=${OVERRIDE_ISABELLE_OUTPUT:-"$USER_HEAPS"}
 ISABELLE_PATH=${OVERRIDE_ISABELLE_PATH:-"$USER_HEAPS"}
 ISABELLE_HEAPS=${ISABELLE_OUTPUT}
 ISABELLE_BROWSER_INFO=${OVERRIDE_ISABELLE_BROWSER_INFO:-"$ISABELLE_HOME_USER/browser_info"}
 
-JEDIT_JAVA_SYSTEM_OPTIONS="$JEDIT_SYSTEM_OPTIONS" # 2016
-
-ISABELLE_BUILD_JAVA_OPTIONS="-Xms2048m -Xmx6096m -Xss4m"
-JEDIT_JAVA_OPTIONS="-Xms128m -Xmx4096m -Xss4m"
-
-ISABELLE_COMPONENT_REPOSITORY="https://isabelle.sketis.net/components"
-
-# SORRY_BITFIELD_PROOFS="1"
-#SKIP_REFINE_PROOFS="1"
 SKIP_DUPLICATED_PROOFS="1"
-
