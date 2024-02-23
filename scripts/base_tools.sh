@@ -69,6 +69,7 @@ as_root apt-get install -y --no-install-recommends \
 
 as_root apt-get install -y --no-install-recommends \
         bc \
+        xxd \
         ca-certificates \
         devscripts \
         expect \
