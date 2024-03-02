@@ -28,8 +28,11 @@ test -d "$DIR" || DIR=$PWD
 # Add additional architectures for cross-compiled libraries.
 # Install the tools required to compile seL4.
 as_root apt-get update -q
+as_root dpkg --add-architecture amd64
+as_root dpkg --add-architecture i386
 as_root dpkg --add-architecture armhf
 as_root dpkg --add-architecture armel
+as_root dpkg --add-architecture arm64
 as_root apt-get install -y --no-install-recommends \
     astyle=3.1-2+b1 \
     build-essential \
@@ -55,16 +58,17 @@ as_root apt-get install -y --no-install-recommends \
     u-boot-tools \
     clang-11 \
     g++-10 \
-    g++-10-aarch64-linux-gnu \
     g++-10-arm-linux-gnueabi \
     g++-10-arm-linux-gnueabihf \
     gcc-10 \
-    gcc-10-aarch64-linux-gnu \
     gcc-10-arm-linux-gnueabi \
     gcc-10-arm-linux-gnueabihf \
     gcc-10-base \
-    gcc-10-multilib \
     gcc-riscv64-unknown-elf \
+    gcc-10-x86-64-linux-gnu:arm64 \
+    g++-10-x86-64-linux-gnu:arm64 \
+    gcc-10-i686-linux-gnu:arm64 \
+    g++-10-i686-linux-gnu:arm64 \
     libclang-11-dev \
     qemu-system-arm \
     qemu-system-misc
@@ -97,6 +101,12 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
                     gcc-${compiler_version}-arm-linux-gnueabihf \
                     cpp-${compiler_version}-arm-linux-gnueabihf \
                     g++-${compiler_version}-arm-linux-gnueabihf \
+                    gcc-${compiler_version}-x86-64-linux-gnu \
+                    cpp-${compiler_version}-x86-64-linux-gnu \
+                    g++-${compiler_version}-x86-64-linux-gnu \
+                    gcc-${compiler_version}-i686-linux-gnu \
+                    cpp-${compiler_version}-i686-linux-gnu \
+                    g++-${compiler_version}-i686-linux-gnu \
                     # end of list
     do
         echo ${compiler}
