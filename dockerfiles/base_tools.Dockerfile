@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: BSD-2-Clause
 #
 
-ARG BASE_IMG=debian:bullseye
+ARG BASE_IMG=debian:bullseye-slim
 # hadolint ignore=DL3006
 FROM $BASE_IMG
 LABEL ORGANISATION="Trustworthy Systems"
