@@ -94,7 +94,7 @@ apply_software_to_image()
     shift 4
 
     # NOTE: it's OK to supply docker build-args that aren't requested in the Dockerfile
-
+    # shellcheck disable=SC2086
     $DOCKER_BUILD $DOCKER_FLAGS \
 		--build-arg BASE_BUILDER_IMG="$DOCKERHUB$prebuilt_img" \
 		--build-arg BASE_IMG="$DOCKERHUB$orig_img" \
