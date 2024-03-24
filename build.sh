@@ -33,6 +33,7 @@ set -ef
 
 # Extra vars
 DOCKER_BUILD="docker build"
+DOCKER_INSPECT="docker inspect"
 DOCKER_FLAGS="--force-rm=true"
 
 # Special variables to be passed through Docker to the build scripts
@@ -69,6 +70,9 @@ build_internal_image()
         -t "$img_name" \
         "$@" \
         .
+
+    echo "Size of $img_name:"
+    $DOCKER_INSPECT -f "{{ .Size }}" "$img_name" | xargs printf "%'d\n"
 }
 
 build_image()
@@ -99,6 +103,9 @@ apply_software_to_image()
 		-t "$DOCKERHUB$new_img" \
         "$@" \
 		.
+
+    echo "Size of $new_img:"
+    $DOCKER_INSPECT -f "{{ .Size }}" "$new_img" | xargs printf "%'d\n"
 }
 ############################################
 
