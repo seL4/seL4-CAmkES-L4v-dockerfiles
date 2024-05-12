@@ -9,9 +9,18 @@ name: Build
 on: [pull_request]
 
 jobs:
-  build:
-    name: Docker images
+  build-amd64:
+    name: Docker images (AMD64)
     runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: ./build.sh -v -b sel4
+    # the following will also build the plain camkes image:
+    - run: ./build.sh -v -b camkes -s cakeml -s rust
+
+  build-arm64:
+    name: Docker images (ARM64)
+    runs-on: [self-hosted, macos, ARM64]
     steps:
     - uses: actions/checkout@v4
     - run: ./build.sh -v -b sel4
