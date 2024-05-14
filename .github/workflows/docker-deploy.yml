@@ -75,7 +75,7 @@ jobs:
       if: ${{ github.repository_owner == 'seL4' }}
       run: |
         docker push trustworthysystems/camkes-cakeml-rust:${TAG}-amd64
-        docker tag trustworthysystems/camkes-cakeml-rust:${TAG} \
+        docker tag trustworthysystems/camkes-cakeml-rust:${TAG}-amd64 \
                    trustworthysystems/camkes-cakeml-rust:latest-amd64
         docker push trustworthysystems/camkes-cakeml-rust:latest-amd64
 
@@ -120,7 +120,7 @@ jobs:
       if: ${{ github.repository_owner == 'seL4' }}
       run: |
         docker push trustworthysystems/camkes-cakeml-rust:${TAG}-arm64
-        docker tag trustworthysystems/camkes-cakeml-rust:${TAG} \
+        docker tag trustworthysystems/camkes-cakeml-rust:${TAG}-arm64 \
                    trustworthysystems/camkes-cakeml-rust:latest-arm64
         docker push trustworthysystems/camkes-cakeml-rust:latest-arm64
 
