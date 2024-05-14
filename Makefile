@@ -149,6 +149,7 @@ user_run:
 		--group-add sudo \
 		-v $(HOST_DIR):/host:z \
 		-v $(DOCKER_VOLUME_HOME):/home/$(shell whoami) \
+		-v $(ETC_LOCALTIME):/etc/localtime:ro \
 		$(USER_IMG) $(EXEC)
 
 .PHONY: user_run_l4v
