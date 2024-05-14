@@ -93,6 +93,9 @@ jobs:
         security unlock-keychain -p ${{secrets.M2_MINI_PWD}}
         echo ${{secrets.DOCKER_TOKEN}} | docker login -u ${{secrets.DOCKER_USER}} --password-stdin
 
+    - name: "Remove old images"
+      run: docker system prune -a -f
+
     - uses: actions/checkout@v4
     - name: "Build trustworthysystems/sel4"
       run: |
