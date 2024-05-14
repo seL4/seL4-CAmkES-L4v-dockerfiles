@@ -34,8 +34,8 @@ jobs:
   # images, because they depend on each other. So sequential is the best we can do.
   # We still split of the l4v build, because the GitHub runner otherwise runs out of
   # disk space.
-  build:
-    name: Docker
+  build-amd64:
+    name: Docker (AMD64)
     runs-on: ubuntu-latest
     needs: tag
     env:
@@ -46,14 +46,14 @@ jobs:
     - name: "Build trustworthysystems/sel4"
       run: |
         ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b sel4
-        docker tag trustworthysystems/sel4:latest trustworthysystems/sel4:${TAG}
+        docker tag trustworthysystems/sel4:latest trustworthysystems/sel4:${TAG}-amd64
     # the following will also build the plain camkes image:
     - name: "Build trustworthysystems/camkes-cakeml-rust"
       run: |
        ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b camkes -s cakeml -s rust
-       docker tag trustworthysystems/camkes:latest trustworthysystems/camkes:${TAG}
+       docker tag trustworthysystems/camkes:latest trustworthysystems/camkes:${TAG}-amd64
        docker tag trustworthysystems/camkes-cakeml-rust:latest \
-                  trustworthysystems/camkes-cakeml-rust:${TAG}
+                  trustworthysystems/camkes-cakeml-rust:${TAG}-amd64
 
     - name: Authenticate
       if: ${{ github.repository_owner == 'seL4' }}
@@ -62,27 +62,72 @@ jobs:
     - name: "Push trustworthysystems/sel4"
       if: ${{ github.repository_owner == 'seL4' }}
       run: |
-        docker push trustworthysystems/sel4:${TAG}
-        docker tag trustworthysystems/sel4:${TAG} trustworthysystems/sel4:latest
-        docker push trustworthysystems/sel4:latest
+        docker push trustworthysystems/sel4:${TAG}-amd64
+        docker tag trustworthysystems/sel4:${TAG}-amd64 trustworthysystems/sel4:latest-amd64
+        docker push trustworthysystems/sel4:latest-amd64
     - name: "Push trustworthysystems/camkes"
       if: ${{ github.repository_owner == 'seL4' }}
       run: |
-        docker push trustworthysystems/camkes:${TAG}
-        docker tag trustworthysystems/camkes:${TAG} trustworthysystems/camkes:latest
-        docker push trustworthysystems/camkes:latest
+        docker push trustworthysystems/camkes:${TAG}-amd64
+        docker tag trustworthysystems/camkes:${TAG}-amd64 trustworthysystems/camkes:latest-amd64
+        docker push trustworthysystems/camkes:latest-amd64
     - name: "Push trustworthysystems/camkes-cakeml-rust"
       if: ${{ github.repository_owner == 'seL4' }}
       run: |
-        docker push trustworthysystems/camkes-cakeml-rust:${TAG}
+        docker push trustworthysystems/camkes-cakeml-rust:${TAG}-amd64
         docker tag trustworthysystems/camkes-cakeml-rust:${TAG} \
-                   trustworthysystems/camkes-cakeml-rust:latest
-        docker push trustworthysystems/camkes-cakeml-rust:latest
+                   trustworthysystems/camkes-cakeml-rust:latest-amd64
+        docker push trustworthysystems/camkes-cakeml-rust:latest-amd64
+
+  build-arm64:
+    name: Docker (ARM64)
+    runs-on: [self-hosted, macos, ARM64]
+    needs: tag
+    env:
+      TAG: ${{ needs.tag.outputs.tag }}
+      SNAPSHOT_DATE: ${{ needs.tag.outputs.snapshot_date }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: "Build trustworthysystems/sel4"
+      run: |
+        ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -vr -b sel4
+        docker tag trustworthysystems/sel4:latest trustworthysystems/sel4:${TAG}-arm64
+    # the following will also build the plain camkes image:
+    - name: "Build trustworthysystems/camkes-cakeml-rust"
+      run: |
+       ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -vr -b camkes -s cakeml -s rust
+       docker tag trustworthysystems/camkes:latest trustworthysystems/camkes:${TAG}-arm64
+       docker tag trustworthysystems/camkes-cakeml-rust:latest \
+                  trustworthysystems/camkes-cakeml-rust:${TAG}-arm64
+
+    - name: Authenticate
+      if: ${{ github.repository_owner == 'seL4' }}
+      run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_TOKEN}}
+
+    - name: "Push trustworthysystems/sel4"
+      if: ${{ github.repository_owner == 'seL4' }}
+      run: |
+        docker push trustworthysystems/sel4:${TAG}-arm64
+        docker tag trustworthysystems/sel4:${TAG}-arm64 trustworthysystems/sel4:latest-arm64
+        docker push trustworthysystems/sel4:latest-arm64
+    - name: "Push trustworthysystems/camkes"
+      if: ${{ github.repository_owner == 'seL4' }}
+      run: |
+        docker push trustworthysystems/camkes:${TAG}-arm64
+        docker tag trustworthysystems/camkes:${TAG}-arm64 trustworthysystems/camkes:latest-arm64
+        docker push trustworthysystems/camkes:latest-arm64
+    - name: "Push trustworthysystems/camkes-cakeml-rust"
+      if: ${{ github.repository_owner == 'seL4' }}
+      run: |
+        docker push trustworthysystems/camkes-cakeml-rust:${TAG}-arm64
+        docker tag trustworthysystems/camkes-cakeml-rust:${TAG} \
+                   trustworthysystems/camkes-cakeml-rust:latest-arm64
+        docker push trustworthysystems/camkes-cakeml-rust:latest-arm64
 
   build-l4v:
-    name: Docker (l4v)
+    name: Docker (l4v, AMD64)
     runs-on: ubuntu-latest
-    needs: [tag, build]
+    needs: [tag, build-amd64]
     env:
       TAG: ${{ needs.tag.outputs.tag }}
       SNAPSHOT_DATE: ${{ needs.tag.outputs.snapshot_date }}
@@ -91,7 +136,8 @@ jobs:
 
     - name: "Build trustworthysystems/l4v"
       run: |
-        docker pull trustworthysystems/camkes:${TAG}
+        docker pull trustworthysystems/camkes:${TAG}-amd64
+        docker tag trustworthysystems/camkes:${TAG}-amd64 trustworthysystems/camkes:latest
         ./build.sh -e SNAPSHOT_DATE=${SNAPSHOT_DATE} -v -b l4v
         docker tag trustworthysystems/l4v:latest trustworthysystems/l4v:${TAG}
 
@@ -105,3 +151,45 @@ jobs:
         docker push trustworthysystems/l4v:${TAG}
         docker tag trustworthysystems/l4v:${TAG} trustworthysystems/l4v:latest
         docker push trustworthysystems/l4v:latest
+
+  multi-arch:
+    name: Multi-arch images
+    runs-on: ubuntu-latest
+    needs: [tag, build-amd64, build-arm64]
+    if: ${{ github.repository_owner == 'seL4' }}
+    env:
+      TAG: ${{ needs.tag.outputs.tag }}
+    steps:
+      - name: Authenticate
+        if: ${{ github.repository_owner == 'seL4' }}
+        run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_TOKEN}}
+
+      - name: "Multi-arch seL4"
+        run: |
+          docker pull trustworthysystems/sel4:${TAG}-arm64
+          docker pull trustworthysystems/sel4:${TAG}-amd64
+
+          docker manifest create trustworthysystems/sel4:${TAG} \
+            --amend trustworthysystems/sel4:${TAG}-arm64 \
+            --amend trustworthysystems/sel4:${TAG}-amd64
+          docker manifest push trustworthysystems/sel4:${TAG}
+
+          docker manifest create trustworthysystems/sel4:latest \
+            --amend trustworthysystems/sel4:${TAG}-arm64 \
+            --amend trustworthysystems/sel4:${TAG}-amd64
+          docker manifest push trustworthysystems/sel4:latest
+
+      - name: "Multi-arch CAmkES"
+        run: |
+          docker pull trustworthysystems/camkes:${TAG}-arm64
+          docker pull trustworthysystems/camkes:${TAG}-amd64
+
+          docker manifest create trustworthysystems/camkes:${TAG} \
+            --amend trustworthysystems/camkes:${TAG}-arm64 \
+            --amend trustworthysystems/camkes:${TAG}-amd64
+          docker manifest push trustworthysystems/camkes:${TAG}
+
+          docker manifest create trustworthysystems/camkes:latest \
+            --amend trustworthysystems/camkes:${TAG}-arm64 \
+            --amend trustworthysystems/camkes:${TAG}-amd64
+          docker manifest push trustworthysystems/camkes:latest
