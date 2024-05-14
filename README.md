@@ -187,3 +187,44 @@ Internally, the seL4 CI system will, once a week, attempt to build the docker im
 -->
 
 [1]: https://hub.docker.com/u/trustworthysystems
+
+## Troubleshooting Docker "no space left on device"
+
+If you are building the docker images in this repository and are seeing error
+messages such as `no space left on device`, especially on MacOS, these are the
+things you can do:
+
+* On MacOS, the default overall disk space allocated to Docker is relatively
+  small and it needs to fit all images, containers, and volumes. The larger
+  CAmkES images are around 14GB in size, and if you have multiple of them the
+  numbers add up quickly. Increasing the size of the overall disk allocation to
+  somewhere in the vicinity of 128GB is usually enough to fix the problem. To do
+  so, in the Docker Desktop app, go to Settings (gear box at the top right in
+  version 4.29, for instance), go to Resources, scroll down to find "Virtual
+  disk limit", and increase to 128GB or more.
+
+* On Linux, Docker does not have a bound on disk space, but you might find
+  overall disk space on the host to be low. You can either free up disk space
+  elsewhere on the host, or try to free up Docker resources.
+
+* Freeing up unused Docker resources (Linux and MacOS). The following steps free
+  up space in increasing order of aggressiveness. If you just want to free all
+  of it, skip to the last step.
+
+      # free up all dangling images and all stopped containers
+      docker system prune
+
+  This is relatively safe in that it won't remove images you might still want to
+  use. You can list current docker images using the command `docker image ls`
+  and remove specific ones with `docker image rm <image>`. To remove all images
+  not attached to a currently running container, you can
+
+      # remove all images
+      docker image prune -a
+
+  The wipe-all option to remove everything that is not currently in use by a
+  running container is:
+
+      # remove everything not currently in use
+      docker system prune -a
+      docker volume prune -a
