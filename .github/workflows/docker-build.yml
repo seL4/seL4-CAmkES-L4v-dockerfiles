@@ -23,9 +23,12 @@ jobs:
     runs-on: [self-hosted, macos, ARM64]
     steps:
     - uses: actions/checkout@v4
-    - run: ./build.sh -v -b sel4
+    # don't use cached images on the self-hosted runner to make sure we are
+    # picking up current Debian repo state. The GitHub runners start from
+    # scratch, so don't need it.
+    - run: ./build.sh -rv -b sel4
     # the following will also build the plain camkes image:
-    - run: ./build.sh -v -b camkes -s cakeml -s rust
+    - run: ./build.sh -rv -b camkes -s cakeml -s rust
 
   # This needs to rebuild the seL4 and camkes images (apart from cakeml/rust),
   # but putting l4v in the same job as the large camkes-cakeml-rust image
