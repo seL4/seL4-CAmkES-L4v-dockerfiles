@@ -168,30 +168,30 @@ jobs:
 
       - name: "Multi-arch seL4"
         run: |
-          docker pull trustworthysystems/sel4:${TAG}-arm64
-          docker pull trustworthysystems/sel4:${TAG}-amd64
+          docker buildx imagetools create -t trustworthysystems/sel4:${TAG} \
+            trustworthysystems/sel4:${TAG}-arm64
+            trustworthysystems/sel4:${TAG}-arm64
 
-          docker manifest create trustworthysystems/sel4:${TAG} \
-            --amend trustworthysystems/sel4:${TAG}-arm64 \
-            --amend trustworthysystems/sel4:${TAG}-amd64
-          docker manifest push trustworthysystems/sel4:${TAG}
-
-          docker manifest create trustworthysystems/sel4:latest \
-            --amend trustworthysystems/sel4:${TAG}-arm64 \
-            --amend trustworthysystems/sel4:${TAG}-amd64
-          docker manifest push trustworthysystems/sel4:latest
+          docker buildx imagetools create -t trustworthysystems/sel4:latest \
+            trustworthysystems/sel4:${TAG}-arm64
+            trustworthysystems/sel4:${TAG}-arm64
 
       - name: "Multi-arch CAmkES"
         run: |
-          docker pull trustworthysystems/camkes:${TAG}-arm64
-          docker pull trustworthysystems/camkes:${TAG}-amd64
+          docker buildx imagetools create -t trustworthysystems/camkes:${TAG} \
+            trustworthysystems/camkes:${TAG}-arm64
+            trustworthysystems/camkes:${TAG}-arm64
 
-          docker manifest create trustworthysystems/camkes:${TAG} \
-            --amend trustworthysystems/camkes:${TAG}-arm64 \
-            --amend trustworthysystems/camkes:${TAG}-amd64
-          docker manifest push trustworthysystems/camkes:${TAG}
+          docker buildx imagetools create -t trustworthysystems/camkes:latest \
+            trustworthysystems/camkes:${TAG}-arm64
+            trustworthysystems/camkes:${TAG}-arm64
 
-          docker manifest create trustworthysystems/camkes:latest \
-            --amend trustworthysystems/camkes:${TAG}-arm64 \
-            --amend trustworthysystems/camkes:${TAG}-amd64
-          docker manifest push trustworthysystems/camkes:latest
+      - name: "Multi-arch CAmkES+CakeML+Rust"
+        run: |
+          docker buildx imagetools create -t trustworthysystems/camkes-cakeml-rust:${TAG} \
+            trustworthysystems/camkes-cakeml-rust:${TAG}-arm64
+            trustworthysystems/camkes-cakeml-rust:${TAG}-arm64
+
+          docker buildx imagetools create -t trustworthysystems/camkes-cakeml-rust:latest \
+            trustworthysystems/camkes-cakeml-rust:${TAG}-arm64
+            trustworthysystems/camkes-cakeml-rust:${TAG}-arm64
