@@ -173,28 +173,28 @@ jobs:
         run: |
           docker buildx imagetools create -t trustworthysystems/sel4:${TAG} \
             trustworthysystems/sel4:${TAG}-arm64
-            trustworthysystems/sel4:${TAG}-arm64
+            trustworthysystems/sel4:${TAG}-amd64
 
           docker buildx imagetools create -t trustworthysystems/sel4:latest \
             trustworthysystems/sel4:${TAG}-arm64
-            trustworthysystems/sel4:${TAG}-arm64
+            trustworthysystems/sel4:${TAG}-amd64
 
       - name: "Multi-arch CAmkES"
         run: |
           docker buildx imagetools create -t trustworthysystems/camkes:${TAG} \
             trustworthysystems/camkes:${TAG}-arm64
-            trustworthysystems/camkes:${TAG}-arm64
+            trustworthysystems/camkes:${TAG}-amd64
 
           docker buildx imagetools create -t trustworthysystems/camkes:latest \
             trustworthysystems/camkes:${TAG}-arm64
-            trustworthysystems/camkes:${TAG}-arm64
+            trustworthysystems/camkes:${TAG}-amd64
 
       - name: "Multi-arch CAmkES+CakeML+Rust"
         run: |
           docker buildx imagetools create -t trustworthysystems/camkes-cakeml-rust:${TAG} \
             trustworthysystems/camkes-cakeml-rust:${TAG}-arm64
-            trustworthysystems/camkes-cakeml-rust:${TAG}-arm64
+            trustworthysystems/camkes-cakeml-rust:${TAG}-amd64
 
           docker buildx imagetools create -t trustworthysystems/camkes-cakeml-rust:latest \
             trustworthysystems/camkes-cakeml-rust:${TAG}-arm64
-            trustworthysystems/camkes-cakeml-rust:${TAG}-arm64
+            trustworthysystems/camkes-cakeml-rust:${TAG}-amd64
