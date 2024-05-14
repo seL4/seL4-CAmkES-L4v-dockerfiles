@@ -22,6 +22,8 @@ jobs:
     name: Docker images (ARM64)
     runs-on: [self-hosted, macos, ARM64]
     steps:
+    - name: "Unlock MacOS Keychain"
+      run: security unlock-keychain -p ${{secrets.M2_MINI_PWD}}
     - uses: actions/checkout@v4
     # don't use cached images on the self-hosted runner to make sure we are
     # picking up current Debian repo state. The GitHub runners start from

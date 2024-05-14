@@ -87,6 +87,12 @@ jobs:
       TAG: ${{ needs.tag.outputs.tag }}
       SNAPSHOT_DATE: ${{ needs.tag.outputs.snapshot_date }}
     steps:
+    - name: Authenticate
+      if: ${{ github.repository_owner == 'seL4' }}
+      run: |
+        security unlock-keychain -p ${{secrets.M2_MINI_PWD}}
+        echo ${{secrets.DOCKER_TOKEN}} | docker login -u ${{secrets.DOCKER_USER}} --password-stdin
+
     - uses: actions/checkout@v4
     - name: "Build trustworthysystems/sel4"
       run: |
@@ -99,10 +105,6 @@ jobs:
        docker tag trustworthysystems/camkes:latest trustworthysystems/camkes:${TAG}-arm64
        docker tag trustworthysystems/camkes-cakeml-rust:latest \
                   trustworthysystems/camkes-cakeml-rust:${TAG}-arm64
-
-    - name: Authenticate
-      if: ${{ github.repository_owner == 'seL4' }}
-      run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_TOKEN}}
 
     - name: "Push trustworthysystems/sel4"
       if: ${{ github.repository_owner == 'seL4' }}
