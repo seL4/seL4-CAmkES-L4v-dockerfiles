@@ -208,3 +208,16 @@ jobs:
           docker buildx imagetools create -t trustworthysystems/camkes-cakeml-rust:latest \
             trustworthysystems/camkes-cakeml-rust:${TAG}-arm64 \
             trustworthysystems/camkes-cakeml-rust:${TAG}-amd64
+
+  dispatch:
+    name: Dispatch
+    runs-on: ubuntu-latest
+    needs: [multi-arch]
+    if: ${{ github.repository_owner == 'seL4' }}
+    steps:
+      - name: Trigger ci-actions deployment
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.PRIV_REPO_TOKEN }}
+          repository: seL4/ci-actions
+          event-type: deps-update
