@@ -13,7 +13,7 @@ set -ef
 : "${DOCKERHUB:=trustworthysystems/}"
 
 # Base images
-: "${DEBIAN_IMG:=debian:bullseye-20210816-slim}"
+: "${DEBIAN_IMG:=debian:bullseye-slim}"
 : "${BASETOOLS_IMG:=base_tools}"
 
 # Core images

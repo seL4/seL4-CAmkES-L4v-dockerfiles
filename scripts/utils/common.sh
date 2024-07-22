@@ -14,7 +14,7 @@ set -exuo pipefail
 : "${DEBIAN_FRONTEND:=noninteractive}"
 export DEBIAN_FRONTEND
 
-: "${USE_DEBIAN_SNAPSHOT:=yes}"
+: "${USE_DEBIAN_SNAPSHOT:=no}"
 export USE_DEBIAN_SNAPSHOT
 
 # Common vars
