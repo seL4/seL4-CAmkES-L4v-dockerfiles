@@ -16,7 +16,7 @@ LABEL MAINTAINER="Gerwin Klein <gerwin.klein@proofcraft.systems>"
 # They can be modified at docker build time via '--build-arg VAR="something"'
 ARG SCM
 ARG DESKTOP_MACHINE=no
-ARG USE_DEBIAN_SNAPSHOT=yes
+ARG USE_DEBIAN_SNAPSHOT
 ARG MAKE_CACHES=yes
 
 ARG SCRIPT=apply-tex.sh
