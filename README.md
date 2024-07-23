@@ -178,13 +178,10 @@ Use at your own risk.
 
 ## Released images on DockerHub
 
-The seL4 CI pushes "known working" images to DockerHub under the [`trustworthysystems/` DockerHub organisation][1]. Images with the `:latest` tag are the ones currently in use in the seL4 CI system, and so are considered to be "known working". Furthermore, each time an image is pushed out, it is tagged with a `YYYY_MM_DD` formatted date.
-
-To ensure (fairly) reproducible builds of docker images, the images are built using Debian Snapshot (an apt repository that can be pinned to a date in time). When changes are made to the scripts or Docker files in this repo, they are built against a "known working" date of Debian Snapshot - in other words, a date in which we were able to build all the Docker images, and they passed all of our tests. This avoids issues where something in Debian Testing or Unstable has changed and causes apt conflicts, or a newer version breaks the seL4 build process.
-
-<!-- Currently not the case:
-Internally, the seL4 CI system will, once a week, attempt to build the docker images using regular apt (not using Snapshot), and if successful, will update the "known working" date. This means on the next build of the docker images that gets pushed out will be using this bumped Snapshot date. Typically, the further in time we get from a Debian release, the more packages we need to fetch from Testing or Unstable, and as such, the less likely this automatic bumping is to work, due to above mentioned issues. With some human intervention, it can usually be fixed up fairly easily. However, even without intervention, the "known working" images will continue to function and build.
--->
+The seL4 CI pushes "known working" images to DockerHub under the [`trustworthysystems/` DockerHub
+organisation][1], usually once a week. Each time an image is pushed out, it is tagged with a
+`YYYY_MM_DD` formatted date. Images with the `:latest` tag are the ones currently in use in the seL4
+CI system.
 
 [1]: https://hub.docker.com/u/trustworthysystems
 
