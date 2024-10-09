@@ -85,6 +85,13 @@ as_root apt-get install -y --no-install-recommends \
         traceroute \
         # end of list
 
+# public key for apt.llvm.org
+wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | as_root apt-key add -
+
+# for specific llvm/clang versions
+echo "deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-12 main" >> /etc/apt/sources.list
+as_root apt-get update -q
+
 # Install python dependencies
 # Upgrade pip first, then install setuptools (required for other pip packages)
 # Install some basic python tools
