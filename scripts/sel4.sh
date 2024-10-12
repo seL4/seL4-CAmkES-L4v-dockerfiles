@@ -71,7 +71,7 @@ as_root apt-get install -y --no-install-recommends \
     qemu-system-x86 \
     sloccount \
     u-boot-tools \
-    clang-12 \
+    clang-11 \
     g++-10 \
     g++-10-arm-linux-gnueabi \
     g++-10-arm-linux-gnueabihf \
@@ -80,7 +80,7 @@ as_root apt-get install -y --no-install-recommends \
     gcc-10-arm-linux-gnueabihf \
     gcc-10-base \
     gcc-riscv64-unknown-elf \
-    libclang-12-dev \
+    libclang-11-dev \
     qemu-system-arm \
     qemu-system-misc \
     $CROSS
@@ -144,12 +144,12 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
         done
     done
 
-    # Ensure that clang-12 shows up as clang
+    # Ensure that clang-11 shows up as clang
     for compiler in clang \
                     clang++ \
                     # end of list
         do
-            as_root update-alternatives --install /usr/bin/"$compiler" "$compiler" "$(which "$compiler"-12)" 60 && \
+            as_root update-alternatives --install /usr/bin/"$compiler" "$compiler" "$(which "$compiler"-11)" 60 && \
             as_root update-alternatives --auto "$compiler"
     done
     # Do a quick check to make sure it works:
