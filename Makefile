@@ -48,7 +48,7 @@ endif
 
 ETC_LOCALTIME := $(realpath /etc/localtime)
 
-HOST_ARCH ?= $(shell arch)
+HOST_ARCH ?= $(shell uname -m)
 ifeq ($(HOST_ARCH),x86_64)
     DOCKER_PLATFORM := "linux/amd64"
 # Intel Macs report i386 instead of x86_64
