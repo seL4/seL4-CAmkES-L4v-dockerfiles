@@ -44,8 +44,6 @@ fi
 as_root apt-get update -q
 as_root dpkg --add-architecture amd64
 as_root dpkg --add-architecture i386
-as_root dpkg --add-architecture armhf
-as_root dpkg --add-architecture armel
 as_root dpkg --add-architecture arm64
 # shellcheck disable=SC2086
 as_root apt-get install -y --no-install-recommends \
