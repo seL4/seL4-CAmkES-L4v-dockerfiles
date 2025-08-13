@@ -33,12 +33,12 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
     # We need to start with a fresh sources.list, to put in both the regular
     # sources, and the snapshot ones
     as_root tee /etc/apt/sources.list << EOF
-# deb http://snapshot.debian.org/archive/debian/$SNAPSHOT_DATE/ bullseye main
-deb http://deb.debian.org/debian bullseye main
-# deb http://snapshot.debian.org/archive/debian-security/$SNAPSHOT_DATE/ bullseye-security main
-deb http://security.debian.org/debian-security bullseye-security main
-# deb http://snapshot.debian.org/archive/debian/$SNAPSHOT_DATE/ bullseye-updates main
-deb http://deb.debian.org/debian bullseye-updates main
+# deb http://snapshot.debian.org/archive/debian/$SNAPSHOT_DATE/ trixie main
+deb http://deb.debian.org/debian trixie main
+# deb http://snapshot.debian.org/archive/debian-security/$SNAPSHOT_DATE/ trixie-security main
+deb http://security.debian.org/debian-security trixie-security main
+# deb http://snapshot.debian.org/archive/debian/$SNAPSHOT_DATE/ trixie-updates main
+deb http://deb.debian.org/debian trixie-updates main
 EOF
 
     # Snapshot has some rate limiting, so avoid its ire

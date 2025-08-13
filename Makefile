@@ -9,7 +9,7 @@ DOCKER ?= docker
 DOCKERHUB ?= trustworthysystems/
 
 # Base images
-DEBIAN_IMG ?= debian:bullseye-slim
+DEBIAN_IMG ?= debian:trixie-slim
 BASETOOLS_IMG ?= base_tools
 
 # Core images
