@@ -25,9 +25,9 @@ test -d "$DIR" || DIR=$PWD
 # tmp space for building
 : "${TEMP_DIR:=/tmp}"
 
-X64_CROSS="g++-10-aarch64-linux-gnu gcc-10-aarch64-linux-gnu gcc-10-multilib"
-ARM64_CROSS="gcc-10-x86-64-linux-gnu:arm64 g++-10-x86-64-linux-gnu:arm64 \
-             gcc-10-i686-linux-gnu:arm64 g++-10-i686-linux-gnu:arm64"
+X64_CROSS="g++-14-aarch64-linux-gnu gcc-14-aarch64-linux-gnu gcc-14-multilib"
+ARM64_CROSS="gcc-14-x86-64-linux-gnu:arm64 g++-14-x86-64-linux-gnu:arm64 \
+             gcc-14-i686-linux-gnu:arm64 g++-14-i686-linux-gnu:arm64"
 
 # TARGETPLATFORM is set by docker during the build process
 if [ "$TARGETPLATFORM" = "linux/amd64" ]; then
@@ -49,7 +49,7 @@ as_root dpkg --add-architecture armel
 as_root dpkg --add-architecture arm64
 # shellcheck disable=SC2086
 as_root apt-get install -y --no-install-recommends \
-    astyle=3.1-2+b1 \
+    astyle=3.1-3+b3 \
     build-essential \
     ccache \
     cmake \
@@ -71,23 +71,23 @@ as_root apt-get install -y --no-install-recommends \
     qemu-system-x86 \
     sloccount \
     u-boot-tools \
-    clang-11 \
-    g++-10 \
-    g++-10-arm-linux-gnueabi \
-    g++-10-arm-linux-gnueabihf \
-    gcc-10 \
-    gcc-10-arm-linux-gnueabi \
-    gcc-10-arm-linux-gnueabihf \
-    gcc-10-base \
+    clang-19 \
+    g++-14 \
+    g++-14-arm-linux-gnueabi \
+    g++-14-arm-linux-gnueabihf \
+    gcc-14 \
+    gcc-14-arm-linux-gnueabi \
+    gcc-14-arm-linux-gnueabihf \
+    gcc-14-base \
     gcc-riscv64-unknown-elf \
-    libclang-11-dev \
+    libclang-19-dev \
     qemu-system-arm \
     qemu-system-misc \
     $CROSS
     # end of list
 
 if [ "$DESKTOP_MACHINE" = "no" ] ; then
-    compiler_version=10
+    compiler_version=14
 
     # Set default compiler to be gcc-$compiler_version using update-alternatives
     # This is necessary particularly for the cross-compilers, which don't put
@@ -144,12 +144,12 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
         done
     done
 
-    # Ensure that clang-11 shows up as clang
+    # Ensure that clang-19 shows up as clang
     for compiler in clang \
                     clang++ \
                     # end of list
         do
-            as_root update-alternatives --install /usr/bin/"$compiler" "$compiler" "$(which "$compiler"-11)" 60 && \
+            as_root update-alternatives --install /usr/bin/"$compiler" "$compiler" "$(which "$compiler"-19)" 60 && \
             as_root update-alternatives --auto "$compiler"
     done
     # Do a quick check to make sure it works:

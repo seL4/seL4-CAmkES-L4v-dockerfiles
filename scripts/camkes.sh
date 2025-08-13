@@ -38,7 +38,7 @@ as_root dpkg --add-architecture i386
 as_root dpkg --add-architecture arm64
 as_root apt-get update -q
 
-# lib32stdc++-10-dev for 32-bit Linux VMM
+# lib32stdc++-14-dev for 32-bit Linux VMM
 as_root apt-get install -y --no-install-recommends \
     acl \
     fakeroot \
@@ -46,7 +46,7 @@ as_root apt-get install -y --no-install-recommends \
     linux-libc-dev:i386 \
     pkg-config \
     spin \
-    lib32stdc++-10-dev:amd64 \
+    lib32stdc++-14-dev:amd64 \
     # end of list
 
 # Required for testing
