@@ -32,6 +32,8 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
 
     # We need to start with a fresh sources.list, to put in both the regular
     # sources, and the snapshot ones
+    as_root rm -f /etc/apt/sources.list.d/debian.sources
+
     as_root tee /etc/apt/sources.list << EOF
 # deb http://snapshot.debian.org/archive/debian/$SNAPSHOT_DATE/ trixie main
 deb http://deb.debian.org/debian trixie main
