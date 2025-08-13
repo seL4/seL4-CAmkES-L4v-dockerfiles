@@ -27,4 +27,4 @@ RUN /bin/bash /tmp/${SCRIPT} \
     && apt-get autoremove --purge --yes \
     && rm -rf /var/lib/apt/lists/*
 
-ENV LANG en_AU.UTF-8
+ENV LANG=en_AU.UTF-8

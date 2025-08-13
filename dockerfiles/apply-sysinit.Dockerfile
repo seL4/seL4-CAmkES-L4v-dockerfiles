@@ -28,4 +28,4 @@ COPY --from=builder ${CAKEML32_BIN_DIR} ${CAKEML32_BIN_DIR}
 COPY --from=builder ${CAKEML64_BIN_DIR} ${CAKEML64_BIN_DIR}
 COPY --from=builder ${CAKEML_DIR} ${CAKEML_DIR}
 
-ENV PATH "${PATH}:${HOL_DIR}/bin"
+ENV PATH="${PATH}:${HOL_DIR}/bin"

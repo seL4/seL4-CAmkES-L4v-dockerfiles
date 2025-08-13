@@ -14,7 +14,7 @@ LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
 ##########################################################
 # Do some setup to prepare for the shell script to be run
 COPY res/isabelle_settings /tmp
-ENV NEW_ISABELLE_SETTINGS "/tmp/isabelle_settings"
+ENV NEW_ISABELLE_SETTINGS="/tmp/isabelle_settings"
 ##########################################################
 
 # ARGS are env vars that are *only available* during the docker build

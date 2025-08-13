@@ -34,4 +34,4 @@ RUN echo ipv4 >> ~/.curlrc \
     && rm -rf /var/lib/apt/lists/*
 
 # ENV variables are available to containers after the build stage
-ENV PATH "${PATH}:${REPO_DIR}"
+ENV PATH="${PATH}:${REPO_DIR}"

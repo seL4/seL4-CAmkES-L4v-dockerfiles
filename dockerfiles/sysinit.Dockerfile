@@ -38,4 +38,4 @@ RUN /bin/bash /tmp/${SCRIPT} \
     && rm -rf /var/lib/apt/lists/*
 
 # Doubley make sure that the PATH is set right
-ENV PATH "${PATH}:${HOL_DIR}/bin"
+ENV PATH="${PATH}:${HOL_DIR}/bin"
