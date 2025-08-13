@@ -25,7 +25,7 @@ as_root apt-get install -y --no-install-recommends \
         xvfb \
         # end of list
 
-as_root pip3 install --no-cache-dir \
+as_root pip3 install --break-system-packages --no-cache-dir \
     ansi2html \
     graphviz \
     pydotplus \

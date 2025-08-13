@@ -88,9 +88,9 @@ as_root apt-get install -y --no-install-recommends \
 # Install python dependencies
 # Upgrade pip first, then install setuptools (required for other pip packages)
 # Install some basic python tools
-as_root pip3 install --no-cache-dir \
+as_root pip3 install --break-system-packages --no-cache-dir \
     setuptools
-as_root pip3 install --no-cache-dir \
+as_root pip3 install --break-system-packages --no-cache-dir \
     gitlint \
     nose \
     reuse \

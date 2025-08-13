@@ -159,9 +159,9 @@ fi
 # Get seL4 python3 deps
 # Pylint is for checking included python scripts
 # Setuptools sometimes is a bit flaky, so double checking it is installed here
-as_root pip3 install --no-cache-dir \
+as_root pip3 install --break-system-packages --no-cache-dir \
     setuptools
-as_root pip3 install --no-cache-dir \
+as_root pip3 install --break-system-packages --no-cache-dir \
     pylint \
     sel4-deps
     # end of list
