@@ -29,6 +29,9 @@ test -d "$DIR" || DIR=$PWD
 # tmp space for building
 : "${TEMP_DIR:=/tmp}"
 
+# Required for cakeml
+/tmp/apply-polyml.sh
+
 # At the end of each Docker image, we switch back to normal Debian
 # apt repos, so we need to switch back to the Snapshot repos now
 possibly_toggle_apt_snapshot
@@ -72,13 +75,6 @@ as_root apt-get install -y --no-install-recommends \
     rsync \
     xxd \
     # end of list
-
-# Required for cakeml
-as_root apt-get install -y --no-install-recommends \
-    polyml \
-    libpolyml-dev \
-    # end of list
-
 
 # Get python deps for CAmkES
 as_root pip3 install --break-system-packages --no-cache-dir \
