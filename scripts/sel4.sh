@@ -70,6 +70,7 @@ as_root apt-get install -y --no-install-recommends \
     sloccount \
     u-boot-tools \
     clang-19 \
+    lld-19 \
     g++-14 \
     g++-14-arm-linux-gnueabi \
     g++-14-arm-linux-gnueabihf \
@@ -145,6 +146,7 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
     # Ensure that clang-19 shows up as clang
     for compiler in clang \
                     clang++ \
+                    lld \
                     # end of list
         do
             as_root update-alternatives --install /usr/bin/"$compiler" "$compiler" "$(which "$compiler"-19)" 60 && \
