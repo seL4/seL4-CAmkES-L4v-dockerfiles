@@ -82,6 +82,7 @@ as_root apt-get install -y --no-install-recommends \
     gcc-14-arm-linux-gnueabihf \
     gcc-14-base \
     gcc-riscv64-unknown-elf \
+    binutils-riscv64-unknown-elf \
     qemu-system-arm \
     qemu-system-misc \
     $CROSS
@@ -145,14 +146,19 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
         done
     done
 
-    # Ensure that clang-19 shows up as clang
-    for compiler in clang \
-                    clang++ \
-                    lld \
-                    # end of list
+    # Ensure that clang-19 and the LLVM binutils show up without version suffix.
+    for tool in clang \
+                clang++ \
+                lld \
+                llvm-ar \
+                llvm-nm \
+                llvm-objcopy \
+                llvm-ranlib \
+                llvm-strip \
+                # end of list
         do
-            as_root update-alternatives --install /usr/bin/"$compiler" "$compiler" "$(which "$compiler"-19)" 60 && \
-            as_root update-alternatives --auto "$compiler"
+            as_root update-alternatives --install /usr/bin/"$tool" "$tool" "$(which "$tool"-19)" 60 && \
+            as_root update-alternatives --auto "$tool"
     done
     # Do a quick check to make sure it works:
     clang --version
