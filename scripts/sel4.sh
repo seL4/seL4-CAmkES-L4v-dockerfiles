@@ -69,7 +69,10 @@ as_root apt-get install -y --no-install-recommends \
     qemu-system-x86 \
     sloccount \
     u-boot-tools \
+    llvm-19 \
+    llvm-19-dev \
     clang-19 \
+    libclang-19-dev \
     lld-19 \
     g++-14 \
     g++-14-arm-linux-gnueabi \
@@ -79,7 +82,6 @@ as_root apt-get install -y --no-install-recommends \
     gcc-14-arm-linux-gnueabihf \
     gcc-14-base \
     gcc-riscv64-unknown-elf \
-    libclang-19-dev \
     qemu-system-arm \
     qemu-system-misc \
     $CROSS
