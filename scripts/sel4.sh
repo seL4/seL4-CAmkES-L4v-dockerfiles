@@ -164,6 +164,21 @@ if [ "$DESKTOP_MACHINE" = "no" ] ; then
     clang --version
 fi
 
+# make RISC-V versions of libgcc.a available to clang/lld
+CLANG_RT=/usr/lib/llvm-19/lib/clang-runtimes
+
+# rv64
+RISCV_DIR=riscv64-unknown-elf/rv64imafdc/lp64d/lib
+as_root mkdir -p $CLANG_RT/$RISCV_DIR
+as_root ln -s "$(riscv64-unknown-elf-gcc -march=rv64imafdc -mabi=lp64d -print-libgcc-file-name)" \
+    $CLANG_RT/$RISCV_DIR/libgcc.a
+
+# rv32; libgcc.a expected in riscv64-unknown-elf/lib/
+RISCV_DIR=riscv64-unknown-elf/lib
+as_root mkdir -p $CLANG_RT/$RISCV_DIR
+as_root ln -s "$(riscv64-unknown-elf-gcc -march=rv32imac -mabi=ilp32 -print-libgcc-file-name)" \
+    $CLANG_RT/$RISCV_DIR/libgcc.a
+
 # Get seL4 python3 deps
 # Pylint is for checking included python scripts
 # Setuptools sometimes is a bit flaky, so double checking it is installed here
