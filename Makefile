@@ -179,11 +179,9 @@ ifeq ($(shell id -u),0)
 	@exit 1
 endif
 
-	scripts/utils/check_for_old_docker_imgs.sh
-
-
 .PHONY: build_user
 build_user: run_checks
+	scripts/utils/check_for_old_docker_imgs.sh "$(DOCKERHUB)$(USER_BASE_IMG)"
 	$(DOCKER_BUILD) --platform $(DOCKER_PLATFORM) $(DOCKER_FLAGS) \
 		--build-arg=USER_BASE_IMG=$(DOCKERHUB)$(USER_BASE_IMG) \
 		-f dockerfiles/extras.Dockerfile \

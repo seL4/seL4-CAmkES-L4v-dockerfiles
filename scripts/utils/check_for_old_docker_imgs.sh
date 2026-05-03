@@ -5,37 +5,42 @@
 # SPDX-License-Identifier: BSD-2-Clause
 #
 
-# Check if any Trustworthy Systems docker images, tagged as 'latest', are getting a bit old
-# If so, print a short message
+# Check if the docker image given as argument, tagged as 'latest', is
+# getting older than MAX_AGE_IN_DAYS. If so, print a short message.
+
+if [ $# -ne 1 ]; then
+    echo 1>&2 "Usage: $0 trustworthysystems/img"
+    exit 1
+fi
+
+img_ref="$1:latest"
 
 MAX_AGE_IN_DAYS=30
 
-linux_date_test() {
-    date --date="2020-04-25T18:44:40.822475865Z" &> /dev/null
-}
+# Cutoff date as YYYYMMDD. Try BSD date first (-v), then GNU date (--date).
+cutoff=$(date -v-${MAX_AGE_IN_DAYS}d +%Y%m%d 2> /dev/null \
+    || date --date="${MAX_AGE_IN_DAYS} days ago" +%Y%m%d)
 
-date_test() {
-    # TODO: implement different date functions for different OSs
-    linux_date_test
-}
-
-# Do a test with a random date to make sure this function will work
-if ! date_test; then
-    echo 1>&2 "WARNING: Unable to check if your trustworthysystems docker images are getting a bit old!"
-    echo 1>&2 "         The date command did not behave as expected. Skipping the check."
+if [ -z "$cutoff" ]; then
+    echo 1>&2 "WARNING: Skipping the docker image age check. date command did not behave as expected."
     exit 0
 fi
 
-# Loop through the images available to determine if they're too old
-for img in $(docker images --filter=reference='trustworthysystems/*:latest' -q); do
-    today="$(date +%s)"
-    img_created_date=$(date --date="$(docker inspect --format='{{json .Created}}' "$img" | tr -d '"')" +%s)
-    time_delta_in_days="$(( ( today - img_created_date ) / (60*60*24) ))"
+img_iso=$(docker inspect --format='{{json .Created}}' "$img_ref" 2> /dev/null | tr -d '"')
+if [ -z "$img_iso" ]; then
+    # Image not present locally; nothing to check.
+    exit 0
+fi
 
-    if [ $time_delta_in_days -gt $MAX_AGE_IN_DAYS ]; then
-        echo 1>&2 "WARNING: The docker image:"
-        echo 1>&2 "           $(docker inspect --format='{{(index .RepoTags 0)}}' "$img" )"
-        echo 1>&2 "         is getting a bit old (more than 30 days)."
-        echo 1>&2 "         You should consider updating it, or choosing a specific tag."
-    fi
-done
+# img_iso is of the form YYYY-MM-DDTHH:MM:SS.ssssssZ; use only YYYY-MM-DD part
+img_day="${img_iso%%T*}"
+# remove `-`
+img_num=$(echo "$img_day" | tr -d -)
+
+# numeric comparison on YYYYMMDD
+if [ "$img_num" -lt "$cutoff" ]; then
+    echo 1>&2 "WARNING: The docker image:"
+    echo 1>&2 "           $img_ref"
+    echo 1>&2 "         is older than ${MAX_AGE_IN_DAYS} days."
+    echo 1>&2 "         You should consider updating it or choosing a specific tag."
+fi
