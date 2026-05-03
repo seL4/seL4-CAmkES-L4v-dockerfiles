@@ -9,7 +9,7 @@
 
 set -exuo pipefail
 
-version="5.9.2"
+version="5.7.1"
 url="https://github.com/polyml/polyml/archive/refs/tags/v${version}.tar.gz"
 TMP_DIR="/tmp"
 

@@ -42,7 +42,7 @@ try_nonroot_first git clone https://github.com/HOL-Theorem-Prover/HOL.git "$HOL_
 pushd "$HOL_DIR"
     git checkout $HOL_COMMIT
     mkdir -p tools-poly
-    echo "val polymllibdir =\"/usr/lib/x86_64-linux-gnu/\";" > tools-poly/poly-includes.ML
+    echo "val polymllibdir =\"/usr/lib/\";" > tools-poly/poly-includes.ML
     poly < tools/smart-configure.sml
     bin/build
     chmod -R 757 "$PWD"
