@@ -40,7 +40,7 @@ as_root apt-get update -q
 # Set up tools to compile CakeML
 try_nonroot_first git clone https://github.com/HOL-Theorem-Prover/HOL.git "$HOL_DIR" || chown_dir_to_user "$HOL_DIR"
 pushd "$HOL_DIR"
-    git checkout $HOL_COMMIT
+    git checkout "$HOL_COMMIT"
     mkdir -p tools-poly
     echo "val polymllibdir =\"/usr/lib/\";" > tools-poly/poly-includes.ML
     poly < tools/smart-configure.sml
@@ -72,7 +72,7 @@ get_cakeml "$CAKEML64_BIN_DIR" "https://cakeml.org/regression/artefacts/${CAKEML
 if [ "$MAKE_CACHES" = "yes" ] ; then
     try_nonroot_first git clone "$CAKEML_REMOTE" "$CAKEML_DIR" || chown_dir_to_user "$CAKEML_DIR"
     pushd "$CAKEML_DIR"
-        git checkout $CAKEML_COMMIT
+        git checkout "$CAKEML_COMMIT"
         # Pre-build the following cakeml directories to speed up subsequent cakeml app builds
         for dir in "basis" "compiler/parsing";
             do
