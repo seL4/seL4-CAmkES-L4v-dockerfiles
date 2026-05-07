@@ -4,12 +4,12 @@
 # SPDX-License-Identifier: BSD-2-Clause
 #
 
-ARG BASE_IMG=base_tools
+ARG BASE_IMG=trustworthysystems/base_tools-riscv
 # hadolint ignore=DL3006
 FROM $BASE_IMG
 ARG TARGETPLATFORM
 LABEL ORGANISATION="Trustworthy Systems"
-LABEL MAINTAINER="Luke Mondy (luke.mondy@data61.csiro.au)"
+LABEL MAINTAINER="Gerwin Klein <gerwin.klein@proofcraft.systems>"
 
 # ARGS are env vars that are *only available* during the docker build
 # They can be modified at docker build time via '--build-arg VAR="something"'

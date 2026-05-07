@@ -81,8 +81,6 @@ as_root apt-get install -y --no-install-recommends \
     gcc-14-arm-linux-gnueabi \
     gcc-14-arm-linux-gnueabihf \
     gcc-14-base \
-    gcc-riscv64-unknown-elf \
-    binutils-riscv64-unknown-elf \
     qemu-system-arm \
     qemu-system-misc \
     $CROSS

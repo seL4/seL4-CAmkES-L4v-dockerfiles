@@ -30,6 +30,7 @@ set -ef
 # For images that are prebuilt
 : "${PREBUILT_CAKEML_IMG:=prebuilt_cakeml}"
 : "${PREBUILT_SYSINIT_IMG:=prebuilt_sysinit}"
+: "${PREBUILT_RISCV_IMG:=riscv}"
 
 # Extra vars
 DOCKER_BUILD="docker build"
@@ -54,14 +55,13 @@ DOCKER_FLAGS="--force-rm=true"
 ############################################
 # builder functions
 
-build_internal_image()
+build_image()
 {
     base_img="$1"
     dfile_name="$2"
-    img_name="$3"
+    img_name="$DOCKERHUB$3"
     shift 3  # any params left over are just injected into the docker command
              # presumably as flags
-
 
     build_args_to_pass_to_docker=$(echo "$build_args" | grep "=" | awk '{print "--build-arg", $1}')
     # shellcheck disable=SC2086
@@ -78,32 +78,22 @@ build_internal_image()
     $DOCKER_INSPECT -f "{{ .Size }}" "$img_name" | xargs printf "%'d\n"
 }
 
-build_image()
-{
-    base_img="$1"
-    dfile_name="$2"
-    img_name="$3"
-    shift 3
-
-    build_internal_image "$DOCKERHUB$base_img" "$dfile_name" "$DOCKERHUB$img_name" "$@"
-}
-
 apply_software_to_image()
 {
     prebuilt_img="$1"
     builder_dfile="$2"
     orig_img="$3"
-    new_img="$4"
+    new_img="$DOCKERHUB$4"
     shift 4
 
     # NOTE: it's OK to supply docker build-args that aren't requested in the Dockerfile
     # shellcheck disable=SC2086
     $DOCKER_BUILD --platform $DOCKER_PLATFORM $DOCKER_FLAGS \
-		--build-arg BASE_BUILDER_IMG="$DOCKERHUB$prebuilt_img" \
-		--build-arg BASE_IMG="$DOCKERHUB$orig_img" \
+		--build-arg BASE_BUILDER_IMG="$prebuilt_img" \
+		--build-arg BASE_IMG="$orig_img" \
         --build-arg SCM="$SCM" \
 		-f "$DOCKERFILE_DIR/$builder_dfile" \
-		-t "$DOCKERHUB$new_img" \
+		-t "$new_img" \
         "$@" \
 		.
 
@@ -117,21 +107,19 @@ apply_software_to_image()
 
 build_sel4()
 {
-    # Don't need $IMG_POSTFIX here, because:
-    # - debian is just debian
-    # - basetools doesn't get pushed out, and is built here anyway
-    build_internal_image "$DEBIAN_IMG" base_tools.Dockerfile "$BASETOOLS_IMG"
-    build_internal_image "$BASETOOLS_IMG" sel4.Dockerfile "$DOCKERHUB$SEL4_IMG"
+    build_image "$DEBIAN_IMG" base_tools.Dockerfile "$BASETOOLS_IMG"
+    apply_software_to_image "$DOCKERHUB$PREBUILT_RISCV_IMG" apply-riscv.Dockerfile "$DOCKERHUB$BASETOOLS_IMG" "${BASETOOLS_IMG}-riscv"
+    build_image "$DOCKERHUB${BASETOOLS_IMG}-riscv" sel4.Dockerfile "$SEL4_IMG"
 }
 
 build_camkes()
 {
-    build_image "$SEL4_IMG$IMG_POSTFIX" camkes.Dockerfile "$CAMKES_IMG"
+    build_image "$DOCKERHUB$SEL4_IMG$IMG_POSTFIX" camkes.Dockerfile "$CAMKES_IMG"
 }
 
 build_l4v()
 {
-    build_image "$CAMKES_IMG$IMG_POSTFIX" l4v.Dockerfile "$L4V_IMG"
+    build_image "$DOCKERHUB$CAMKES_IMG$IMG_POSTFIX" l4v.Dockerfile "$L4V_IMG"
 }
 
 ############################################
@@ -153,13 +141,19 @@ EOF
 build_cakeml()
 {
     prebuild_warning >&2
-    build_image "$CAMKES_IMG$IMG_POSTFIX" cakeml.Dockerfile "$PREBUILT_CAKEML_IMG"
+    build_image "$DOCKERHUB$CAMKES_IMG$IMG_POSTFIX" cakeml.Dockerfile "$PREBUILT_CAKEML_IMG"
 }
 
 build_sysinit()
 {
     prebuild_warning >&2
-    build_image "$CAMKES_IMG$IMG_POSTFIX" sysinit.Dockerfile "$PREBUILT_SYSINIT_IMG"
+    build_image "$DOCKERHUB$CAMKES_IMG$IMG_POSTFIX" sysinit.Dockerfile "$PREBUILT_SYSINIT_IMG"
+}
+
+build_riscv()
+{
+    # no warning for riscv
+    build_image "$DOCKERHUB$CAMKES_IMG$IMG_POSTFIX" riscv.Dockerfile "$PREBUILT_RISCV_IMG"
 }
 
 
@@ -274,7 +268,7 @@ do
         # If not, <shrug />, docker won't pick up the variable anyway, so no harm done.
         prebuilt_img="$(echo "PREBUILT_${s}_IMG" | tr "[:lower:]" "[:upper:]")"
         prebuilt_img="$(eval echo \$"$prebuilt_img")"
-        apply_software_to_image "$prebuilt_img" "apply-${s}.Dockerfile" "$base_img$base_img_postfix" "$base_img-$s"
+        apply_software_to_image "$DOCKERHUB$prebuilt_img" "apply-${s}.Dockerfile" "$DOCKERHUB$base_img$base_img_postfix" "$base_img-$s"
         base_img="$base_img-$s"
         base_img_postfix="" # only apply the postfix in the first loop
     fi
