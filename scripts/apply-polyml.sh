@@ -22,7 +22,7 @@ pushd "polyml-${version}"
 sed -i 's|#if (PTHREAD_STACK_MIN < 4096)|#if 0|' libpolyml/sighandler.cpp
 # Force HAVE_ASM_ELF_H to no for polyml-5.7.1; comment says Android only
 # https://github.com/polyml/polyml/blob/v5.7.1/libpolyml/elfexport.cpp#L93-L96
-./configure --prefix=/usr ac_cv_header_asm_elf_h=no
+./configure --prefix=/usr --enable-shared ac_cv_header_asm_elf_h=no
 make
 make install
 rm -rf "v${version}.tar.gz" "polyml-${version}"
