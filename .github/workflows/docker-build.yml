@@ -13,7 +13,7 @@ jobs:
     name: Docker images (AMD64)
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - run: ./build.sh -v -b sel4
     # the following will also build the plain camkes image:
     - run: ./build.sh -v -b camkes -s cakeml -s rust
@@ -24,7 +24,7 @@ jobs:
     steps:
     - name: "Unlock MacOS Keychain"
       run: security unlock-keychain -p ${{secrets.M2_MINI_PWD}}
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     # don't use cached images on the self-hosted runner to make sure we are
     # picking up current Debian repo state. The GitHub runners start from
     # scratch, so don't need it.
@@ -39,7 +39,7 @@ jobs:
     name: Docker images (l4v)
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - run: ./build.sh -v -b sel4
     - run: ./build.sh -v -b camkes
     - run: ./build.sh -v -b l4v
