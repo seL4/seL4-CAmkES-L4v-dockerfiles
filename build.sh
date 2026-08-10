@@ -32,7 +32,7 @@ set -ef
 : "${PREBUILT_SYSINIT_IMG:=prebuilt_sysinit}"
 
 # Extra vars
-DOCKER_BUILD="docker build"
+DOCKER_BUILD="docker buildx build --load"
 DOCKER_INSPECT="docker inspect"
 DOCKER_FLAGS="--force-rm=true"
 
