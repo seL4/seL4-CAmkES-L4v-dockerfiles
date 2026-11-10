@@ -111,8 +111,6 @@ grep "export" /root/.bashrc >> "${RC_FILE}"
 # this block does not do parameter expansion, so will be copied verbatim.
 cat << 'EOF' >> "${RC_FILE}"
 export PATH=/scripts/repo:$PATH
-export GHCUP_INSTALL_BASE_PREFIX=/opt/ghcup
-[ -r /opt/ghcup/.ghcup/env ] && source /opt/ghcup/.ghcup/env
 cd /host
 EOF
 
@@ -127,9 +125,6 @@ mkdir -p /isabelle
 chown -R "$chown_setting" /isabelle
 # Isabelle expects a home dir folder.
 ln -s /isabelle "/home/${UNAME}/.isabelle"
-
-# Make Haskell installation writable if it exists
-[ -d /opt/ghcup ] && chown -R "${UNAME}" /opt/ghcup
 
 # Make sure the user owns their home dir
 chown -R "$chown_setting" "/home/${UNAME}"

@@ -82,19 +82,9 @@ as_root pip3 install --break-system-packages --no-cache-dir \
     nose \
     # end of list
 
-# Get stack
-export GHCUP_INSTALL_BASE_PREFIX=/opt/ghcup
-curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | BOOTSTRAP_HASKELL_NONINTERACTIVE=1 \
-                                                                   BOOTSTRAP_HASKELL_GHC_VERSION=9.2.8 \
-                                                                   BOOTSTRAP_HASKELL_CABAL_VERSION=3.10 \
-                                                                   BOOTSTRAP_HASKELL_INSTALL_STACK=1 sh
-
-# shellcheck disable=SC1091
-source "$GHCUP_INSTALL_BASE_PREFIX/.ghcup/env"
-echo "export GHCUP_INSTALL_BASE_PREFIX=/opt/ghcup" >> "$HOME/.bashrc"
-echo "source $GHCUP_INSTALL_BASE_PREFIX/.ghcup/env" >> "$HOME/.bashrc"
-
-as_root rm -f "$GHCUP_INSTALL_BASE_PREFIX"/.ghcup/cache/*
+# Get stack (installs to /usr/local/bin). No GHC or cabal: stack installs the
+# GHC version required by each project's resolver into $STACK_ROOT itself.
+curl --proto '=https' --tlsv1.2 -sSfL https://get.haskellstack.org/ | sh
 
 # Pick a random group ID, one that won't clash with common user GIDs
 as_root groupadd -g "$STACK_GID" stack
